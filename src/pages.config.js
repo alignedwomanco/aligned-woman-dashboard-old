@@ -5,7 +5,8 @@ import Experts from './pages/Experts';
 import Apply from './pages/Apply';
 import Contact from './pages/Contact';
 import Dashboard from './pages/Dashboard';
-import Settings from './pages/Settings';
+import OnboardingDiagnostic from './pages/OnboardingDiagnostic';
+import MyPathway from './pages/MyPathway';
 import __Layout from './Layout.jsx';
 
 
@@ -17,7 +18,8 @@ export const PAGES = {
     "Apply": Apply,
     "Contact": Contact,
     "Dashboard": Dashboard,
-    "Settings": Settings,
+    "OnboardingDiagnostic": OnboardingDiagnostic,
+    "MyPathway": MyPathway,
 }
 
 export const pagesConfig = {
