@@ -310,109 +310,165 @@ export default function OnboardingDiagnostic() {
     );
   }
 
-  // Questions step
+  // Chat-style conversation
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white p-6">
-      <div className="max-w-2xl mx-auto pt-12">
-        {/* Progress */}
-        <div className="mb-8">
-          <div className="flex justify-between text-sm text-gray-600 mb-2">
-            <span>Question {questionCount}</span>
-            <span>~{Math.max(10 - questionCount, 1)} remaining</span>
+    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white p-4 md:p-6">
+      <div className="max-w-3xl mx-auto h-[calc(100vh-2rem)] flex flex-col">
+        {/* Header */}
+        <div className="flex-shrink-0 py-4 border-b border-gray-200 bg-white/80 backdrop-blur-sm rounded-t-3xl px-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-[#6B1B3D] to-[#8B2E4D] rounded-full flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h2 className="font-bold text-[#4A1228]">ALIVE Diagnostic</h2>
+                <p className="text-xs text-gray-500">Building your pathway</p>
+              </div>
+            </div>
+            <Progress value={(questionCount / 12) * 100} className="w-24 h-2" />
           </div>
-          <Progress value={(questionCount / 12) * 100} className="h-2" />
         </div>
 
-        <AnimatePresence mode="wait">
-          {isLoading ? (
+        {/* Messages Container */}
+        <div className="flex-1 overflow-y-auto bg-white px-4 py-6 space-y-6">
+          {/* Past Q&A */}
+          {answers.map((qa, index) => (
+            <div key={index} className="space-y-4">
+              {/* Question from system */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="flex gap-3"
+              >
+                <div className="w-8 h-8 bg-gradient-to-br from-[#6B1B3D] to-[#8B2E4D] rounded-full flex items-center justify-center flex-shrink-0">
+                  <Sparkles className="w-4 h-4 text-white" />
+                </div>
+                <div className="flex-1 bg-gray-50 rounded-2xl rounded-tl-sm p-4 max-w-[80%]">
+                  <p className="text-gray-800">{qa.question}</p>
+                </div>
+              </motion.div>
+
+              {/* Answer from user */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="flex gap-3 justify-end"
+              >
+                <div className="flex-1 bg-gradient-to-br from-[#6B1B3D] to-[#8B2E4D] rounded-2xl rounded-tr-sm p-4 max-w-[80%] ml-auto">
+                  <p className="text-white">{qa.answer}</p>
+                </div>
+              </motion.div>
+            </div>
+          ))}
+
+          {/* Current Question */}
+          {currentQuestion && !isLoading && (
             <motion.div
-              key="loading"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex items-center justify-center py-20"
-            >
-              <Loader2 className="w-10 h-10 text-[#6B1B3D] animate-spin" />
-            </motion.div>
-          ) : (
-            <motion.div
-              key={questionCount}
-              initial={{ opacity: 0, x: 30 }}
+              initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-              transition={{ duration: 0.3 }}
+              className="flex gap-3"
             >
-              <Card className="shadow-xl">
-                <CardContent className="p-8">
-                  <h2 className="text-2xl font-bold text-[#4A1228] mb-8">
-                    {currentQuestion?.question}
-                  </h2>
+              <div className="w-8 h-8 bg-gradient-to-br from-[#6B1B3D] to-[#8B2E4D] rounded-full flex items-center justify-center flex-shrink-0">
+                <Sparkles className="w-4 h-4 text-white" />
+              </div>
+              <div className="flex-1 bg-gray-50 rounded-2xl rounded-tl-sm p-4">
+                <p className="text-gray-800 mb-4">{currentQuestion.question}</p>
 
-                  {currentQuestion?.format === "scale" && (
-                    <div className="space-y-6">
-                      <div className="flex justify-between text-sm text-gray-500">
-                        <span>Not at all</span>
-                        <span>Completely</span>
-                      </div>
-                      <Slider
-                        value={scaleValue}
-                        onValueChange={setScaleValue}
-                        max={10}
-                        min={1}
-                        step={1}
-                        className="py-4"
-                      />
-                      <div className="text-center">
-                        <span className="text-4xl font-bold text-[#6B1B3D]">
-                          {scaleValue[0]}
-                        </span>
-                        <span className="text-gray-500">/10</span>
-                      </div>
+                {/* Scale input */}
+                {currentQuestion.format === "scale" && (
+                  <div className="space-y-4 bg-white rounded-xl p-4">
+                    <div className="flex justify-between text-xs text-gray-500">
+                      <span>Low</span>
+                      <span>High</span>
                     </div>
-                  )}
-
-                  {(currentQuestion?.format === "multiple_choice" ||
-                    currentQuestion?.format === "scenario") && (
-                    <div className="space-y-3">
-                      {currentQuestion.options?.map((option, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setSelectedOption(option)}
-                          className={`w-full p-4 text-left rounded-xl border-2 transition-all ${
-                            selectedOption === option
-                              ? "border-[#6B1B3D] bg-pink-50"
-                              : "border-gray-200 hover:border-gray-300"
-                          }`}
-                        >
-                          {option}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-
-                  {currentQuestion?.format === "short_text" && (
-                    <Textarea
-                      value={currentAnswer}
-                      onChange={(e) => setCurrentAnswer(e.target.value)}
-                      placeholder="Share your thoughts..."
-                      className="min-h-[150px] rounded-xl border-gray-200 focus:border-[#6B1B3D] focus:ring-[#6B1B3D]"
+                    <Slider
+                      value={scaleValue}
+                      onValueChange={setScaleValue}
+                      max={10}
+                      min={1}
+                      step={1}
+                      className="py-2"
                     />
-                  )}
+                    <div className="text-center">
+                      <span className="text-3xl font-bold text-[#6B1B3D]">{scaleValue[0]}</span>
+                      <span className="text-gray-500 text-sm">/10</span>
+                    </div>
+                  </div>
+                )}
 
-                  <Button
-                    onClick={handleSubmitAnswer}
-                    disabled={!isAnswerValid()}
-                    size="lg"
-                    className="w-full mt-8 bg-gradient-to-r from-[#6B1B3D] to-[#8B2E4D] hover:from-[#4A1228] hover:to-[#6B1B3D] text-white py-6 text-lg font-semibold rounded-xl"
-                  >
-                    Continue
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                  </Button>
-                </CardContent>
-              </Card>
+                {/* Multiple choice */}
+                {(currentQuestion.format === "multiple_choice" || currentQuestion.format === "scenario") && (
+                  <div className="space-y-2">
+                    {currentQuestion.options?.map((option, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setSelectedOption(option)}
+                        className={`w-full p-3 text-left rounded-xl border-2 text-sm transition-all ${
+                          selectedOption === option
+                            ? "border-[#6B1B3D] bg-pink-50"
+                            : "border-gray-200 hover:border-gray-300 bg-white"
+                        }`}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Text input */}
+                {currentQuestion.format === "short_text" && (
+                  <Textarea
+                    value={currentAnswer}
+                    onChange={(e) => setCurrentAnswer(e.target.value)}
+                    placeholder="Type your response..."
+                    className="min-h-[100px] bg-white rounded-xl"
+                    autoFocus
+                  />
+                )}
+              </div>
             </motion.div>
           )}
-        </AnimatePresence>
+
+          {/* Loading indicator */}
+          {isLoading && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex gap-3"
+            >
+              <div className="w-8 h-8 bg-gradient-to-br from-[#6B1B3D] to-[#8B2E4D] rounded-full flex items-center justify-center flex-shrink-0">
+                <Sparkles className="w-4 h-4 text-white" />
+              </div>
+              <div className="bg-gray-50 rounded-2xl rounded-tl-sm p-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </div>
+
+        {/* Input Area */}
+        {currentQuestion && !isLoading && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex-shrink-0 border-t border-gray-200 bg-white rounded-b-3xl p-4"
+          >
+            <Button
+              onClick={handleSubmitAnswer}
+              disabled={!isAnswerValid()}
+              size="lg"
+              className="w-full bg-gradient-to-r from-[#6B1B3D] to-[#8B2E4D] hover:from-[#4A1228] hover:to-[#6B1B3D] text-white rounded-xl"
+            >
+              Send Response
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </motion.div>
+        )}
       </div>
     </div>
   );
