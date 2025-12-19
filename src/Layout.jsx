@@ -200,7 +200,7 @@ export default function Layout({ children, currentPageName }) {
                     Log In
                   </Button>
                   <Button
-                    onClick={() => base44.auth.redirectToLogin()}
+                    onClick={() => base44.auth.redirectToLogin(createPageUrl("OnboardingDiagnostic"))}
                     className="bg-burgundy hover:bg-burgundy-deep text-white px-6"
                   >
                     Get Started
