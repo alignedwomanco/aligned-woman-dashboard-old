@@ -11,6 +11,10 @@ import ModulesLibrary from './pages/ModulesLibrary';
 import ModulePlayer from './pages/ModulePlayer';
 import ToolsHub from './pages/ToolsHub';
 import Journal from './pages/Journal';
+import CheckIn from './pages/CheckIn';
+import Blueprint from './pages/Blueprint';
+import Progress from './pages/Progress';
+import Settings from './pages/Settings';
 import __Layout from './Layout.jsx';
 
 
@@ -28,6 +32,10 @@ export const PAGES = {
     "ModulePlayer": ModulePlayer,
     "ToolsHub": ToolsHub,
     "Journal": Journal,
+    "CheckIn": CheckIn,
+    "Blueprint": Blueprint,
+    "Progress": Progress,
+    "Settings": Settings,
 }
 
 export const pagesConfig = {
