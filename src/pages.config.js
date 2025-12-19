@@ -7,6 +7,10 @@ import Contact from './pages/Contact';
 import Dashboard from './pages/Dashboard';
 import OnboardingDiagnostic from './pages/OnboardingDiagnostic';
 import MyPathway from './pages/MyPathway';
+import ModulesLibrary from './pages/ModulesLibrary';
+import ModulePlayer from './pages/ModulePlayer';
+import ToolsHub from './pages/ToolsHub';
+import Journal from './pages/Journal';
 import __Layout from './Layout.jsx';
 
 
@@ -20,6 +24,10 @@ export const PAGES = {
     "Dashboard": Dashboard,
     "OnboardingDiagnostic": OnboardingDiagnostic,
     "MyPathway": MyPathway,
+    "ModulesLibrary": ModulesLibrary,
+    "ModulePlayer": ModulePlayer,
+    "ToolsHub": ToolsHub,
+    "Journal": Journal,
 }
 
 export const pagesConfig = {
