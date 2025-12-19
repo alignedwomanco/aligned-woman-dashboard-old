@@ -51,13 +51,27 @@ export default function Layout({ children, currentPageName }) {
         if (authenticated) {
           const userData = await base44.auth.me();
           setUser(userData);
+          
+          // Redirect authenticated users to onboarding if not completed
+          if (!isPublicPage && currentPageName !== "OnboardingDiagnostic" && currentPageName !== "Dashboard") {
+            const sessions = await base44.entities.DiagnosticSession.filter(
+              { isComplete: true },
+              "-created_date",
+              1
+            );
+            
+            if (!sessions || sessions.length === 0) {
+              // No completed diagnostic, redirect to onboarding
+              window.location.href = createPageUrl("OnboardingDiagnostic");
+            }
+          }
         }
       } catch (e) {
         setIsAuthenticated(false);
       }
     };
     checkAuth();
-  }, []);
+  }, [currentPageName, isPublicPage]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
