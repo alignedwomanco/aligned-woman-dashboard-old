@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
+import { createPageUrl } from "@/utils";
 import { Sparkles, ArrowRight, Check } from "lucide-react";
 
 const benefits = [
