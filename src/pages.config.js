@@ -4,6 +4,8 @@ import ALIVEMethod from './pages/ALIVEMethod';
 import Experts from './pages/Experts';
 import Apply from './pages/Apply';
 import Contact from './pages/Contact';
+import Dashboard from './pages/Dashboard';
+import Settings from './pages/Settings';
 import __Layout from './Layout.jsx';
 
 
@@ -14,6 +16,8 @@ export const PAGES = {
     "Experts": Experts,
     "Apply": Apply,
     "Contact": Contact,
+    "Dashboard": Dashboard,
+    "Settings": Settings,
 }
 
 export const pagesConfig = {
