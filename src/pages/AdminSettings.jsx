@@ -23,13 +23,23 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Upload, Camera, Trash2, Save } from "lucide-react";
+import { Shield, Users, Upload, Camera, Trash2, Save, UserPlus } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ModuleBuilderContent from "@/components/admin/ModuleBuilderContent";
 
 export default function AdminSettings() {
   const [currentUser, setCurrentUser] = useState(null);
   const [profileData, setProfileData] = useState({});
+  const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState("moderator");
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -62,6 +72,21 @@ export default function AdminSettings() {
     mutationFn: (userId) => base44.entities.User.delete(userId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["allUsers"] });
+    },
+  });
+
+  const sendInviteMutation = useMutation({
+    mutationFn: async ({ email, role }) => {
+      await base44.integrations.Core.SendEmail({
+        to: email,
+        subject: "Invitation to The Aligned Woman Blueprint",
+        body: `You've been invited to join The Aligned Woman Blueprint as ${role.replace("_", " ")}. Please sign up at ${window.location.origin}`,
+      });
+    },
+    onSuccess: () => {
+      setInviteDialogOpen(false);
+      setInviteEmail("");
+      setInviteRole("moderator");
     },
   });
 
@@ -218,10 +243,60 @@ export default function AdminSettings() {
               {/* Administrators Section */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Shield className="w-5 h-5" />
-                    Administrators & Team
-                  </CardTitle>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2">
+                      <Shield className="w-5 h-5" />
+                      Administrators & Team
+                    </CardTitle>
+                    <Dialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button className="bg-[#6B1B3D] hover:bg-[#4A1228]">
+                          <UserPlus className="w-4 h-4 mr-2" />
+                          Invite Admin
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Invite Administrator or Team Member</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                          <div>
+                            <Label>Email Address</Label>
+                            <Input
+                              type="email"
+                              value={inviteEmail}
+                              onChange={(e) => setInviteEmail(e.target.value)}
+                              placeholder="email@example.com"
+                            />
+                          </div>
+                          <div>
+                            <Label>Role</Label>
+                            <Select value={inviteRole} onValueChange={setInviteRole}>
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="expert">Expert</SelectItem>
+                                <SelectItem value="course_creator">Course Creator</SelectItem>
+                                <SelectItem value="moderator">Moderator</SelectItem>
+                                <SelectItem value="admin">Admin</SelectItem>
+                                {currentUser.role === "master_admin" && (
+                                  <SelectItem value="master_admin">Master Admin</SelectItem>
+                                )}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <Button
+                            onClick={() => sendInviteMutation.mutate({ email: inviteEmail, role: inviteRole })}
+                            disabled={!inviteEmail}
+                            className="w-full bg-[#6B1B3D]"
+                          >
+                            Send Invitation
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <Table>
