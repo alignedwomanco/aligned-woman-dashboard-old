@@ -212,11 +212,13 @@ Be concise and specific.`;
         <div className="flex-shrink-0 py-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-14 h-14 bg-rose-400/20 rounded-2xl flex items-center justify-center">
-                <Sparkles className="w-7 h-7 text-rose-300" />
-              </div>
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6945438e6f6e0e1d874ba569/6f3c1f132_AWLogoWhite.png"
+                alt="The Aligned Woman"
+                className="w-14 h-14 object-contain"
+              />
               <div>
-                <h1 className="text-lg font-bold text-white">Daily Check-In</h1>
+                <h1 className="text-lg font-bold text-white">Your Pathway</h1>
                 <p className="text-white/50 text-sm">{step + 1} of {totalSteps}</p>
               </div>
             </div>

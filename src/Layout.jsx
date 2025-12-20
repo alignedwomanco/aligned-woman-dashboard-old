@@ -128,8 +128,11 @@ export default function Layout({ children, currentPageName }) {
             {/* Logo */}
             <Link to={createPageUrl(isAuthenticated && !isPublicPage ? "Dashboard" : "Landing")} className="flex items-center gap-3">
               <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6945438e6f6e0e1d874ba569/c471bd504_image.png"
-                alt="Logo"
+                src={scrolled || !isPublicPage 
+                  ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6945438e6f6e0e1d874ba569/fa1001979_AWLogo_.png"
+                  : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6945438e6f6e0e1d874ba569/6f3c1f132_AWLogoWhite.png"
+                }
+                alt="The Aligned Woman Logo"
                 className="w-10 h-10 object-contain"
               />
               <span className={`text-xl font-bold tracking-tight ${scrolled || !isPublicPage ? "text-burgundy" : "text-white"}`}>
