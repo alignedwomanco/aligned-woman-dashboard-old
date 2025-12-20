@@ -25,6 +25,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Shield, Users, Upload, Camera, Trash2, Save } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ModuleBuilderContent from "@/components/admin/ModuleBuilderContent";
 
 export default function AdminSettings() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -52,6 +53,13 @@ export default function AdminSettings() {
 
   const updateUserRoleMutation = useMutation({
     mutationFn: ({ userId, role }) => base44.entities.User.update(userId, { role }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["allUsers"] });
+    },
+  });
+
+  const deleteUserMutation = useMutation({
+    mutationFn: (userId) => base44.entities.User.delete(userId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["allUsers"] });
     },
@@ -98,6 +106,10 @@ export default function AdminSettings() {
   }
 
   const canManageUsers = currentUser.role === "admin" || currentUser.role === "master_admin";
+  const canAccessModuleBuilder = ["admin", "master_admin", "moderator", "course_creator"].includes(currentUser.role);
+
+  const adminUsers = allUsers.filter(u => ["admin", "master_admin", "moderator", "course_creator", "expert"].includes(u.role));
+  const regularUsers = allUsers.filter(u => u.role === "user");
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white p-6">
@@ -108,9 +120,10 @@ export default function AdminSettings() {
         </div>
 
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsList className="grid w-full max-w-2xl grid-cols-3">
             <TabsTrigger value="profile">Profile</TabsTrigger>
             {canManageUsers && <TabsTrigger value="users">User Management</TabsTrigger>}
+            {canAccessModuleBuilder && <TabsTrigger value="modules">Module Builder</TabsTrigger>}
           </TabsList>
 
           {/* Profile Tab */}
@@ -201,12 +214,13 @@ export default function AdminSettings() {
 
           {/* User Management Tab */}
           {canManageUsers && (
-            <TabsContent value="users">
+            <TabsContent value="users" className="space-y-6">
+              {/* Administrators Section */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Users className="w-5 h-5" />
-                    User Permissions
+                    <Shield className="w-5 h-5" />
+                    Administrators & Team
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -217,10 +231,11 @@ export default function AdminSettings() {
                         <TableHead>Email</TableHead>
                         <TableHead>Current Role</TableHead>
                         <TableHead>Change Role</TableHead>
+                        <TableHead>Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {allUsers.map((user) => (
+                      {adminUsers.map((user) => (
                         <TableRow key={user.id}>
                           <TableCell className="flex items-center gap-3">
                             <Avatar>
@@ -260,12 +275,106 @@ export default function AdminSettings() {
                               </SelectContent>
                             </Select>
                           </TableCell>
+                          <TableCell>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => deleteUserMutation.mutate(user.id)}
+                              disabled={user.id === currentUser.id}
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
                   </Table>
                 </CardContent>
               </Card>
+
+              {/* Regular Users Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="w-5 h-5" />
+                    Users
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>User</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Current Role</TableHead>
+                        <TableHead>Change Role</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {regularUsers.map((user) => (
+                        <TableRow key={user.id}>
+                          <TableCell className="flex items-center gap-3">
+                            <Avatar>
+                              <AvatarImage src={user.profile_picture} />
+                              <AvatarFallback className="bg-[#6B1B3D] text-white">
+                                {user.full_name?.[0] || user.email?.[0]}
+                              </AvatarFallback>
+                            </Avatar>
+                            <span className="font-medium">{user.full_name || "User"}</span>
+                          </TableCell>
+                          <TableCell>{user.email}</TableCell>
+                          <TableCell>
+                            <Badge className={getRoleBadgeColor(user.role)}>
+                              {user.role?.replace("_", " ")}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Select
+                              value={user.role}
+                              onValueChange={(role) =>
+                                updateUserRoleMutation.mutate({ userId: user.id, role })
+                              }
+                            >
+                              <SelectTrigger className="w-48">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="user">User</SelectItem>
+                                <SelectItem value="expert">Expert</SelectItem>
+                                <SelectItem value="course_creator">Course Creator</SelectItem>
+                                <SelectItem value="moderator">Moderator</SelectItem>
+                                <SelectItem value="admin">Admin</SelectItem>
+                                {currentUser.role === "master_admin" && (
+                                  <SelectItem value="master_admin">Master Admin</SelectItem>
+                                )}
+                              </SelectContent>
+                            </Select>
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => deleteUserMutation.mutate(user.id)}
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          )}
+
+          {/* Module Builder Tab */}
+          {canAccessModuleBuilder && (
+            <TabsContent value="modules">
+              <ModuleBuilderContent />
             </TabsContent>
           )}
         </Tabs>
