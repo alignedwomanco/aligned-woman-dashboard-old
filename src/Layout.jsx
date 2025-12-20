@@ -53,7 +53,7 @@ export default function Layout({ children, currentPageName }) {
           setUser(userData);
           
           // Redirect authenticated users to onboarding if not completed
-          if (!isPublicPage && currentPageName !== "OnboardingDiagnostic" && currentPageName !== "Dashboard") {
+          if (!isPublicPage && currentPageName !== "OnboardingDiagnostic") {
             const sessions = await base44.entities.DiagnosticSession.filter(
               { isComplete: true },
               "-created_date",

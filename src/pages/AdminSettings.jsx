@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Upload, Camera, Trash2, Save, UserPlus } from "lucide-react";
+import { Shield, Users, Upload, Camera, Trash2, Save, UserPlus, RefreshCw } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ModuleBuilderContent from "@/components/admin/ModuleBuilderContent";
+import { createPageUrl } from "@/utils";
 
 export default function AdminSettings() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -94,6 +95,16 @@ export default function AdminSettings() {
     mutationFn: (data) => base44.auth.updateMe(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+    },
+  });
+
+  const restartOnboardingMutation = useMutation({
+    mutationFn: async () => {
+      const sessions = await base44.entities.DiagnosticSession.list();
+      await Promise.all(sessions.map(session => base44.entities.DiagnosticSession.delete(session.id)));
+    },
+    onSuccess: () => {
+      window.location.href = createPageUrl("OnboardingDiagnostic");
     },
   });
 
@@ -226,13 +237,23 @@ export default function AdminSettings() {
                   </div>
                 </div>
 
-                <Button
-                  onClick={handleProfileUpdate}
-                  className="bg-[#6B1B3D] hover:bg-[#4A1228]"
-                >
-                  <Save className="w-4 h-4 mr-2" />
-                  Save Changes
-                </Button>
+                <div className="flex gap-3">
+                  <Button
+                    onClick={handleProfileUpdate}
+                    className="bg-[#6B1B3D] hover:bg-[#4A1228]"
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    Save Changes
+                  </Button>
+                  <Button
+                    onClick={() => restartOnboardingMutation.mutate()}
+                    variant="outline"
+                    className="border-[#6B1B3D] text-[#6B1B3D] hover:bg-pink-50"
+                  >
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Restart Onboarding
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
