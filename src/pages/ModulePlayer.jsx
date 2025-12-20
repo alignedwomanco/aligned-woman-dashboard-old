@@ -1,62 +1,140 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import {
-  Play,
-  Pause,
-  CheckCircle,
   ArrowLeft,
-  ArrowRight,
-  BookOpen,
-  ClipboardCheck,
-  Wrench,
+  CheckCircle,
   Clock,
   Eye,
+  Download,
+  MessageCircle,
+  Send,
+  Check,
 } from "lucide-react";
-
-// Mock module data
-const moduleData = {
-  id: "1",
-  title: "Nervous System Regulation",
-  phase: "Awareness",
-  duration: 45,
-  videoUrl: "https://www.youtube.com/embed/SDKOedKFSf4",
-  summary: "Learn how your system responds to stress, and how to return to safety without forcing yourself.",
-  outcomes: [
-    "Identify your stress response pattern",
-    "Name your earliest warning signs",
-    "Use two regulation tools in real time",
-  ],
-  lessonText: `
-    Your nervous system is not your enemy. It is doing exactly what it was designed to do: keep you safe.
-
-    When you understand how your system works, you stop fighting yourself and start working with your biology.
-
-    The autonomic nervous system has two main branches:
-    
-    **Sympathetic** - Your activation response (fight or flight)
-    **Parasympathetic** - Your rest and restoration response (rest and digest)
-
-    Neither is good or bad. Both are necessary. The goal is not to be calm all the time — it is to be able to return to safety when you need to.
-
-    Most women are stuck in chronic low-grade activation. Not full panic, but never fully at rest either.
-
-    The first step is simply noticing: Where do you feel stress in your body? How does activation show up for you?
-  `,
-  toolUnlocks: ["Regulation Toolkit"],
-};
 
 export default function ModulePlayer() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("lesson");
-  const [videoProgress, setVideoProgress] = useState(65);
-  const [assessmentStarted, setAssessmentStarted] = useState(false);
+  const [searchParams] = useSearchParams();
+  const moduleId = searchParams.get("id");
+  const [selectedSubModule, setSelectedSubModule] = useState(null);
+  const [newComment, setNewComment] = useState("");
+  const queryClient = useQueryClient();
+
+  const { data: module } = useQuery({
+    queryKey: ["module", moduleId],
+    queryFn: async () => {
+      const modules = await base44.entities.Module.filter({ id: moduleId });
+      return modules[0];
+    },
+    enabled: !!moduleId,
+  });
+
+  const { data: subModules = [] } = useQuery({
+    queryKey: ["subModules", moduleId],
+    queryFn: () => base44.entities.SubModule.filter({ moduleId }, "order"),
+    enabled: !!moduleId,
+  });
+
+  const { data: subModuleProgress = [] } = useQuery({
+    queryKey: ["subModuleProgress", moduleId],
+    queryFn: () => base44.entities.SubModuleProgress.filter({ moduleId }),
+    enabled: !!moduleId,
+  });
+
+  const { data: comments = [] } = useQuery({
+    queryKey: ["comments", selectedSubModule?.id],
+    queryFn: () =>
+      base44.entities.ModuleComment.filter(
+        { subModuleId: selectedSubModule.id },
+        "-created_date"
+      ),
+    enabled: !!selectedSubModule,
+  });
+
+  const updateProgressMutation = useMutation({
+    mutationFn: ({ subModuleId, watchedPercent, isComplete }) =>
+      base44.entities.SubModuleProgress.create({
+        subModuleId,
+        moduleId,
+        watchedPercent,
+        isComplete,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["subModuleProgress"] });
+    },
+  });
+
+  const addCommentMutation = useMutation({
+    mutationFn: (comment) => base44.entities.ModuleComment.create(comment),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["comments"] });
+      setNewComment("");
+    },
+  });
+
+  useEffect(() => {
+    if (subModules.length > 0 && !selectedSubModule) {
+      setSelectedSubModule(subModules[0]);
+    }
+  }, [subModules]);
+
+  const handleMarkComplete = () => {
+    const progress = subModuleProgress.find(
+      (p) => p.subModuleId === selectedSubModule.id
+    );
+    const watchedPercent = progress?.watchedPercent || 0;
+
+    if (watchedPercent >= 50) {
+      updateProgressMutation.mutate({
+        subModuleId: selectedSubModule.id,
+        watchedPercent: 100,
+        isComplete: true,
+      });
+    }
+  };
+
+  const handleAddComment = () => {
+    if (!newComment.trim()) return;
+    addCommentMutation.mutate({
+      moduleId,
+      subModuleId: selectedSubModule.id,
+      comment: newComment,
+      isQuestion: false,
+    });
+  };
+
+  const getProgress = (subModuleId) => {
+    const progress = subModuleProgress.find((p) => p.subModuleId === subModuleId);
+    return progress || { watchedPercent: 0, isComplete: false };
+  };
+
+  const overallProgress =
+    subModules.length > 0
+      ? Math.round(
+          (subModuleProgress.filter((p) => p.isComplete).length / subModules.length) * 100
+        )
+      : 0;
+
+  if (!module || !selectedSubModule) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-[#6B1B3D] border-t-transparent rounded-full" />
+      </div>
+    );
+  }
+
+  const currentProgress = getProgress(selectedSubModule.id);
+  const canMarkComplete = currentProgress.watchedPercent >= 50;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
@@ -73,206 +151,282 @@ export default function ModulePlayer() {
               <div>
                 <Badge className="bg-blue-100 text-blue-700 border-blue-200 border mb-1">
                   <Eye className="w-3 h-3 mr-1" />
-                  Awareness
+                  {module.phase}
                 </Badge>
-                <h1 className="text-xl font-bold text-[#4A1228]">{moduleData.title}</h1>
+                <h1 className="text-xl font-bold text-[#4A1228]">{module.title}</h1>
               </div>
             </div>
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-500 flex items-center gap-1">
                 <Clock className="w-4 h-4" />
-                {moduleData.duration} min
+                {module.durationMinutes} min
               </span>
-              <Progress value={videoProgress} className="w-32" />
+              <Progress value={overallProgress} className="w-32" />
+              <span className="text-sm font-medium text-[#6B1B3D]">{overallProgress}%</span>
             </div>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto p-6">
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-12 gap-6">
+          {/* Left Sidebar - Sub-modules List */}
+          <div className="lg:col-span-3">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm">Course Content</CardTitle>
+                <Progress value={overallProgress} className="h-1.5" />
+              </CardHeader>
+              <CardContent className="p-0">
+                <ScrollArea className="h-[calc(100vh-300px)]">
+                  <div className="space-y-1 p-4">
+                    {subModules.map((subModule, idx) => {
+                      const progress = getProgress(subModule.id);
+                      return (
+                        <button
+                          key={subModule.id}
+                          onClick={() => setSelectedSubModule(subModule)}
+                          className={`w-full text-left p-3 rounded-lg transition-all ${
+                            selectedSubModule?.id === subModule.id
+                              ? "bg-pink-50 border-2 border-[#6B1B3D]"
+                              : "hover:bg-gray-50 border-2 border-transparent"
+                          }`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div
+                              className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
+                                progress.isComplete
+                                  ? "bg-green-500"
+                                  : "bg-gray-200"
+                              }`}
+                            >
+                              {progress.isComplete ? (
+                                <Check className="w-4 h-4 text-white" />
+                              ) : (
+                                <span className="text-xs text-gray-600">{idx + 1}</span>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm font-medium text-[#4A1228] truncate">
+                                {subModule.title}
+                              </div>
+                              {progress.watchedPercent > 0 && !progress.isComplete && (
+                                <div className="mt-1">
+                                  <Progress
+                                    value={progress.watchedPercent}
+                                    className="h-1"
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-6 space-y-6">
             {/* Video Player */}
             <motion.div
+              key={selectedSubModule.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
               <Card className="overflow-hidden">
                 <div className="aspect-video bg-gray-900">
-                  <iframe
-                    src={moduleData.videoUrl}
-                    className="w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
+                  {selectedSubModule.videoUrl ? (
+                    <iframe
+                      src={selectedSubModule.videoUrl}
+                      className="w-full h-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-white">
+                      No video available
+                    </div>
+                  )}
                 </div>
               </Card>
             </motion.div>
 
-            {/* Tabs */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <TabsList className="bg-white border w-full justify-start">
-                  <TabsTrigger value="lesson" className="flex items-center gap-2">
-                    <BookOpen className="w-4 h-4" />
-                    Lesson
-                  </TabsTrigger>
-                  <TabsTrigger value="assessment" className="flex items-center gap-2">
-                    <ClipboardCheck className="w-4 h-4" />
-                    Assessment
-                  </TabsTrigger>
-                  <TabsTrigger value="tools" className="flex items-center gap-2">
-                    <Wrench className="w-4 h-4" />
-                    Tools
-                  </TabsTrigger>
-                </TabsList>
+            {/* Lesson Content */}
+            <Card>
+              <CardHeader>
+                <CardTitle>{selectedSubModule.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="prose max-w-none">
+                  <p className="text-gray-700 whitespace-pre-wrap">
+                    {selectedSubModule.lessonContent}
+                  </p>
+                </div>
 
-                <TabsContent value="lesson" className="mt-6">
-                  <Card>
-                    <CardContent className="p-8">
-                      <div className="prose prose-lg prose-pink max-w-none">
-                        {moduleData.lessonText.split('\n').map((paragraph, i) => {
-                          if (paragraph.trim().startsWith('**')) {
-                            const text = paragraph.replace(/\*\*/g, '');
-                            return <p key={i} className="font-semibold text-[#4A1228]">{text}</p>;
-                          }
-                          return <p key={i} className="text-gray-700">{paragraph}</p>;
-                        })}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
-                <TabsContent value="assessment" className="mt-6">
-                  <Card>
-                    <CardContent className="p-8">
-                      {!assessmentStarted ? (
-                        <div className="text-center py-12">
-                          <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <ClipboardCheck className="w-8 h-8 text-[#6B1B3D]" />
-                          </div>
-                          <h3 className="text-2xl font-bold text-[#4A1228] mb-4">
-                            Integration Check
-                          </h3>
-                          <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                            This is not a test. It is proof of readiness. Complete the assessment to unlock the next module and tools.
-                          </p>
-                          <Button
-                            onClick={() => setAssessmentStarted(true)}
-                            size="lg"
-                            className="bg-gradient-to-r from-[#6B1B3D] to-[#8B2E4D] text-white"
-                          >
-                            Begin Assessment
-                            <ArrowRight className="ml-2 w-5 h-5" />
-                          </Button>
-                        </div>
-                      ) : (
-                        <div>
-                          <p className="text-gray-600">Assessment interface would appear here...</p>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
-                <TabsContent value="tools" className="mt-6">
-                  <Card>
-                    <CardContent className="p-8">
-                      <h3 className="text-lg font-bold text-[#4A1228] mb-4">
-                        Tools Unlocked by This Module
-                      </h3>
-                      {moduleData.toolUnlocks.map((tool, i) => (
-                        <div
-                          key={i}
-                          className="flex items-center gap-4 bg-green-50 rounded-xl p-4 border border-green-200"
+                {/* Downloads */}
+                {selectedSubModule.downloads && selectedSubModule.downloads.length > 0 && (
+                  <div className="mt-6 pt-6 border-t">
+                    <h3 className="font-medium text-[#4A1228] mb-3 flex items-center gap-2">
+                      <Download className="w-4 h-4" />
+                      Downloads
+                    </h3>
+                    <div className="space-y-2">
+                      {selectedSubModule.downloads.map((download, idx) => (
+                        <a
+                          key={idx}
+                          href={download.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 p-3 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors"
                         >
-                          <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                            <Wrench className="w-6 h-6 text-green-600" />
-                          </div>
-                          <div>
-                            <h4 className="font-medium text-[#4A1228]">{tool}</h4>
-                            <p className="text-sm text-gray-600">
-                              Complete the assessment to unlock
-                            </p>
-                          </div>
-                        </div>
+                          <Download className="w-4 h-4 text-[#6B1B3D]" />
+                          <span className="text-sm font-medium text-[#4A1228]">
+                            {download.name}
+                          </span>
+                        </a>
                       ))}
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-              </Tabs>
-            </motion.div>
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Learning Outcomes</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    {moduleData.outcomes.map((outcome, i) => (
-                      <li key={i} className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-gray-700 text-sm">{outcome}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <Card className="bg-gradient-to-br from-pink-50 to-white border-pink-100">
-                <CardContent className="p-6">
-                  <h3 className="font-bold text-[#4A1228] mb-2">Your Progress</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="text-gray-600">Video</span>
-                        <span className="font-medium">{videoProgress}%</span>
-                      </div>
-                      <Progress value={videoProgress} className="h-2" />
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="text-gray-600">Assessment</span>
-                        <span className="font-medium">Not started</span>
-                      </div>
-                      <Progress value={0} className="h-2" />
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            </motion.div>
+                )}
+              </CardContent>
+            </Card>
 
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
+            {/* Comments Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <MessageCircle className="w-5 h-5" />
+                  Questions & Comments
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {/* Add Comment */}
+                  <div className="flex gap-3">
+                    <Textarea
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      placeholder="Ask a question or leave a comment..."
+                      className="flex-1"
+                    />
+                    <Button
+                      onClick={handleAddComment}
+                      className="bg-[#6B1B3D] hover:bg-[#4A1228]"
+                    >
+                      <Send className="w-4 h-4" />
+                    </Button>
+                  </div>
+
+                  <Separator />
+
+                  {/* Comments List */}
+                  <ScrollArea className="h-[300px]">
+                    <div className="space-y-4">
+                      {comments.map((comment) => (
+                        <div key={comment.id} className="p-4 bg-gray-50 rounded-lg">
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="w-8 h-8 bg-[#6B1B3D] rounded-full flex items-center justify-center text-white text-sm">
+                              {comment.created_by?.[0]}
+                            </div>
+                            <span className="text-sm font-medium text-gray-700">
+                              {comment.created_by}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {new Date(comment.created_date).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <p className="text-gray-700">{comment.comment}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Right Sidebar */}
+          <div className="lg:col-span-3 space-y-6">
+            {/* Learning Outcomes */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Learning Outcomes</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3">
+                  {module.outcomes?.map((outcome, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span className="text-gray-700 text-sm">{outcome}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* Progress Card */}
+            <Card className="bg-gradient-to-br from-pink-50 to-white border-pink-100">
+              <CardContent className="p-6">
+                <h3 className="font-bold text-[#4A1228] mb-4">Your Progress</h3>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span className="text-gray-600">Video</span>
+                      <span className="font-medium">
+                        {currentProgress.watchedPercent}%
+                      </span>
+                    </div>
+                    <Progress value={currentProgress.watchedPercent} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span className="text-gray-600">Assessment</span>
+                      <span className="font-medium">
+                        {selectedSubModule.isAssessment ? "Current" : "Not started"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {canMarkComplete && !currentProgress.isComplete && (
+                  <Button
+                    onClick={handleMarkComplete}
+                    className="w-full mt-4 bg-green-600 hover:bg-green-700"
+                  >
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Mark as Complete
+                  </Button>
+                )}
+
+                {currentProgress.isComplete && (
+                  <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200 text-center">
+                    <CheckCircle className="w-5 h-5 text-green-600 mx-auto mb-1" />
+                    <span className="text-sm font-medium text-green-700">
+                      Completed
+                    </span>
+                  </div>
+                )}
+
+                {!canMarkComplete && (
+                  <div className="mt-4 p-3 bg-orange-50 rounded-lg border border-orange-200">
+                    <p className="text-xs text-orange-800">
+                      Watch at least 50% of the video to mark as complete
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Button
+              className="w-full bg-gradient-to-r from-[#6B1B3D] to-[#8B2E4D] text-white"
+              onClick={() => navigate(createPageUrl("MyPathway"))}
             >
-              <Button
-                className="w-full bg-gradient-to-r from-[#6B1B3D] to-[#8B2E4D] text-white"
-                onClick={() => navigate(createPageUrl("MyPathway"))}
-              >
-                Back to Pathway
-              </Button>
-            </motion.div>
+              Back to Pathway
+            </Button>
           </div>
         </div>
       </div>

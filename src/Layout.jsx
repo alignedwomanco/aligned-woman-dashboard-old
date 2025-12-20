@@ -162,11 +162,19 @@ export default function Layout({ children, currentPageName }) {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link to={createPageUrl("Settings")} className="flex items-center gap-2">
+                      <Link to={createPageUrl("AdminSettings")} className="flex items-center gap-2">
                         <Settings className="w-4 h-4" />
                         Settings
                       </Link>
                     </DropdownMenuItem>
+                    {user?.role && (user.role === "admin" || user.role === "master_admin" || user.role === "moderator" || user.role === "course_creator") && (
+                      <DropdownMenuItem asChild>
+                        <Link to={createPageUrl("ModuleFrameworkBuilder")} className="flex items-center gap-2">
+                          <Settings className="w-4 h-4" />
+                          Module Builder
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout} className="text-red-600">
                       <LogOut className="w-4 h-4 mr-2" />
