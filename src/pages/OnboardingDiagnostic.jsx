@@ -79,16 +79,7 @@ export default function OnboardingDiagnostic() {
   const totalSteps = getDynamicStepCount();
 
   function getDynamicStepCount() {
-    let count = 5; // Foundation questions
-    if (answers.concerns.includes("emotional") || answers.concerns.includes("body")) {
-      count += 3; // More awareness questions
-    } else {
-      count += 2;
-    }
-    if (answers.concerns.includes("business") || answers.concerns.includes("purpose")) {
-      count += 3; // More intention questions
-    }
-    return count;
+    return 6; // 0-5 steps
   }
 
   const updateAnswer = (key, value) => {
@@ -393,8 +384,8 @@ Be concise and specific.`;
                 </div>
               )}
 
-              {/* Additional dynamic steps would go here based on concerns */}
-              {step >= 5 && (
+              {/* Step 5: Additional context */}
+              {step === 5 && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
