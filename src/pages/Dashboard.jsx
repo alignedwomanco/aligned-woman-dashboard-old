@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Play,
   Sparkles,
@@ -19,10 +20,16 @@ import {
   CheckCircle,
   Clock,
   Flame,
+  BookOpen,
+  Heart,
+  Smile,
+  Moon,
+  Edit3,
 } from "lucide-react";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
+  const [snapshotView, setSnapshotView] = useState("daily");
 
   useEffect(() => {
     const loadUser = async () => {
@@ -56,9 +63,16 @@ export default function Dashboard() {
     initialData: [],
   });
 
+  const { data: journalEntries } = useQuery({
+    queryKey: ["journalEntries"],
+    queryFn: () => base44.entities.JournalEntry.list("-created_date", 30),
+    initialData: [],
+  });
+
   const completedModules = moduleProgress?.filter((p) => p.status === "Complete").length || 0;
   const inProgressModule = moduleProgress?.find((p) => p.status === "InProgress");
   const checkInStreak = checkIns?.length || 0;
+  const latestCheckIn = checkIns?.[0];
 
   const phaseProgress = {
     Awareness: 40,
@@ -102,6 +116,91 @@ export default function Dashboard() {
     );
   }
 
+  useEffect(() => {
+    if (diagnosticSession?.snapshotFrequency) {
+      setSnapshotView(diagnosticSession.snapshotFrequency);
+    }
+  }, [diagnosticSession]);
+
+  const getSnapshotContent = () => {
+    const todayDate = new Date().toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    });
+
+    return (
+      <Card className="bg-gradient-to-br from-pink-50 to-white border-pink-100">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-2xl">
+              {snapshotView === "daily" && "Today's Snapshot"}
+              {snapshotView === "weekly" && "This Week's Overview"}
+              {snapshotView === "monthly" && "This Month's Reflection"}
+            </CardTitle>
+            <Badge className="bg-[#6B1B3D] text-white">{todayDate}</Badge>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Focus Areas */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-500 mb-2">Current Focus</h3>
+            <div className="flex flex-wrap gap-2">
+              {diagnosticSession.concerns?.slice(0, 5).map((concern) => (
+                <Badge key={concern} variant="outline" className="bg-white">
+                  {concern}
+                </Badge>
+              ))}
+            </div>
+          </div>
+
+          {/* Emotional State */}
+          {latestCheckIn && (
+            <div>
+              <h3 className="text-sm font-semibold text-gray-500 mb-2">Current State</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-white p-3 rounded-lg">
+                  <div className="text-xs text-gray-500">Energy</div>
+                  <div className="text-2xl font-bold text-[#6B1B3D]">{latestCheckIn.energy}/10</div>
+                </div>
+                <div className="bg-white p-3 rounded-lg">
+                  <div className="text-xs text-gray-500">Capacity</div>
+                  <div className="text-2xl font-bold text-[#6B1B3D]">{latestCheckIn.capacity}/10</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Cycle Insight */}
+          {diagnosticSession.cycleProfile?.cycleStage && (
+            <div>
+              <h3 className="text-sm font-semibold text-gray-500 mb-2">Cycle Phase</h3>
+              <Badge className="bg-purple-100 text-purple-800">
+                {diagnosticSession.cycleProfile.cycleStage}
+              </Badge>
+            </div>
+          )}
+
+          {/* Suggested Action */}
+          <div className="bg-rose-50 p-4 rounded-xl">
+            <h3 className="text-sm font-semibold text-[#6B1B3D] mb-2">Suggested Action</h3>
+            <p className="text-gray-700">
+              Based on your capacity ({diagnosticSession.capacityScore}/10), consider a {diagnosticSession.timeAvailable} session today.
+            </p>
+          </div>
+
+          {/* Progress Note */}
+          <div className="bg-[#6B1B3D] text-white p-4 rounded-xl">
+            <h3 className="text-sm font-semibold mb-2">Phase Progress</h3>
+            <p className="text-sm">
+              You're working through <strong>{diagnosticSession.primaryPhase}</strong> with a focus on {diagnosticSession.secondaryPhase}.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white p-6">
       <div className="max-w-7xl mx-auto">
@@ -114,10 +213,10 @@ export default function Dashboard() {
           <h1 className="text-3xl font-bold text-[#4A1228] mb-2">
             Welcome back{user?.full_name ? `, ${user.full_name.split(" ")[0]}` : ""}
           </h1>
-          <p className="text-gray-600">Your ALIVE Pathway awaits.</p>
+          <p className="text-gray-600">Your personalised ALIVE operating system.</p>
         </motion.div>
 
-        {/* Hero Card */}
+        {/* ALIVE Profile Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -130,14 +229,11 @@ export default function Dashboard() {
               <div className="relative z-10">
                 <div className="flex items-center gap-2 mb-4">
                   <Sparkles className="w-5 h-5 text-rose-300" />
-                  <span className="text-rose-200 font-medium">Your ALIVE Pathway</span>
+                  <span className="text-rose-200 font-medium">Your ALIVE Profile</span>
                 </div>
                 <h2 className="text-2xl font-bold text-white mb-2">
-                  Primary Phase: {diagnosticSession?.primaryPhase || "Awareness"}
+                  Primary: {diagnosticSession?.primaryPhase || "Awareness"}
                 </h2>
-                <p className="text-white/70 mb-6">
-                  Built from your diagnostic. Updated as you evolve.
-                </p>
                 <div className="flex flex-wrap gap-3">
                   <Badge className="bg-white/20 text-white border-0 px-4 py-2">
                     Capacity: {diagnosticSession?.capacityScore || 7}/10
@@ -151,97 +247,158 @@ export default function Dashboard() {
           </Card>
         </motion.div>
 
-        {/* Action Tiles */}
-        <div className="grid md:grid-cols-3 gap-6 mb-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <Link to={createPageUrl("ModulePlayer")}>
-              <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer border-2 border-[#6B1B3D]/10 hover:border-[#6B1B3D]/30">
-                <CardContent className="p-6">
-                  <div className="w-14 h-14 bg-gradient-to-br from-[#6B1B3D] to-[#8B2E4D] rounded-2xl flex items-center justify-center mb-4">
-                    <Play className="w-7 h-7 text-white" />
+        {/* Snapshot Tabs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mb-8"
+        >
+          <Tabs value={snapshotView} onValueChange={setSnapshotView}>
+            <TabsList className="mb-4">
+              <TabsTrigger value="daily">Daily</TabsTrigger>
+              <TabsTrigger value="weekly">Weekly</TabsTrigger>
+              <TabsTrigger value="monthly">Monthly</TabsTrigger>
+            </TabsList>
+            <TabsContent value={snapshotView}>
+              {getSnapshotContent()}
+            </TabsContent>
+          </Tabs>
+        </motion.div>
+
+        {/* Quick Actions & Tools */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mb-10"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold text-[#4A1228]">Tools</h2>
+            <Link to={createPageUrl("ToolsHub")}>
+              <Button variant="ghost" className="text-[#6B1B3D]">
+                See all <ArrowRight className="ml-2 w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
+          <div className="grid md:grid-cols-4 gap-4">
+            <Link to={createPageUrl("Journal")}>
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardContent className="p-5 text-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <Edit3 className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-lg font-bold text-[#4A1228] mb-2">
-                    Continue Module
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4">
-                    {inProgressModule ? "Pick up where you left off" : "Start your first module"}
-                  </p>
-                  <div className="flex items-center text-[#6B1B3D] font-medium text-sm">
-                    Continue <ArrowRight className="ml-2 w-4 h-4" />
-                  </div>
+                  <h3 className="font-semibold text-[#4A1228]">Quick Journal</h3>
                 </CardContent>
               </Card>
             </Link>
-          </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
             <Link to={createPageUrl("CheckIn")}>
-              <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer border-2 border-pink-100 hover:border-pink-200">
-                <CardContent className="p-6">
-                  <div className="w-14 h-14 bg-gradient-to-br from-pink-400 to-rose-500 rounded-2xl flex items-center justify-center mb-4">
-                    <Calendar className="w-7 h-7 text-white" />
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardContent className="p-5 text-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-rose-500 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <Heart className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-lg font-bold text-[#4A1228] mb-2">
-                    Today's Check-In
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4">
-                    Track your energy, mood, and capacity
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <Flame className="w-4 h-4 text-orange-500" />
-                    <span className="text-sm text-gray-600">{checkInStreak} day streak</span>
-                  </div>
+                  <h3 className="font-semibold text-[#4A1228]">Daily Check-In</h3>
                 </CardContent>
               </Card>
             </Link>
-          </motion.div>
 
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardContent className="p-5 text-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <Smile className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="font-semibold text-[#4A1228]">Gratitude</h3>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardContent className="p-5 text-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <Moon className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="font-semibold text-[#4A1228]">Sleep Check</h3>
+              </CardContent>
+            </Card>
+          </div>
+        </motion.div>
+
+        {/* Identity & Values Section */}
+        <div className="grid lg:grid-cols-2 gap-8 mb-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <Link to={createPageUrl("ToolsHub")}>
-              <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer border-2 border-purple-100 hover:border-purple-200">
-                <CardContent className="p-6">
-                  <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl flex items-center justify-center mb-4">
-                    <Wrench className="w-7 h-7 text-white" />
-                  </div>
-                  <h3 className="text-lg font-bold text-[#4A1228] mb-2">
-                    Tool for Today
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4">
-                    Regulation Toolkit
-                  </p>
-                  <div className="flex items-center text-purple-600 font-medium text-sm">
-                    Open Tool <ArrowRight className="ml-2 w-4 h-4" />
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-[#6B1B3D]" />
+                  Identity Evolution
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-red-50 p-4 rounded-xl">
+                  <h3 className="text-sm font-semibold text-red-800 mb-2">Releasing</h3>
+                  <p className="text-gray-700">{diagnosticSession.releasing || "Not set"}</p>
+                </div>
+                <div className="bg-green-50 p-4 rounded-xl">
+                  <h3 className="text-sm font-semibold text-green-800 mb-2">Becoming</h3>
+                  <p className="text-gray-700">{diagnosticSession.becoming || "Not set"}</p>
+                </div>
+              </CardContent>
+            </Card>
           </motion.div>
-        </div>
 
-        {/* Progress Section */}
-        <div className="grid lg:grid-cols-2 gap-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
             <Card>
+              <CardHeader>
+                <CardTitle>Core Values & Boundaries</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-500 mb-2">Core Values</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {diagnosticSession.values?.map((value) => (
+                      <Badge key={value} className="bg-[#6B1B3D] text-white">
+                        {value}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-500 mb-2">Active Boundaries</h3>
+                  <ul className="space-y-1">
+                    {diagnosticSession.boundaries?.filter(b => b).map((boundary, i) => (
+                      <li key={i} className="text-sm text-gray-700 flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-[#6B1B3D] flex-shrink-0 mt-0.5" />
+                        {boundary}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+        {/* Phase Integration & Stats */}
+        <div className="grid lg:grid-cols-2 gap-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <Target className="w-5 h-5 text-[#6B1B3D]" />
-                  Phase Progress
+                  Phase Integration
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-5">
@@ -263,7 +420,7 @@ export default function Dashboard() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.7 }}
           >
             <Card>
               <CardHeader className="pb-2">
@@ -281,7 +438,7 @@ export default function Dashboard() {
                     <div className="text-sm text-gray-600">Modules Complete</div>
                   </div>
                   <div className="bg-purple-50 rounded-2xl p-5 text-center">
-                    <div className="text-3xl font-bold text-purple-700 mb-1">3</div>
+                    <div className="text-3xl font-bold text-purple-700 mb-1">4</div>
                     <div className="text-sm text-gray-600">Tools Unlocked</div>
                   </div>
                   <div className="bg-orange-50 rounded-2xl p-5 text-center">
@@ -291,7 +448,9 @@ export default function Dashboard() {
                     <div className="text-sm text-gray-600">Day Streak</div>
                   </div>
                   <div className="bg-green-50 rounded-2xl p-5 text-center">
-                    <div className="text-3xl font-bold text-green-600 mb-1">12</div>
+                    <div className="text-3xl font-bold text-green-600 mb-1">
+                      {journalEntries.length}
+                    </div>
                     <div className="text-sm text-gray-600">Journal Entries</div>
                   </div>
                 </div>
