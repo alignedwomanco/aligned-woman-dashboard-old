@@ -8,7 +8,17 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Sparkles,
   Briefcase,
@@ -22,12 +32,15 @@ import {
   MoreHorizontal,
   CheckCircle,
   Loader2,
+  Calendar as CalendarIcon,
+  Clock,
+  X,
 } from "lucide-react";
 
 const concernOptions = [
   { id: "business", label: "Business / Career", icon: Briefcase },
   { id: "relationships", label: "Relationships", icon: Heart },
-  { id: "emotional", label: "Emotional / Nervous System", icon: Brain },
+  { id: "emotional", label: "Emotional / Nervous System Support", icon: Brain },
   { id: "body", label: "Body or Hormones", icon: Activity },
   { id: "money", label: "Money", icon: DollarSign },
   { id: "confidence", label: "Confidence or Identity", icon: Shield },
@@ -35,6 +48,7 @@ const concernOptions = [
   { id: "purpose", label: "Purpose or Leadership", icon: Target },
   { id: "visibility", label: "Visibility or Personal Brand", icon: Eye },
   { id: "other", label: "Other", icon: MoreHorizontal },
+  { id: "all", label: "All of the above", icon: CheckCircle },
 ];
 
 const feelingOptions = [
@@ -50,15 +64,18 @@ const feelingOptions = [
   "Fine but disconnected",
 ];
 
-const moodOptions = [
-  { value: "low", emoji: "😔", label: "Low" },
-  { value: "neutral", emoji: "😐", label: "Neutral" },
-  { value: "clarity", emoji: "✨", label: "Clarity" },
-  { value: "uplift", emoji: "✨", label: "Uplift" },
-  { value: "joy", emoji: "🌸", label: "Joy" },
-];
-
 const timeOptions = ["3 minutes", "10 minutes", "20 minutes", "45 minutes", "Varies a lot"];
+
+const coreValueOptions = [
+  "Authenticity",
+  "Growth",
+  "Connection",
+  "Freedom",
+  "Impact",
+  "Balance",
+  "Creativity",
+  "Service",
+];
 
 export default function OnboardingDiagnostic() {
   const navigate = useNavigate();
@@ -67,46 +84,110 @@ export default function OnboardingDiagnostic() {
   const [answers, setAnswers] = useState({
     concerns: [],
     currentFeeling: "",
-    moodCheck: "",
     capacityScore: 5,
     timeAvailable: "",
-    awarenessAnswers: {},
-    liberationAnswers: {},
-    intentionAnswers: {},
-    visionAnswers: {},
+    userContextText: "",
+    cycleProfile: {
+      lastPeriodDate: "",
+      cycleLength: 28,
+      cycleStage: "",
+    },
+    dob: "",
+    tob: "",
+    pob: "",
+    enableDeepPersonalisation: false,
+    values: [],
+    releasing: "",
+    becoming: "",
+    boundaries: [""],
+    snapshotFrequency: "daily",
+    dailyUpdateEnabled: false,
   });
 
-  const totalSteps = getDynamicStepCount();
-
-  function getDynamicStepCount() {
-    return 6; // 0-5 steps
-  }
+  const totalSteps = 11; // 0-10
 
   const updateAnswer = (key, value) => {
     setAnswers((prev) => ({ ...prev, [key]: value }));
   };
 
-  const toggleConcern = (concernId) => {
+  const updateCycleProfile = (key, value) => {
     setAnswers((prev) => ({
       ...prev,
-      concerns: prev.concerns.includes(concernId)
-        ? prev.concerns.filter((c) => c !== concernId)
-        : [...prev.concerns, concernId],
+      cycleProfile: { ...prev.cycleProfile, [key]: value },
+    }));
+  };
+
+  const toggleConcern = (concernId) => {
+    if (concernId === "all") {
+      if (answers.concerns.includes("all")) {
+        setAnswers((prev) => ({ ...prev, concerns: [] }));
+      } else {
+        setAnswers((prev) => ({ ...prev, concerns: ["all"] }));
+      }
+    } else {
+      setAnswers((prev) => ({
+        ...prev,
+        concerns: prev.concerns.includes("all")
+          ? [concernId]
+          : prev.concerns.includes(concernId)
+          ? prev.concerns.filter((c) => c !== concernId)
+          : [...prev.concerns, concernId],
+      }));
+    }
+  };
+
+  const toggleValue = (value) => {
+    setAnswers((prev) => ({
+      ...prev,
+      values: prev.values.includes(value)
+        ? prev.values.filter((v) => v !== value)
+        : [...prev.values, value],
+    }));
+  };
+
+  const addBoundary = () => {
+    setAnswers((prev) => ({
+      ...prev,
+      boundaries: [...prev.boundaries, ""],
+    }));
+  };
+
+  const updateBoundary = (index, value) => {
+    setAnswers((prev) => ({
+      ...prev,
+      boundaries: prev.boundaries.map((b, i) => (i === index ? value : b)),
+    }));
+  };
+
+  const removeBoundary = (index) => {
+    setAnswers((prev) => ({
+      ...prev,
+      boundaries: prev.boundaries.filter((_, i) => i !== index),
     }));
   };
 
   const canProceed = () => {
     switch (step) {
       case 0:
-        return answers.concerns.length > 0;
+        return true; // Welcome screen
       case 1:
-        return answers.currentFeeling !== "";
+        return answers.concerns.length > 0;
       case 2:
-        return answers.moodCheck !== "";
+        return answers.currentFeeling !== "";
       case 3:
-        return true;
-      case 4:
         return answers.timeAvailable !== "";
+      case 4:
+        return true; // Capacity is always set
+      case 5:
+        return true; // Free text is optional
+      case 6:
+        return true; // Cycle info is optional
+      case 7:
+        return !answers.enableDeepPersonalisation || answers.dob !== "";
+      case 8:
+        return answers.values.length > 0;
+      case 9:
+        return true; // Snapshot prefs have defaults
       default:
         return true;
     }
@@ -123,13 +204,13 @@ export default function OnboardingDiagnostic() {
   const handleComplete = async () => {
     setIsProcessing(true);
 
-    // Analyze answers to determine phases and recommendations
     const result = await analyzeAnswers(answers);
 
     await base44.entities.DiagnosticSession.create({
       ...answers,
       primaryPhase: result.primaryPhase,
       secondaryPhase: result.secondaryPhase,
+      capacityScore: answers.capacityScore,
       riskFlags: result.riskFlags,
       condensedTopics: result.condensedTopics,
       recommendedModules: result.recommendedModules,
@@ -147,9 +228,10 @@ export default function OnboardingDiagnostic() {
 
 Concerns: ${data.concerns.join(", ")}
 Current Feeling: ${data.currentFeeling}
-Mood: ${data.moodCheck}
 Capacity: ${data.capacityScore}/10
 Time Available: ${data.timeAvailable}
+Context: ${data.userContextText}
+Values: ${data.values.join(", ")}
 
 Based on these answers, determine:
 1. Primary phase (Awareness, Liberation, Intention, or VisionEmbodiment)
@@ -168,7 +250,6 @@ Be concise and specific.`;
         properties: {
           primaryPhase: { type: "string" },
           secondaryPhase: { type: "string" },
-          capacityScore: { type: "number" },
           riskFlags: { type: "array", items: { type: "string" } },
           condensedTopics: { type: "array", items: { type: "string" } },
           recommendedModules: { type: "array", items: { type: "string" } },
@@ -227,8 +308,25 @@ Be concise and specific.`;
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
             >
-              {/* Step 0: Concerns */}
+              {/* Step 0: Welcome */}
               {step === 0 && (
+                <div className="space-y-6 text-center">
+                  <div className="w-20 h-20 bg-rose-400/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Sparkles className="w-10 h-10 text-rose-300" />
+                  </div>
+                  <h2 className="text-4xl font-bold text-white mb-4">Welcome</h2>
+                  <p className="text-xl text-white/80 mb-4">
+                    This platform adapts to you.
+                  </p>
+                  <p className="text-white/60 max-w-md mx-auto">
+                    Answer a few questions so we can personalise your daily guidance. 
+                    You can skip anything and update later.
+                  </p>
+                </div>
+              )}
+
+              {/* Step 1: Concerns */}
+              {step === 1 && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
@@ -268,8 +366,8 @@ Be concise and specific.`;
                 </div>
               )}
 
-              {/* Step 1: Current Feeling */}
-              {step === 1 && (
+              {/* Step 2: Current Feeling */}
+              {step === 2 && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
@@ -295,38 +393,36 @@ Be concise and specific.`;
                 </div>
               )}
 
-              {/* Step 2: Mood Check */}
-              {step === 2 && (
+              {/* Step 3: Time Available */}
+              {step === 3 && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      <span className="text-rose-300">How are you feeling?</span>
+                      How much <span className="text-rose-300">time</span> do you have?
                     </h2>
-                    <p className="text-white/60">Quick mood check-in</p>
+                    <p className="text-white/60">Per day, realistically</p>
                   </div>
-                  <Card className="bg-white/5 border-white/10 p-8">
-                    <div className="grid grid-cols-5 gap-4">
-                      {moodOptions.map((mood) => (
-                        <button
-                          key={mood.value}
-                          onClick={() => updateAnswer("moodCheck", mood.value)}
-                          className={`flex flex-col items-center gap-3 p-4 rounded-2xl transition-all ${
-                            answers.moodCheck === mood.value
-                              ? "bg-rose-400/20 scale-110"
-                              : "bg-white/5 hover:bg-white/10"
-                          }`}
-                        >
-                          <span className="text-4xl">{mood.emoji}</span>
-                          <span className="text-white/70 text-sm font-medium">{mood.label}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </Card>
+                  <div className="grid grid-cols-2 gap-3">
+                    {timeOptions.map((time) => (
+                      <button
+                        key={time}
+                        onClick={() => updateAnswer("timeAvailable", time)}
+                        className={`p-5 rounded-2xl border-2 transition-all ${
+                          answers.timeAvailable === time
+                            ? "bg-rose-400/10 border-rose-400/50 text-white"
+                            : "bg-white/5 border-white/10 hover:border-white/20 text-white/70"
+                        }`}
+                      >
+                        <Clock className="w-6 h-6 mx-auto mb-2" />
+                        <span className="font-medium text-lg">{time}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
 
-              {/* Step 3: Capacity */}
-              {step === 3 && (
+              {/* Step 4: Capacity */}
+              {step === 4 && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
@@ -357,34 +453,7 @@ Be concise and specific.`;
                 </div>
               )}
 
-              {/* Step 4: Time Available */}
-              {step === 4 && (
-                <div className="space-y-6">
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">
-                      How much <span className="text-rose-300">time</span> do you have?
-                    </h2>
-                    <p className="text-white/60">Per day, realistically</p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    {timeOptions.map((time) => (
-                      <button
-                        key={time}
-                        onClick={() => updateAnswer("timeAvailable", time)}
-                        className={`p-5 rounded-2xl border-2 transition-all ${
-                          answers.timeAvailable === time
-                            ? "bg-rose-400/10 border-rose-400/50 text-white"
-                            : "bg-white/5 border-white/10 hover:border-white/20 text-white/70"
-                        }`}
-                      >
-                        <span className="font-medium text-lg">{time}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Step 5: Additional context */}
+              {/* Step 5: Free Text Context */}
               {step === 5 && (
                 <div className="space-y-6">
                   <div>
@@ -394,28 +463,299 @@ Be concise and specific.`;
                     <p className="text-white/60">Share as much or as little as you'd like</p>
                   </div>
                   <Textarea
-                    value={answers.awarenessAnswers.context || ""}
-                    onChange={(e) =>
-                      updateAnswer("awarenessAnswers", {
-                        ...answers.awarenessAnswers,
-                        context: e.target.value,
-                      })
-                    }
+                    value={answers.userContextText}
+                    onChange={(e) => updateAnswer("userContextText", e.target.value)}
                     placeholder="I've been feeling... I'm working on... I need support with..."
                     className="min-h-[200px] bg-white/5 border-white/10 text-white placeholder:text-white/30 rounded-2xl text-lg p-6"
                   />
-                  {answers.concerns.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {answers.concerns.map((concern) => {
-                        const option = concernOptions.find((c) => c.id === concern);
-                        return (
-                          <Badge key={concern} variant="secondary" className="bg-rose-400/20 text-rose-200">
-                            {option?.label}
-                          </Badge>
-                        );
-                      })}
+                </div>
+              )}
+
+              {/* Step 6: Cycle Profile */}
+              {step === 6 && (
+                <div className="space-y-6">
+                  <div>
+                    <h2 className="text-3xl font-bold text-white mb-2">
+                      <span className="text-rose-300">Cycle</span> / Hormone Support
+                    </h2>
+                    <p className="text-white/60">Optional - helps personalize energy guidance</p>
+                  </div>
+                  <Card className="bg-white/5 border-white/10 p-6 space-y-4">
+                    <div>
+                      <Label className="text-white mb-2 block">Cycle Stage</Label>
+                      <Select
+                        value={answers.cycleProfile.cycleStage}
+                        onValueChange={(value) => updateCycleProfile("cycleStage", value)}
+                      >
+                        <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                          <SelectValue placeholder="Select..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Cycling">Cycling</SelectItem>
+                          <SelectItem value="Perimenopausal">Perimenopausal</SelectItem>
+                          <SelectItem value="Menopausal">Menopausal</SelectItem>
+                          <SelectItem value="Prefer not to say">Prefer not to say</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
-                  )}
+                    {answers.cycleProfile.cycleStage === "Cycling" && (
+                      <>
+                        <div>
+                          <Label className="text-white mb-2 block">Cycle Length (days)</Label>
+                          <Input
+                            type="number"
+                            value={answers.cycleProfile.cycleLength}
+                            onChange={(e) => updateCycleProfile("cycleLength", parseInt(e.target.value))}
+                            className="bg-white/10 border-white/20 text-white"
+                            min="21"
+                            max="45"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-white mb-2 block">Last Period Date (optional)</Label>
+                          <Input
+                            type="date"
+                            value={answers.cycleProfile.lastPeriodDate}
+                            onChange={(e) => updateCycleProfile("lastPeriodDate", e.target.value)}
+                            className="bg-white/10 border-white/20 text-white"
+                          />
+                        </div>
+                      </>
+                    )}
+                  </Card>
+                </div>
+              )}
+
+              {/* Step 7: Birth Details */}
+              {step === 7 && (
+                <div className="space-y-6">
+                  <div>
+                    <h2 className="text-3xl font-bold text-white mb-2">
+                      Want <span className="text-rose-300">deeper personalisation</span>?
+                    </h2>
+                    <p className="text-white/60">Add your birth details for Human Design + Astrology insights. Optional.</p>
+                  </div>
+                  <Card className="bg-white/5 border-white/10 p-6 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-white">Enable Deep Personalisation</Label>
+                      <Switch
+                        checked={answers.enableDeepPersonalisation}
+                        onCheckedChange={(checked) => updateAnswer("enableDeepPersonalisation", checked)}
+                      />
+                    </div>
+                    {answers.enableDeepPersonalisation && (
+                      <>
+                        <div>
+                          <Label className="text-white mb-2 block">Date of Birth *</Label>
+                          <Input
+                            type="date"
+                            value={answers.dob}
+                            onChange={(e) => updateAnswer("dob", e.target.value)}
+                            className="bg-white/10 border-white/20 text-white"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-white mb-2 block">Time of Birth (optional)</Label>
+                          <Input
+                            type="time"
+                            value={answers.tob}
+                            onChange={(e) => updateAnswer("tob", e.target.value)}
+                            className="bg-white/10 border-white/20 text-white"
+                            placeholder="I don't know"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-white mb-2 block">Place of Birth (optional)</Label>
+                          <Input
+                            value={answers.pob}
+                            onChange={(e) => updateAnswer("pob", e.target.value)}
+                            className="bg-white/10 border-white/20 text-white"
+                            placeholder="City, Country"
+                          />
+                        </div>
+                      </>
+                    )}
+                  </Card>
+                </div>
+              )}
+
+              {/* Step 8: Values, Identity, Boundaries */}
+              {step === 8 && (
+                <div className="space-y-6">
+                  <div>
+                    <h2 className="text-3xl font-bold text-white mb-2">
+                      Your <span className="text-rose-300">Values & Identity</span>
+                    </h2>
+                  </div>
+
+                  <div>
+                    <Label className="text-white mb-3 block text-lg">Core Values</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {coreValueOptions.map((value) => (
+                        <button
+                          key={value}
+                          onClick={() => toggleValue(value)}
+                          className={`px-4 py-2 rounded-full border-2 transition-all ${
+                            answers.values.includes(value)
+                              ? "bg-rose-400/20 border-rose-400 text-white"
+                              : "bg-white/5 border-white/20 text-white/70"
+                          }`}
+                        >
+                          {value}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label className="text-white mb-2 block">Releasing (Identity Evolution)</Label>
+                    <Input
+                      value={answers.releasing}
+                      onChange={(e) => updateAnswer("releasing", e.target.value)}
+                      className="bg-white/10 border-white/20 text-white"
+                      placeholder="What are you letting go of?"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-white mb-2 block">Becoming (Identity Evolution)</Label>
+                    <Input
+                      value={answers.becoming}
+                      onChange={(e) => updateAnswer("becoming", e.target.value)}
+                      className="bg-white/10 border-white/20 text-white"
+                      placeholder="Who are you becoming?"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-white mb-2 block">Active Boundaries</Label>
+                    <p className="text-white/60 text-sm mb-3">What boundaries do you need right now?</p>
+                    <div className="space-y-2">
+                      {answers.boundaries.map((boundary, index) => (
+                        <div key={index} className="flex gap-2">
+                          <Input
+                            value={boundary}
+                            onChange={(e) => updateBoundary(index, e.target.value)}
+                            className="bg-white/10 border-white/20 text-white"
+                            placeholder={`Boundary ${index + 1}`}
+                          />
+                          {answers.boundaries.length > 1 && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => removeBoundary(index)}
+                              className="text-white/60 hover:text-white"
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          )}
+                        </div>
+                      ))}
+                      {answers.boundaries.length < 5 && (
+                        <Button
+                          variant="outline"
+                          onClick={addBoundary}
+                          className="w-full bg-white/5 border-white/20 text-white hover:bg-white/10"
+                        >
+                          + Add Boundary
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 9: Snapshot Preferences */}
+              {step === 9 && (
+                <div className="space-y-6">
+                  <div>
+                    <h2 className="text-3xl font-bold text-white mb-2">
+                      Your <span className="text-rose-300">Snapshot</span> Preferences
+                    </h2>
+                    <p className="text-white/60">How often would you like to see your full overview?</p>
+                  </div>
+
+                  <div className="space-y-3">
+                    {[
+                      { value: "daily", label: "Daily snapshot (everything in one view)" },
+                      { value: "weekly", label: "Weekly overview" },
+                      { value: "monthly", label: "Monthly reflection" },
+                      { value: "manual", label: "Only when I check in" },
+                    ].map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => updateAnswer("snapshotFrequency", option.value)}
+                        className={`w-full p-4 rounded-2xl border-2 transition-all text-left ${
+                          answers.snapshotFrequency === option.value
+                            ? "bg-rose-400/10 border-rose-400/50 text-white"
+                            : "bg-white/5 border-white/10 hover:border-white/20 text-white/70"
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <Card className="bg-white/5 border-white/10 p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <Label className="text-white text-base">Daily Update</Label>
+                        <p className="text-white/60 text-sm mt-1">
+                          Send me a daily update that includes everything (my snapshot)
+                        </p>
+                      </div>
+                      <Switch
+                        checked={answers.dailyUpdateEnabled}
+                        onCheckedChange={(checked) => updateAnswer("dailyUpdateEnabled", checked)}
+                      />
+                    </div>
+                  </Card>
+                </div>
+              )}
+
+              {/* Step 10: Summary */}
+              {step === 10 && (
+                <div className="space-y-6">
+                  <div className="text-center">
+                    <div className="w-20 h-20 bg-rose-400/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <CheckCircle className="w-10 h-10 text-rose-300" />
+                    </div>
+                    <h2 className="text-3xl font-bold text-white mb-2">You're All Set!</h2>
+                    <p className="text-white/60">Here's your personalized pathway summary</p>
+                  </div>
+
+                  <Card className="bg-white/5 border-white/10 p-6 space-y-4">
+                    <div>
+                      <Label className="text-rose-300 text-sm">Focus Areas</Label>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {answers.concerns.map((concern) => (
+                          <Badge key={concern} className="bg-white/10 text-white border-0">
+                            {concernOptions.find((c) => c.id === concern)?.label}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label className="text-rose-300 text-sm">Current State</Label>
+                      <p className="text-white mt-1">{answers.currentFeeling}</p>
+                    </div>
+
+                    <div>
+                      <Label className="text-rose-300 text-sm">Daily Time Available</Label>
+                      <p className="text-white mt-1">{answers.timeAvailable}</p>
+                    </div>
+
+                    <div>
+                      <Label className="text-rose-300 text-sm">Capacity Score</Label>
+                      <p className="text-white mt-1">{answers.capacityScore}/10</p>
+                    </div>
+
+                    <div>
+                      <Label className="text-rose-300 text-sm">Snapshot Frequency</Label>
+                      <p className="text-white mt-1 capitalize">{answers.snapshotFrequency}</p>
+                    </div>
+                  </Card>
                 </div>
               )}
             </motion.div>
@@ -423,14 +763,24 @@ Be concise and specific.`;
         </div>
 
         {/* Footer */}
-        <div className="flex-shrink-0 pt-4">
+        <div className="flex-shrink-0 pt-4 flex gap-3">
+          {step > 0 && (
+            <Button
+              onClick={() => setStep(step - 1)}
+              variant="outline"
+              size="lg"
+              className="bg-white/5 border-white/20 text-white hover:bg-white/10"
+            >
+              Back
+            </Button>
+          )}
           <Button
             onClick={handleNext}
             disabled={!canProceed()}
             size="lg"
-            className="w-full bg-rose-500 hover:bg-rose-600 text-white rounded-2xl py-6 text-lg font-semibold disabled:opacity-40"
+            className="flex-1 bg-rose-500 hover:bg-rose-600 text-white rounded-2xl py-6 text-lg font-semibold disabled:opacity-40"
           >
-            {step < totalSteps - 1 ? "Continue →" : "Complete"}
+            {step === 0 ? "Begin" : step < totalSteps - 1 ? "Continue →" : "Go to Dashboard"}
           </Button>
         </div>
       </div>
