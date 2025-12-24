@@ -12,11 +12,11 @@ import ModuleFrameworkBuilder from './pages/ModuleFrameworkBuilder';
 import ModulePlayer from './pages/ModulePlayer';
 import ModulesLibrary from './pages/ModulesLibrary';
 import MyPathway from './pages/MyPathway';
-import OnboardingDiagnostic from './pages/OnboardingDiagnostic';
 import OurWhy from './pages/OurWhy';
 import Progress from './pages/Progress';
 import Settings from './pages/Settings';
 import ToolsHub from './pages/ToolsHub';
+import OnboardingForm from './pages/OnboardingForm';
 import __Layout from './Layout.jsx';
 
 
@@ -35,11 +35,11 @@ export const PAGES = {
     "ModulePlayer": ModulePlayer,
     "ModulesLibrary": ModulesLibrary,
     "MyPathway": MyPathway,
-    "OnboardingDiagnostic": OnboardingDiagnostic,
     "OurWhy": OurWhy,
     "Progress": Progress,
     "Settings": Settings,
     "ToolsHub": ToolsHub,
+    "OnboardingForm": OnboardingForm,
 }
 
 export const pagesConfig = {

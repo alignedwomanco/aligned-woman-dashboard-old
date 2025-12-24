@@ -126,7 +126,7 @@ export default function Dashboard() {
             <p className="text-xl text-gray-600 max-w-xl mx-auto mb-8">
               Let's build your personalised ALIVE Pathway. Complete a short diagnostic so we can prescribe exactly what you need.
             </p>
-            <Link to={createPageUrl("OnboardingDiagnostic")}>
+            <Link to={createPageUrl("OnboardingForm")}>
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-[#6B1B3D] to-[#8B2E4D] hover:from-[#4A1228] hover:to-[#6B1B3D] text-white px-10 py-6 text-lg font-semibold rounded-full shadow-xl"

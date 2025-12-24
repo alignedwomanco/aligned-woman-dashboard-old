@@ -246,7 +246,12 @@ export default function AdminSettings() {
                     Save Changes
                   </Button>
                   <Button
-                    onClick={() => restartOnboardingMutation.mutate()}
+                    onClick={() => {
+                      restartOnboardingMutation.mutate();
+                      setTimeout(() => {
+                        window.location.href = createPageUrl("OnboardingForm");
+                      }, 100);
+                    }}
                     variant="outline"
                     className="border-[#6B1B3D] text-[#6B1B3D] hover:bg-pink-50"
                   >

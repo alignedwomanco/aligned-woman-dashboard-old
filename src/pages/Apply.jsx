@@ -92,7 +92,7 @@ export default function Apply() {
                 </p>
                 
                 <Button
-                  onClick={() => base44.auth.redirectToLogin(createPageUrl("OnboardingDiagnostic"))}
+                  onClick={() => base44.auth.redirectToLogin(createPageUrl("OnboardingForm"))}
                   size="lg"
                   className="w-full bg-gradient-to-r from-[#6B1B3D] to-[#8B2E4D] hover:from-[#4A1228] hover:to-[#6B1B3D] text-white py-6 text-lg font-semibold rounded-xl shadow-lg group"
                 >

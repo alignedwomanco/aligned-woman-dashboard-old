@@ -53,16 +53,16 @@ export default function Layout({ children, currentPageName }) {
           setUser(userData);
           
           // Redirect authenticated users to onboarding if not completed
-          if (!isPublicPage && currentPageName !== "OnboardingDiagnostic") {
+          if (!isPublicPage && currentPageName !== "OnboardingForm") {
             const sessions = await base44.entities.DiagnosticSession.filter(
               { isComplete: true },
               "-created_date",
               1
             );
-            
+
             if (!sessions || sessions.length === 0) {
               // No completed diagnostic, redirect to onboarding
-              window.location.href = createPageUrl("OnboardingDiagnostic");
+              window.location.href = createPageUrl("OnboardingForm");
             }
           }
         }

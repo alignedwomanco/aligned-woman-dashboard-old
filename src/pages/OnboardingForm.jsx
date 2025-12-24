@@ -77,7 +77,7 @@ const coreValueOptions = [
   "Service",
 ];
 
-export default function OnboardingDiagnostic() {
+export default function OnboardingForm() {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -173,9 +173,9 @@ export default function OnboardingDiagnostic() {
       case 1:
         return answers.concerns.length > 0;
       case 2:
-        return answers.currentFeeling !== "";
+        return true; // Auto-advance on single select
       case 3:
-        return answers.timeAvailable !== "";
+        return true; // Auto-advance on single select
       case 4:
         return true; // Capacity is always set
       case 5:
@@ -208,13 +208,7 @@ export default function OnboardingDiagnostic() {
 
     await base44.entities.DiagnosticSession.create({
       ...answers,
-      primaryPhase: result.primaryPhase,
-      secondaryPhase: result.secondaryPhase,
-      capacityScore: answers.capacityScore,
-      riskFlags: result.riskFlags,
-      condensedTopics: result.condensedTopics,
-      recommendedModules: result.recommendedModules,
-      firstWeekPlan: result.firstWeekPlan,
+      ...result,
       isComplete: true,
     });
 
@@ -343,6 +337,21 @@ Be warm, specific, and action-oriented.`;
     return result;
   };
 
+  // Auto-advance for single-select questions
+  const handleSingleSelect = (key, value) => {
+    updateAnswer(key, value);
+    setTimeout(() => {
+      if (step < totalSteps - 1) {
+        setStep(step + 1);
+      }
+    }, 300);
+  };
+
+  // Determine if current step needs manual next button
+  const needsNextButton = () => {
+    return step === 0 || step === 1 || step === 4 || step === 5 || step === 6 || step === 7 || step === 8 || step === 9 || step === 10;
+  };
+
   if (isProcessing) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#4A1228] to-[#2A0A18] flex items-center justify-center p-6">
@@ -360,10 +369,10 @@ Be warm, specific, and action-oriented.`;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#4A1228] to-[#2A0A18] p-4 md:p-6">
-      <div className="max-w-2xl mx-auto h-[calc(100vh-2rem)] flex flex-col">
+    <div className="min-h-screen bg-gradient-to-b from-[#4A1228] to-[#2A0A18] p-4 md:p-6 pb-28">
+      <div className="max-w-2xl mx-auto">
         {/* Header */}
-        <div className="flex-shrink-0 py-6">
+        <div className="py-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <img 
@@ -381,7 +390,7 @@ Be warm, specific, and action-oriented.`;
         </div>
 
         {/* Question Content */}
-        <div className="flex-1 overflow-y-auto pb-6">
+        <div className="min-h-[60vh]">
           <AnimatePresence mode="wait">
             <motion.div
               key={step}
@@ -461,7 +470,7 @@ Be warm, specific, and action-oriented.`;
                     {feelingOptions.map((feeling) => (
                       <button
                         key={feeling}
-                        onClick={() => updateAnswer("currentFeeling", feeling)}
+                        onClick={() => handleSingleSelect("currentFeeling", feeling)}
                         className={`p-4 rounded-2xl border-2 transition-all text-center ${
                           answers.currentFeeling === feeling
                             ? "bg-rose-400/10 border-rose-400/50 text-white"
@@ -488,7 +497,7 @@ Be warm, specific, and action-oriented.`;
                     {timeOptions.map((time) => (
                       <button
                         key={time}
-                        onClick={() => updateAnswer("timeAvailable", time)}
+                        onClick={() => handleSingleSelect("timeAvailable", time)}
                         className={`p-5 rounded-2xl border-2 transition-all ${
                           answers.timeAvailable === time
                             ? "bg-rose-400/10 border-rose-400/50 text-white"
@@ -843,9 +852,11 @@ Be warm, specific, and action-oriented.`;
             </motion.div>
           </AnimatePresence>
         </div>
+      </div>
 
-        {/* Footer */}
-        <div className="flex-shrink-0 pt-4 flex gap-3">
+      {/* Floating Footer */}
+      <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-[#2A0A18] via-[#2A0A18]/95 to-transparent pt-8 pb-6 px-4">
+        <div className="max-w-2xl mx-auto flex gap-3">
           {step > 0 && (
             <Button
               onClick={() => setStep(step - 1)}
@@ -856,14 +867,16 @@ Be warm, specific, and action-oriented.`;
               Back
             </Button>
           )}
-          <Button
-            onClick={handleNext}
-            disabled={!canProceed()}
-            size="lg"
-            className="flex-1 bg-rose-500 hover:bg-rose-600 text-white rounded-2xl py-6 text-lg font-semibold disabled:opacity-40"
-          >
-            {step === 0 ? "Begin" : step < totalSteps - 1 ? "Continue →" : "Go to Dashboard"}
-          </Button>
+          {needsNextButton() && (
+            <Button
+              onClick={handleNext}
+              disabled={!canProceed()}
+              size="lg"
+              className="flex-1 bg-rose-500 hover:bg-rose-600 text-white rounded-2xl py-6 text-lg font-semibold disabled:opacity-40"
+            >
+              {step === 0 ? "Start My Journey" : step < totalSteps - 1 ? "Continue →" : "Go to Dashboard"}
+            </Button>
+          )}
         </div>
       </div>
     </div>
