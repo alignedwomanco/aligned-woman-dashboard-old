@@ -36,6 +36,8 @@ import CourseBuilderContent from "@/components/admin/CourseBuilderContent";
 import AdminMetricsContent from "@/components/admin/AdminMetricsContent";
 import AvatarGenerator from "@/components/admin/AvatarGenerator";
 import { createPageUrl } from "@/utils";
+import BackgroundSelector from "@/components/settings/BackgroundSelector";
+import ThemeSelector from "@/components/settings/ThemeSelector";
 
 export default function AdminSettings() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -166,8 +168,9 @@ export default function AdminSettings() {
         </div>
 
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full max-w-3xl grid-cols-4">
+          <TabsList className="grid w-full max-w-3xl grid-cols-5">
             <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="appearance">Appearance</TabsTrigger>
             {canManageUsers && <TabsTrigger value="users">Users</TabsTrigger>}
             {canAccessModuleBuilder && <TabsTrigger value="courses">Course Builder</TabsTrigger>}
             {canAccessModuleBuilder && <TabsTrigger value="metrics">Metrics</TabsTrigger>}
@@ -278,6 +281,26 @@ export default function AdminSettings() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Appearance Tab */}
+          <TabsContent value="appearance" className="space-y-6">
+            <ThemeSelector
+              currentTheme={currentUser.theme || "burgundy"}
+              onThemeChange={async (themeId) => {
+                await base44.auth.updateMe({ theme: themeId });
+                setCurrentUser({ ...currentUser, theme: themeId });
+                window.location.reload();
+              }}
+            />
+            <BackgroundSelector
+              currentBackground={currentUser.background_image || null}
+              onBackgroundChange={async (backgroundUrl) => {
+                await base44.auth.updateMe({ background_image: backgroundUrl });
+                setCurrentUser({ ...currentUser, background_image: backgroundUrl });
+                window.location.reload();
+              }}
+            />
           </TabsContent>
 
           {/* User Management Tab */}
