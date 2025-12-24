@@ -386,7 +386,7 @@ Be warm, specific, and action-oriented.`;
               </div>
             </div>
           </div>
-          <Progress value={((step + 1) / totalSteps) * 100} className="h-1.5" />
+          <Progress value={((step + 1) / totalSteps) * 100} className="h-1.5 [&>div]:bg-[#FECDD4] [&>div]:bg-[length:20px_20px] [&>div]:bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,.2)_10px,rgba(255,255,255,.2)_20px)]" />
         </div>
 
         {/* Question Content */}
