@@ -152,8 +152,7 @@ export default function AdminSettings() {
     );
   }
 
-  const canManageUsers = currentUser.role === "admin" || currentUser.role === "master_admin";
-  const canAccessModuleBuilder = ["admin", "master_admin", "moderator", "course_creator"].includes(currentUser.role);
+  const canAccessAdmin = ["admin", "master_admin", "moderator", "expert", "course_creator"].includes(currentUser.role);
 
   const adminUsers = allUsers.filter(u => ["admin", "master_admin", "moderator", "course_creator", "expert"].includes(u.role));
   const regularUsers = allUsers.filter(u => u.role === "user");
@@ -162,139 +161,22 @@ export default function AdminSettings() {
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#4A1228] mb-2">Settings</h1>
-          <p className="text-gray-600">Manage your profile and system settings</p>
+          <h1 className="text-3xl font-bold text-[#4A1228] mb-2">Admin Settings</h1>
+          <p className="text-gray-600">Manage system settings and configurations</p>
         </div>
 
-        <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full max-w-3xl grid-cols-4">
-            <TabsTrigger value="profile">Profile</TabsTrigger>
-            <TabsTrigger value="appearance">Appearance</TabsTrigger>
-            {canManageUsers && <TabsTrigger value="users">Users</TabsTrigger>}
-            {canAccessModuleBuilder && <TabsTrigger value="courses">Course Builder</TabsTrigger>}
-            {canAccessModuleBuilder && <TabsTrigger value="metrics">Metrics</TabsTrigger>}
+        <Tabs defaultValue="users" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="users">Users</TabsTrigger>
+            <TabsTrigger value="courses">Course Builder</TabsTrigger>
+            <TabsTrigger value="dashboard">Dashboard Configurator</TabsTrigger>
+            <TabsTrigger value="integrations">Integrations</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="ai-chat">AI Chat Widget</TabsTrigger>
+            <TabsTrigger value="support">Support Room</TabsTrigger>
           </TabsList>
 
-          {/* Profile Tab */}
-          <TabsContent value="profile">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Camera className="w-5 h-5" />
-                  Your Profile
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Profile Picture */}
-                <div className="flex items-center gap-6">
-                  <Avatar className="w-24 h-24">
-                    <AvatarImage src={currentUser.profile_picture} />
-                    <AvatarFallback className="bg-[#6B1B3D] text-white text-2xl">
-                      {currentUser.full_name?.[0] || currentUser.email?.[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Label htmlFor="profile-pic" className="cursor-pointer">
-                        <div className="flex items-center gap-2 px-4 py-2 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors">
-                          <Upload className="w-4 h-4 text-[#6B1B3D]" />
-                          <span className="text-sm font-medium text-[#6B1B3D]">
-                            Change Picture
-                          </span>
-                        </div>
-                        <Input
-                          id="profile-pic"
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={handleProfilePicture}
-                        />
-                      </Label>
-                      <AvatarGenerator 
-                        currentUser={currentUser}
-                        onAvatarGenerated={(url) => setCurrentUser({ ...currentUser, profile_picture: url })}
-                      />
-                    </div>
-                    <p className="text-xs text-gray-500">JPG, PNG, max 5MB</p>
-                  </div>
-                </div>
-
-                {/* Basic Info */}
-                <div className="space-y-4">
-                  <div>
-                    <Label>Full Name</Label>
-                    <Input
-                      value={profileData.full_name || ""}
-                      onChange={(e) =>
-                        setProfileData({ ...profileData, full_name: e.target.value })
-                      }
-                    />
-                  </div>
-
-                  <div>
-                    <Label>Email</Label>
-                    <Input value={currentUser.email} disabled className="bg-gray-50" />
-                  </div>
-
-                  <div>
-                    <Label>Role</Label>
-                    <Badge className={getRoleBadgeColor(currentUser.role)}>
-                      {currentUser.role?.replace("_", " ").toUpperCase()}
-                    </Badge>
-                  </div>
-
-                  <div>
-                    <Label>Bio</Label>
-                    <Textarea
-                      value={profileData.bio || ""}
-                      onChange={(e) =>
-                        setProfileData({ ...profileData, bio: e.target.value })
-                      }
-                      placeholder="Tell us about yourself..."
-                      className="min-h-[100px]"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <Button
-                    onClick={handleProfileUpdate}
-                    className="bg-[#6B1B3D] hover:bg-[#4A1228]"
-                  >
-                    <Save className="w-4 h-4 mr-2" />
-                    Save Changes
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      restartOnboardingMutation.mutate();
-                      setTimeout(() => {
-                        window.location.href = createPageUrl("OnboardingForm");
-                      }, 100);
-                    }}
-                    variant="outline"
-                    className="border-[#6B1B3D] text-[#6B1B3D] hover:bg-pink-50"
-                  >
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                    Restart Onboarding
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Appearance Tab */}
-          <TabsContent value="appearance" className="space-y-6">
-            <BackgroundSelector
-              currentBackground={currentUser.background_image || "#FEF5F9"}
-              onBackgroundChange={(backgroundUrl) => {
-                setCurrentUser({ ...currentUser, background_image: backgroundUrl });
-                window.location.reload();
-              }}
-            />
-          </TabsContent>
-
           {/* User Management Tab */}
-          {canManageUsers && (
             <TabsContent value="users" className="space-y-6">
               {/* Administrators Section */}
               <Card>
@@ -503,18 +385,62 @@ export default function AdminSettings() {
           )}
 
           {/* Course Builder Tab */}
-          {canAccessModuleBuilder && (
-            <TabsContent value="courses">
-              <CourseBuilderContent />
-            </TabsContent>
-          )}
+          <TabsContent value="courses">
+            <CourseBuilderContent />
+          </TabsContent>
 
-          {/* Metrics Tab */}
-          {canAccessModuleBuilder && (
-            <TabsContent value="metrics">
-              <AdminMetricsContent />
-            </TabsContent>
-          )}
+          {/* Dashboard Configurator Tab */}
+          <TabsContent value="dashboard">
+            <Card>
+              <CardHeader>
+                <CardTitle>Dashboard Configurator</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">Dashboard layout and tools configuration coming soon...</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Integrations Tab */}
+          <TabsContent value="integrations">
+            <Card>
+              <CardHeader>
+                <CardTitle>Integrations</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">External integrations management coming soon...</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Analytics Tab */}
+          <TabsContent value="analytics">
+            <AdminMetricsContent />
+          </TabsContent>
+
+          {/* AI Chat Widget Tab */}
+          <TabsContent value="ai-chat">
+            <Card>
+              <CardHeader>
+                <CardTitle>AI Chat Widget Settings</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">LaurAI chat widget configuration coming soon...</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Support Room Tab */}
+          <TabsContent value="support">
+            <Card>
+              <CardHeader>
+                <CardTitle>Support Room</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">User support tickets and requests coming soon...</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
     </div>

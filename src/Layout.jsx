@@ -203,11 +203,19 @@ export default function Layout({ children, currentPageName }) {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link to={createPageUrl("AdminSettings")} className="flex items-center gap-2">
-                        <Settings className="w-4 h-4" />
-                        Settings
+                      <Link to={createPageUrl("ProfileSettings")} className="flex items-center gap-2">
+                        <User className="w-4 h-4" />
+                        Profile Settings
                       </Link>
                     </DropdownMenuItem>
+                    {user && ["admin", "master_admin", "moderator", "expert", "course_creator"].includes(user.role) && (
+                      <DropdownMenuItem asChild>
+                        <Link to={createPageUrl("AdminSettings")} className="flex items-center gap-2">
+                          <Settings className="w-4 h-4" />
+                          Admin Settings
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout} className="text-red-600">
                       <LogOut className="w-4 h-4 mr-2" />
@@ -246,10 +254,10 @@ export default function Layout({ children, currentPageName }) {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "tween", duration: 0.3 }}
-              className="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-white z-[9999] shadow-2xl overflow-y-auto"
+              className="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-white z-[9999] shadow-2xl flex flex-col"
             >
               {/* Sidebar Header */}
-              <div className="p-6 border-b flex items-center justify-between">
+              <div className="p-6 border-b flex items-center justify-between flex-shrink-0">
                 <img 
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6945438e6f6e0e1d874ba569/fa1001979_AWLogo_.png"
                   alt="The Aligned Woman"
@@ -263,25 +271,27 @@ export default function Layout({ children, currentPageName }) {
                 </button>
               </div>
 
-              {/* Navigation Links */}
-              <div className="p-6 space-y-2">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={createPageUrl(item.name)}
-                    className={`block px-4 py-3 rounded-xl text-base font-medium transition-colors ${
-                      currentPageName === item.name
-                        ? "bg-pink-50 text-[#6C1A3E]"
-                        : "text-gray-700 hover:bg-pink-50"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+              {/* Navigation Links - Scrollable */}
+              <div className="flex-1 overflow-y-auto sidebar-scroll">
+                <div className="p-6 space-y-2">
+                  {navItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      to={createPageUrl(item.name)}
+                      className={`block px-4 py-3 rounded-xl text-base font-medium transition-colors ${
+                        currentPageName === item.name
+                          ? "bg-pink-50 text-[#6C1A3E]"
+                          : "text-gray-700 hover:bg-pink-50"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
               </div>
 
               {/* Bottom Action */}
-              <div className="p-6 border-t mt-auto">
+              <div className="p-6 border-t flex-shrink-0">
                 {isAuthenticated ? (
                   <Button
                     onClick={handleLogout}
