@@ -34,6 +34,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ModuleBuilderContent from "@/components/admin/ModuleBuilderContent";
 import AdminMetricsContent from "@/components/admin/AdminMetricsContent";
+import AvatarGenerator from "@/components/admin/AvatarGenerator";
 import { createPageUrl } from "@/utils";
 
 export default function AdminSettings() {
@@ -183,22 +184,28 @@ export default function AdminSettings() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <Label htmlFor="profile-pic" className="cursor-pointer">
-                      <div className="flex items-center gap-2 px-4 py-2 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors">
-                        <Upload className="w-4 h-4 text-[#6B1B3D]" />
-                        <span className="text-sm font-medium text-[#6B1B3D]">
-                          Change Picture
-                        </span>
-                      </div>
-                      <Input
-                        id="profile-pic"
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleProfilePicture}
+                    <div className="flex items-center gap-2 mb-2">
+                      <Label htmlFor="profile-pic" className="cursor-pointer">
+                        <div className="flex items-center gap-2 px-4 py-2 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors">
+                          <Upload className="w-4 h-4 text-[#6B1B3D]" />
+                          <span className="text-sm font-medium text-[#6B1B3D]">
+                            Change Picture
+                          </span>
+                        </div>
+                        <Input
+                          id="profile-pic"
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleProfilePicture}
+                        />
+                      </Label>
+                      <AvatarGenerator 
+                        currentUser={currentUser}
+                        onAvatarGenerated={(url) => setCurrentUser({ ...currentUser, profile_picture: url })}
                       />
-                    </Label>
-                    <p className="text-xs text-gray-500 mt-2">JPG, PNG, max 5MB</p>
+                    </div>
+                    <p className="text-xs text-gray-500">JPG, PNG, max 5MB</p>
                   </div>
                 </div>
 
