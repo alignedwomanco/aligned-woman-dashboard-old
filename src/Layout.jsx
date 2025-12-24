@@ -12,6 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { motion, AnimatePresence } from "framer-motion";
+import { Sparkles } from "lucide-react";
+import LaurAIChatWidget from "../components/LaurAIChatWidget";
 
 const publicPages = [
   { name: "Landing", label: "Home" },
@@ -24,13 +26,10 @@ const publicPages = [
 
 const appPages = [
   { name: "Dashboard", label: "Dashboard" },
-  { name: "DailyCheckIn", label: "Daily Check-In" },
-  { name: "MyPathway", label: "My Pathway" },
-  { name: "ModulesLibrary", label: "Modules" },
+  { name: "ModulesLibrary", label: "Courses" },
+  { name: "Experts", label: "Expert Library" },
   { name: "ToolsHub", label: "Tools" },
-  { name: "Journal", label: "Journal" },
-  { name: "MyMetrics", label: "My Progress" },
-  { name: "Blueprint", label: "Blueprint" },
+  { name: "Contact", label: "Support" },
 ];
 
 export default function Layout({ children, currentPageName }) {
@@ -156,13 +155,11 @@ export default function Layout({ children, currentPageName }) {
 
             {/* Right side actions */}
             <div className="flex items-center gap-3">
-              {/* Dashboard Button - Only for authenticated users */}
-              {isAuthenticated && !isPublicPage && (
+              {/* Dashboard Button - Only when NOT on dashboard */}
+              {isAuthenticated && currentPageName !== "Dashboard" && (
                 <Link to={createPageUrl("Dashboard")}>
-                  <Button
-                    variant="ghost"
-                    className={`${scrolled || !isPublicPage ? "text-burgundy hover:bg-pink-50" : "text-white hover:bg-white/10"}`}
-                  >
+                  <Button className="bg-[#6B1B3D] hover:bg-[#4A1228] text-white rounded-xl px-4 py-2 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4" />
                     Dashboard
                   </Button>
                 </Link>
@@ -240,16 +237,16 @@ export default function Layout({ children, currentPageName }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/50 z-50"
+              className="fixed inset-0 bg-black/50 z-[60]"
             />
-            
+
             {/* Sidebar */}
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "tween", duration: 0.3 }}
-              className="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-white z-50 shadow-2xl overflow-y-auto"
+              className="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-white z-[70] shadow-2xl overflow-y-auto"
             >
               {/* Sidebar Header */}
               <div className="p-6 border-b flex items-center justify-between">
@@ -294,7 +291,7 @@ export default function Layout({ children, currentPageName }) {
                   </Button>
                 ) : (
                   <Button
-                    onClick={() => base44.auth.redirectToLogin(createPageUrl("OnboardingDiagnostic"))}
+                    onClick={() => base44.auth.redirectToLogin(createPageUrl("Dashboard"))}
                     className="w-full bg-[#6C1A3E] hover:bg-[#4A1228] text-white rounded-full py-6"
                   >
                     Apply Now
@@ -311,6 +308,9 @@ export default function Layout({ children, currentPageName }) {
       <main className={isPublicPage ? "" : "pt-20"}>
         {children}
       </main>
+
+      {/* LaurAI Chat Widget */}
+      {isAuthenticated && <LaurAIChatWidget />}
 
       {/* Footer - only on public pages */}
       {isPublicPage && (
