@@ -365,7 +365,6 @@ export default function Layout({ children, currentPageName }) {
                   </Button>
                 </div>
               )}
-              </div>
             </motion.div>
           </>
         )}
