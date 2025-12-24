@@ -263,7 +263,7 @@ export default function Layout({ children, currentPageName }) {
               className="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-white z-[9999] shadow-2xl flex flex-col"
             >
               {/* Sidebar Header */}
-              <div className="p-6 border-b flex items-center justify-between flex-shrink-0">
+              <div className="p-6 border-b flex items-center justify-between flex-shrink-0 bg-white">
                 <img 
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6945438e6f6e0e1d874ba569/fa1001979_AWLogo_.png"
                   alt="The Aligned Woman"
@@ -271,24 +271,24 @@ export default function Layout({ children, currentPageName }) {
                 />
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 text-[#6C1A3E] hover:bg-pink-50 rounded-lg transition-colors"
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                 >
-                  <X className="w-6 h-6" />
+                  <X className="w-6 h-6 text-gray-700" />
                 </button>
               </div>
 
               {/* Navigation Links - Scrollable */}
-              <div className="flex-1 overflow-y-auto sidebar-scroll">
-                <div className="p-6 space-y-2">
+              <div className="flex-1 overflow-y-auto sidebar-scroll bg-white">
+                <div className="p-6 space-y-1">
                   {navItems.map((item) => (
                     <Link
                       key={item.name}
                       to={createPageUrl(item.name)}
                       onClick={() => setMobileMenuOpen(false)}
-                      className={`block px-4 py-3 rounded-xl text-base font-medium transition-colors ${
+                      className={`block px-4 py-3 rounded-lg text-base font-medium transition-colors ${
                         currentPageName === item.name
                           ? "bg-pink-50 text-[#6C1A3E]"
-                          : "text-gray-700 hover:bg-pink-50"
+                          : "text-gray-700 hover:bg-gray-50"
                       }`}
                     >
                       {item.label}
@@ -298,20 +298,26 @@ export default function Layout({ children, currentPageName }) {
               </div>
 
               {/* Bottom Action */}
-              <div className="p-6 border-t flex-shrink-0">
+              <div className="p-6 border-t flex-shrink-0 bg-white">
                 {isAuthenticated ? (
                   <Button
-                    onClick={handleLogout}
-                    className="w-full bg-[#6C1A3E] hover:bg-[#4A1228] text-white rounded-full py-6"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleLogout();
+                    }}
+                    className="w-full bg-[#6C1A3E] hover:bg-[#4A1228] text-white rounded-full py-4 text-base font-medium"
                   >
                     Sign Out
                   </Button>
                 ) : (
                   <Button
-                    onClick={() => base44.auth.redirectToLogin(createPageUrl("Dashboard"))}
-                    className="w-full bg-[#6C1A3E] hover:bg-[#4A1228] text-white rounded-full py-6"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      base44.auth.redirectToLogin(createPageUrl("Dashboard"));
+                    }}
+                    className="w-full bg-[#6C1A3E] hover:bg-[#4A1228] text-white rounded-full py-4 text-base font-medium"
                   >
-                    Apply Now
+                    Sign Out
                   </Button>
                 )}
               </div>
