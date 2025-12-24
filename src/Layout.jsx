@@ -29,8 +29,8 @@ const appPages = [
   { name: "ToolsHub", label: "Tools" },
   { name: "Journal", label: "Journal" },
   { name: "CheckIn", label: "Check-In" },
+  { name: "MyMetrics", label: "My Progress" },
   { name: "Blueprint", label: "Blueprint" },
-  { name: "Progress", label: "Progress" },
 ];
 
 export default function Layout({ children, currentPageName }) {

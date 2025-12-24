@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ModuleBuilderContent from "@/components/admin/ModuleBuilderContent";
+import AdminMetricsContent from "@/components/admin/AdminMetricsContent";
 import { createPageUrl } from "@/utils";
 
 export default function AdminSettings() {
@@ -156,10 +157,11 @@ export default function AdminSettings() {
         </div>
 
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full max-w-2xl grid-cols-3">
+          <TabsList className="grid w-full max-w-3xl grid-cols-4">
             <TabsTrigger value="profile">Profile</TabsTrigger>
-            {canManageUsers && <TabsTrigger value="users">User Management</TabsTrigger>}
-            {canAccessModuleBuilder && <TabsTrigger value="modules">Module Builder</TabsTrigger>}
+            {canManageUsers && <TabsTrigger value="users">Users</TabsTrigger>}
+            {canAccessModuleBuilder && <TabsTrigger value="modules">Modules</TabsTrigger>}
+            {canAccessModuleBuilder && <TabsTrigger value="metrics">Metrics</TabsTrigger>}
           </TabsList>
 
           {/* Profile Tab */}
@@ -476,6 +478,13 @@ export default function AdminSettings() {
           {canAccessModuleBuilder && (
             <TabsContent value="modules">
               <ModuleBuilderContent />
+            </TabsContent>
+          )}
+
+          {/* Metrics Tab */}
+          {canAccessModuleBuilder && (
+            <TabsContent value="metrics">
+              <AdminMetricsContent />
             </TabsContent>
           )}
         </Tabs>

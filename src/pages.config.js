@@ -17,6 +17,7 @@ import Progress from './pages/Progress';
 import Settings from './pages/Settings';
 import ToolsHub from './pages/ToolsHub';
 import OnboardingForm from './pages/OnboardingForm';
+import MyMetrics from './pages/MyMetrics';
 import __Layout from './Layout.jsx';
 
 
@@ -40,6 +41,7 @@ export const PAGES = {
     "Settings": Settings,
     "ToolsHub": ToolsHub,
     "OnboardingForm": OnboardingForm,
+    "MyMetrics": MyMetrics,
 }
 
 export const pagesConfig = {

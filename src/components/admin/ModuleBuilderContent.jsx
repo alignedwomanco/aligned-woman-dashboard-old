@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +22,10 @@ import {
   Video,
   Download,
   GripVertical,
+  ChevronUp,
+  ChevronDown,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -34,6 +39,8 @@ export default function ModuleBuilderContent() {
     summary: "",
     outcomes: [],
     durationMinutes: 0,
+    order: 1,
+    isEnabled: true,
   });
   const [subModuleForm, setSubModuleForm] = useState({
     title: "",
@@ -48,7 +55,7 @@ export default function ModuleBuilderContent() {
 
   const { data: modules = [] } = useQuery({
     queryKey: ["modules"],
-    queryFn: () => base44.entities.Module.list("-order"),
+    queryFn: () => base44.entities.Module.list("order"),
   });
 
   const { data: subModules = [] } = useQuery({
@@ -63,7 +70,22 @@ export default function ModuleBuilderContent() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["modules"] });
       setIsCreatingModule(false);
-      setModuleForm({ title: "", phase: "Awareness", summary: "", outcomes: [], durationMinutes: 0 });
+      setModuleForm({ title: "", phase: "Awareness", summary: "", outcomes: [], durationMinutes: 0, order: 1, isEnabled: true });
+    },
+  });
+
+  const updateModuleMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Module.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["modules"] });
+    },
+  });
+
+  const deleteModuleMutation = useMutation({
+    mutationFn: (id) => base44.entities.Module.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["modules"] });
+      setSelectedModule(null);
     },
   });
 
@@ -94,6 +116,38 @@ export default function ModuleBuilderContent() {
     createModuleMutation.mutate(moduleForm);
   };
 
+  const handleToggleModule = (module) => {
+    updateModuleMutation.mutate({
+      id: module.id,
+      data: { isEnabled: !module.isEnabled },
+    });
+  };
+
+  const handleMoveModule = (module, direction) => {
+    const currentIndex = modules.findIndex((m) => m.id === module.id);
+    const swapIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+
+    if (swapIndex < 0 || swapIndex >= modules.length) return;
+
+    const swapModule = modules[swapIndex];
+
+    updateModuleMutation.mutate({
+      id: module.id,
+      data: { order: swapModule.order },
+    });
+
+    updateModuleMutation.mutate({
+      id: swapModule.id,
+      data: { order: module.order },
+    });
+  };
+
+  const handleDeleteModule = (module) => {
+    if (window.confirm(`Delete "${module.title}"? This cannot be undone.`)) {
+      deleteModuleMutation.mutate(module.id);
+    }
+  };
+
   const handleCreateSubModule = () => {
     createSubModuleMutation.mutate({
       ...subModuleForm,
@@ -122,7 +176,7 @@ export default function ModuleBuilderContent() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-[#4A1228]">Module Framework Builder</h2>
+          <h2 className="text-2xl font-bold text-[#4A1228]">Module Builder</h2>
           <p className="text-gray-600">Create and manage learning modules</p>
         </div>
         <Dialog open={isCreatingModule} onOpenChange={setIsCreatingModule}>
@@ -176,6 +230,14 @@ export default function ModuleBuilderContent() {
                   }
                 />
               </div>
+              <div>
+                <Label>Order</Label>
+                <Input
+                  type="number"
+                  value={moduleForm.order}
+                  onChange={(e) => setModuleForm({ ...moduleForm, order: parseInt(e.target.value) })}
+                />
+              </div>
               <Button onClick={handleCreateModule} className="w-full bg-[#6B1B3D]">
                 Create Module
               </Button>
@@ -188,24 +250,78 @@ export default function ModuleBuilderContent() {
         {/* Modules List */}
         <Card className="lg:col-span-1">
           <CardHeader>
-            <CardTitle className="text-lg">Modules</CardTitle>
+            <CardTitle className="text-lg">Modules ({modules.length})</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            {modules.map((module) => (
-              <button
+            {modules.map((module, index) => (
+              <div
                 key={module.id}
-                onClick={() => setSelectedModule(module)}
-                className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                className={`p-4 rounded-lg border-2 transition-all ${
                   selectedModule?.id === module.id
                     ? "border-[#6B1B3D] bg-pink-50"
-                    : "border-gray-200 hover:border-pink-200"
+                    : "border-gray-200"
                 }`}
               >
-                <div className="font-medium text-[#4A1228]">{module.title}</div>
-                <Badge variant="outline" className="mt-2">
-                  {module.phase}
-                </Badge>
-              </button>
+                <div className="flex items-start gap-2">
+                  <button
+                    onClick={() => setSelectedModule(module)}
+                    className="flex-1 text-left"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-[#4A1228]">{module.title}</span>
+                      {!module.isEnabled && (
+                        <Badge variant="outline" className="text-xs text-gray-500">
+                          Hidden
+                        </Badge>
+                      )}
+                    </div>
+                    <Badge variant="outline" className="mt-2">
+                      {module.phase}
+                    </Badge>
+                  </button>
+                  
+                  <div className="flex flex-col gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7"
+                      onClick={() => handleToggleModule(module)}
+                    >
+                      {module.isEnabled ? (
+                        <Eye className="w-4 h-4 text-green-600" />
+                      ) : (
+                        <EyeOff className="w-4 h-4 text-gray-400" />
+                      )}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7"
+                      onClick={() => handleMoveModule(module, "up")}
+                      disabled={index === 0}
+                    >
+                      <ChevronUp className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7"
+                      onClick={() => handleMoveModule(module, "down")}
+                      disabled={index === modules.length - 1}
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7"
+                      onClick={() => handleDeleteModule(module)}
+                    >
+                      <Trash2 className="w-4 h-4 text-red-500" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
             ))}
           </CardContent>
         </Card>
