@@ -173,15 +173,15 @@ export default function OnboardingForm() {
       case 1:
         return answers.concerns.length > 0;
       case 2:
-        return true; // Auto-advance on single select
+        return answers.currentFeeling !== ""; // Required
       case 3:
-        return true; // Auto-advance on single select
+        return answers.timeAvailable !== ""; // Required
       case 4:
         return true; // Capacity is always set
       case 5:
-        return true; // Free text is optional
+        return answers.userContextText.trim() !== ""; // Required
       case 6:
-        return true; // Cycle info is optional
+        return answers.cycleProfile.cycleStage !== ""; // Required
       case 7:
         return !answers.enableDeepPersonalisation || answers.dob !== "";
       case 8:
@@ -462,9 +462,9 @@ Be warm, specific, and action-oriented.`;
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      What feels <span className="text-rose-300">hardest</span> this week?
+                      What feels <span className="text-rose-300">hardest</span> at the moment?
                     </h2>
-                    <p className="text-white/60">Choose what resonates most</p>
+                    <p className="text-white/60">Or in the last month</p>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     {feelingOptions.map((feeling) => (
@@ -519,7 +519,7 @@ Be warm, specific, and action-oriented.`;
                     <h2 className="text-3xl font-bold text-white mb-2">
                       Capacity <span className="text-rose-300">right now</span>
                     </h2>
-                    <p className="text-white/60">How resourced do you feel today?</p>
+                    <p className="text-white/60">How resourced do you feel at the moment (i.e. last 30 days)?</p>
                   </div>
                   <Card className="bg-white/5 border-white/10 p-8">
                     <div className="space-y-6">
@@ -551,12 +551,18 @@ Be warm, specific, and action-oriented.`;
                     <h2 className="text-3xl font-bold text-white mb-2">
                       Tell us what's <span className="text-rose-300">happening</span> for you
                     </h2>
-                    <p className="text-white/60">Share as much or as little as you'd like</p>
+                    <p className="text-white/60">
+                      {answers.concerns.length > 0 
+                        ? `Tell us more about ${answers.concerns.slice(0, 2).map(c => concernOptions.find(opt => opt.id === c)?.label.toLowerCase()).join(" and ")}`
+                        : "Share as much or as little as you'd like"}
+                    </p>
                   </div>
                   <Textarea
                     value={answers.userContextText}
                     onChange={(e) => updateAnswer("userContextText", e.target.value)}
-                    placeholder="I've been feeling... I'm working on... I need support with..."
+                    placeholder={answers.concerns.length > 0 
+                      ? `What's happening with ${answers.concerns.slice(0, 2).map(c => concernOptions.find(opt => opt.id === c)?.label.toLowerCase()).join(" and ")}...`
+                      : "I've been feeling... I'm working on... I need support with..."}
                     className="min-h-[200px] bg-white/5 border-white/10 text-white placeholder:text-white/30 rounded-2xl text-lg p-6"
                   />
                 </div>
@@ -854,15 +860,15 @@ Be warm, specific, and action-oriented.`;
         </div>
       </div>
 
-      {/* Floating Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-[#2A0A18] via-[#2A0A18]/95 to-transparent pt-8 pb-6 px-4">
+      {/* Sticky Footer */}
+      <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-[#2A0A18] via-[#2A0A18] to-[#2A0A18]/90 pt-6 pb-safe pb-6 px-4 border-t border-white/5">
         <div className="max-w-2xl mx-auto flex gap-3">
           {step > 0 && (
             <Button
               onClick={() => setStep(step - 1)}
               variant="outline"
               size="lg"
-              className="bg-white/5 border-white/20 text-white hover:bg-white/10"
+              className="bg-white/5 border-white/20 text-white hover:bg-white/10 hover:text-white hover:shadow-lg"
             >
               Back
             </Button>
@@ -874,7 +880,7 @@ Be warm, specific, and action-oriented.`;
               size="lg"
               className="flex-1 bg-rose-500 hover:bg-rose-600 text-white rounded-2xl py-6 text-lg font-semibold disabled:opacity-40"
             >
-              {step === 0 ? "Start My Journey" : step < totalSteps - 1 ? "Continue →" : "Go to Dashboard"}
+              {step === 0 ? "Start My Journey" : step < totalSteps - 1 ? "Next →" : "Go to Dashboard"}
             </Button>
           )}
         </div>

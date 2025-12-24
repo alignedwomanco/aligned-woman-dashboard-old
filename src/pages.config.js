@@ -11,13 +11,13 @@ import Landing from './pages/Landing';
 import ModuleFrameworkBuilder from './pages/ModuleFrameworkBuilder';
 import ModulePlayer from './pages/ModulePlayer';
 import ModulesLibrary from './pages/ModulesLibrary';
+import MyMetrics from './pages/MyMetrics';
 import MyPathway from './pages/MyPathway';
+import OnboardingForm from './pages/OnboardingForm';
 import OurWhy from './pages/OurWhy';
 import Progress from './pages/Progress';
 import Settings from './pages/Settings';
 import ToolsHub from './pages/ToolsHub';
-import OnboardingForm from './pages/OnboardingForm';
-import MyMetrics from './pages/MyMetrics';
 import DailyCheckIn from './pages/DailyCheckIn';
 import __Layout from './Layout.jsx';
 
@@ -36,13 +36,13 @@ export const PAGES = {
     "ModuleFrameworkBuilder": ModuleFrameworkBuilder,
     "ModulePlayer": ModulePlayer,
     "ModulesLibrary": ModulesLibrary,
+    "MyMetrics": MyMetrics,
     "MyPathway": MyPathway,
+    "OnboardingForm": OnboardingForm,
     "OurWhy": OurWhy,
     "Progress": Progress,
     "Settings": Settings,
     "ToolsHub": ToolsHub,
-    "OnboardingForm": OnboardingForm,
-    "MyMetrics": MyMetrics,
     "DailyCheckIn": DailyCheckIn,
 }
 
