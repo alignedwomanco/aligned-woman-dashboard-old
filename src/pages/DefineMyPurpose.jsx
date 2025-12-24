@@ -19,19 +19,9 @@ import {
 
 const FIRST_QUESTION = {
   questionNumber: 1,
-  questionText: "What feels like your biggest struggle right now?",
-  format: "multi_select",
-  options: [
-    "Business or Career",
-    "Money",
-    "Relationships",
-    "Self worth or confidence",
-    "Burnout or overwhelm",
-    "Health, hormones, or body",
-    "Boundaries and communication",
-    "Purpose and identity",
-    "Visibility and leadership",
-  ],
+  questionText: "What is the biggest belief you currently hold about yourself that might be limiting your potential?",
+  format: "short_text",
+  helperText: "Take your time. Be honest with yourself.",
   storeAs: "dyp_q1",
 };
 
@@ -132,6 +122,7 @@ export default function DefineMyPurpose() {
       console.error("Error loading question:", error);
     } finally {
       setIsLoading(false);
+      setCurrentAnswer("");
     }
   };
 
@@ -159,7 +150,7 @@ export default function DefineMyPurpose() {
         await loadNextQuestion(currentStep + 1, session.id);
       }
 
-      setCurrentAnswer(currentStep + 1 > 9 || currentStep === 9 ? "" : []);
+      setCurrentAnswer("");
     } catch (error) {
       console.error("Error submitting answer:", error);
     } finally {
@@ -204,12 +195,6 @@ export default function DefineMyPurpose() {
   };
 
   const canProceed = () => {
-    if (currentQuestion.format === "multi_select") {
-      return currentAnswer.length > 0;
-    }
-    if (currentQuestion.format === "scale") {
-      return true;
-    }
     return currentAnswer && currentAnswer.toString().trim() !== "";
   };
 
@@ -377,90 +362,8 @@ export default function DefineMyPurpose() {
                 )}
               </div>
 
-              {/* Single Choice */}
-              {currentQuestion.format === "single_choice" && (
-                <div className="grid grid-cols-2 gap-3">
-                  {currentQuestion.options?.map((option) => (
-                    <button
-                      key={option}
-                      onClick={() => setCurrentAnswer(option)}
-                      className={`p-4 rounded-2xl border-2 transition-all ${
-                        currentAnswer === option
-                          ? "bg-[#FECDD4]/10 border-[#FECDD4]/50 text-white"
-                          : "bg-white/5 border-white/10 hover:border-white/20 text-white/70"
-                      }`}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {/* Multi Select */}
-              {currentQuestion.format === "multi_select" && (
-                <div className="space-y-3">
-                  {currentQuestion.options?.map((option) => {
-                    const isSelected = currentAnswer.includes(option);
-                    return (
-                      <button
-                        key={option}
-                        onClick={() => {
-                          setCurrentAnswer((prev) =>
-                            isSelected
-                              ? prev.filter((o) => o !== option)
-                              : [...prev, option]
-                          );
-                        }}
-                        className={`w-full flex items-center gap-4 p-4 rounded-2xl border-2 transition-all ${
-                          isSelected
-                            ? "bg-[#FECDD4]/10 border-[#FECDD4]/50"
-                            : "bg-white/5 border-white/10 hover:border-white/20"
-                        }`}
-                      >
-                        <div
-                          className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                            isSelected
-                              ? "border-[#FECDD4] bg-[#FECDD4]"
-                              : "border-white/30"
-                          }`}
-                        >
-                          {isSelected && (
-                            <CheckCircle className="w-4 h-4 text-white" />
-                          )}
-                        </div>
-                        <span className="text-white font-medium flex-1 text-left">
-                          {option}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-
-              {/* Scale */}
-              {currentQuestion.format === "scale" && (
-                <Card className="bg-white/5 border-white/10 p-8">
-                  <div className="space-y-6">
-                    <Slider
-                      value={[currentAnswer || 5]}
-                      onValueChange={(val) => setCurrentAnswer(val[0])}
-                      max={10}
-                      min={1}
-                      step={1}
-                      className="py-4 [&>span:first-child]:bg-[#FECDD4] [&>span:first-child]:bg-[length:30px_30px] [&>span:first-child]:animate-[progress_1s_linear_infinite] [&>span:first-child]:bg-[repeating-linear-gradient(45deg,#FECDD4,#FECDD4_10px,rgba(255,255,255,.6)_10px,rgba(255,255,255,.6)_20px)]"
-                    />
-                    <div className="text-center">
-                      <span className="text-6xl font-bold text-[#FECDD4]">
-                        {currentAnswer || 5}
-                      </span>
-                      <span className="text-2xl text-white/40">/10</span>
-                    </div>
-                  </div>
-                </Card>
-              )}
-
               {/* Short Text */}
-              {currentQuestion.format === "short_text" && (
+              {(currentQuestion.format === "short_text" || !currentQuestion.format) && (
                 <Textarea
                   value={currentAnswer}
                   onChange={(e) => setCurrentAnswer(e.target.value)}
