@@ -18,6 +18,7 @@ import Settings from './pages/Settings';
 import ToolsHub from './pages/ToolsHub';
 import OnboardingForm from './pages/OnboardingForm';
 import MyMetrics from './pages/MyMetrics';
+import DailyCheckIn from './pages/DailyCheckIn';
 import __Layout from './Layout.jsx';
 
 
@@ -42,6 +43,7 @@ export const PAGES = {
     "ToolsHub": ToolsHub,
     "OnboardingForm": OnboardingForm,
     "MyMetrics": MyMetrics,
+    "DailyCheckIn": DailyCheckIn,
 }
 
 export const pagesConfig = {

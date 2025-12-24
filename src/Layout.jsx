@@ -24,11 +24,11 @@ const publicPages = [
 
 const appPages = [
   { name: "Dashboard", label: "Dashboard" },
+  { name: "DailyCheckIn", label: "Daily Check-In" },
   { name: "MyPathway", label: "My Pathway" },
   { name: "ModulesLibrary", label: "Modules" },
   { name: "ToolsHub", label: "Tools" },
   { name: "Journal", label: "Journal" },
-  { name: "CheckIn", label: "Check-In" },
   { name: "MyMetrics", label: "My Progress" },
   { name: "Blueprint", label: "Blueprint" },
 ];
