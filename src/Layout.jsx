@@ -139,7 +139,7 @@ export default function Layout({ children, currentPageName }) {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            {/* Logo */}
+            {/* Left side: Logo */}
             <Link to={createPageUrl(isAuthenticated && !isPublicPage ? "Dashboard" : "Landing")} className="flex items-center gap-3">
               <img 
                 src={scrolled || !isPublicPage 
@@ -156,15 +156,45 @@ export default function Layout({ children, currentPageName }) {
 
             {/* Right side actions */}
             <div className="flex items-center gap-3">
-              {/* Login/Account Icon - Always visible */}
+              {/* Dashboard Button - Only for authenticated users */}
+              {isAuthenticated && !isPublicPage && (
+                <Link to={createPageUrl("Dashboard")}>
+                  <Button
+                    variant="ghost"
+                    className={`${scrolled || !isPublicPage ? "text-burgundy hover:bg-pink-50" : "text-white hover:bg-white/10"}`}
+                  >
+                    Dashboard
+                  </Button>
+                </Link>
+              )}
+
+              {/* Mobile menu button (hamburger) */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className={`p-2 ${scrolled || !isPublicPage ? "text-[#6C1A3E]" : "text-white"}`}
+              >
+                {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
+              </button>
+
+              {/* Profile Icon - Always visible */}
               {isAuthenticated ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className={`p-2 ${scrolled || !isPublicPage ? "text-burgundy" : "text-white"}`}>
-                      <div className="w-8 h-8 rounded-full bg-burgundy flex items-center justify-center">
-                        <span className="text-white text-sm font-medium">
-                          {user?.full_name?.[0] || user?.email?.[0] || "U"}
-                        </span>
+                    <button className="p-1">
+                      <div className="w-10 h-10 rounded-full border-2 border-purple-500 overflow-hidden">
+                        {user?.profile_picture ? (
+                          <img 
+                            src={user.profile_picture} 
+                            alt={user.full_name || "Profile"}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-burgundy flex items-center justify-center">
+                            <span className="text-white text-sm font-medium">
+                              {user?.full_name?.[0] || user?.email?.[0] || "U"}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </button>
                   </DropdownMenuTrigger>
@@ -191,19 +221,11 @@ export default function Layout({ children, currentPageName }) {
               ) : (
                 <button
                   onClick={() => base44.auth.redirectToLogin(createPageUrl("Dashboard"))}
-                  className={`p-2 ${scrolled || !isPublicPage ? "text-burgundy" : "text-white"}`}
+                  className={`p-1 ${scrolled || !isPublicPage ? "text-burgundy" : "text-white"}`}
                 >
-                  <UserCircle className="w-8 h-8" />
+                  <UserCircle className="w-10 h-10" />
                 </button>
               )}
-
-              {/* Mobile menu button (hamburger) */}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className={`p-2 ${scrolled || !isPublicPage ? "text-[#6C1A3E]" : "text-white"}`}
-              >
-                {mobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
-              </button>
             </div>
           </div>
         </div>

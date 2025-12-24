@@ -111,7 +111,15 @@ export default function AdminSettings() {
   });
 
   const handleProfileUpdate = async () => {
-    await updateProfileMutation.mutateAsync(profileData);
+    const formattedData = {
+      ...profileData,
+      full_name: profileData.full_name
+        ?.split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ')
+    };
+    await updateProfileMutation.mutateAsync(formattedData);
+    setCurrentUser({ ...currentUser, ...formattedData });
   };
 
   const handleProfilePicture = async (e) => {
