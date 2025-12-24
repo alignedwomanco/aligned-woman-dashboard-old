@@ -35,6 +35,7 @@ export default function DailyCheckIn() {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [visitedSteps, setVisitedSteps] = useState(new Set());
   const [checkInData, setCheckInData] = useState({
     mood: "",
     energy: 5,
@@ -49,6 +50,19 @@ export default function DailyCheckIn() {
 
   const updateData = (key, value) => {
     setCheckInData((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleSingleSelect = (key, value) => {
+    updateData(key, value);
+    // Only auto-advance if this step hasn't been visited before
+    if (!visitedSteps.has(step)) {
+      setTimeout(() => {
+        setVisitedSteps(prev => new Set([...prev, step]));
+        if (step < totalSteps - 1) {
+          setStep(step + 1);
+        }
+      }, 300);
+    }
   };
 
   const toggleNeed = (need) => {
@@ -262,7 +276,7 @@ Be warm, specific, and synthesized. This is ONE intelligence speaking, not five 
                     {moodOptions.map((mood) => (
                       <button
                         key={mood.value}
-                        onClick={() => updateData("mood", mood.value)}
+                        onClick={() => handleSingleSelect("mood", mood.value)}
                         className={`p-6 rounded-2xl border-2 transition-all ${
                           checkInData.mood === mood.value
                             ? "bg-[#FECDD4]/10 border-[#FECDD4]/50 scale-105"
