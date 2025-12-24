@@ -238,7 +238,7 @@ Be warm, specific, and synthesized. This is ONE intelligence speaking, not five 
               </div>
             </div>
           </div>
-          <Progress value={((step + 1) / totalSteps) * 100} className="h-1.5 [&>div]:bg-[#FECDD4] [&>div]:bg-[length:20px_20px] [&>div]:bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,.2)_10px,rgba(255,255,255,.2)_20px)]" />
+          <Progress value={((step + 1) / totalSteps) * 100} className="h-1.5 [&>div]:bg-[#FECDD4] [&>div]:bg-[length:30px_30px] [&>div]:animate-[progress_1s_linear_infinite] [&>div]:bg-[repeating-linear-gradient(45deg,#FECDD4,#FECDD4_10px,rgba(255,255,255,.3)_10px,rgba(255,255,255,.3)_20px)]" />
         </div>
 
         <div>
