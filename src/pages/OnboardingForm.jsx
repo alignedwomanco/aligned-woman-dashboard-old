@@ -533,7 +533,7 @@ Be warm, specific, and action-oriented.`;
                         max={10}
                         min={1}
                         step={1}
-                        className="py-4"
+                        className="py-4 [&>span:first-child]:bg-[#FECDD4] [&>span:first-child]:bg-[length:30px_30px] [&>span:first-child]:animate-[progress_1s_linear_infinite] [&>span:first-child]:bg-[repeating-linear-gradient(45deg,#FECDD4,#FECDD4_10px,rgba(255,255,255,.6)_10px,rgba(255,255,255,.6)_20px)]"
                       />
                       <div className="text-center">
                         <span className="text-6xl font-bold text-[#FECDD4]">{answers.capacityScore}</span>
