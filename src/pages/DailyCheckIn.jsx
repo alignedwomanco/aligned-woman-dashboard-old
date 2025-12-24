@@ -396,14 +396,14 @@ Be warm, specific, and synthesized. This is ONE intelligence speaking, not five 
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-[#2A0A18] via-[#2A0A18]/95 to-transparent pt-8 pb-6 px-4">
+      <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-[#2A0A18] via-[#2A0A18] to-[#2A0A18]/90 pt-6 pb-safe pb-6 px-4 border-t border-white/5">
         <div className="max-w-2xl mx-auto flex gap-3">
           {step > 0 && (
             <Button
               onClick={() => setStep(step - 1)}
               variant="outline"
               size="lg"
-              className="bg-white/5 border-white/20 text-white hover:bg-white/10"
+              className="bg-white/5 border-white/20 text-white hover:bg-white/10 hover:text-white hover:shadow-lg"
             >
               Back
             </Button>
@@ -420,7 +420,7 @@ Be warm, specific, and synthesized. This is ONE intelligence speaking, not five 
             size="lg"
             className="flex-1 bg-rose-500 hover:bg-rose-600 text-white rounded-2xl py-6 text-lg font-semibold disabled:opacity-40"
           >
-            {step < totalSteps - 1 ? "Continue →" : "Complete Check-In"}
+            {step < totalSteps - 1 ? "Next →" : "Complete Check-In"}
           </Button>
         </div>
       </div>
