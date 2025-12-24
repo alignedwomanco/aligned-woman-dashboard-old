@@ -27,13 +27,20 @@ export default function ThemeProvider({ children }) {
   };
 
   const applyBackground = (backgroundUrl) => {
-    if (backgroundUrl) {
+    if (backgroundUrl && backgroundUrl.startsWith('#')) {
+      // It's a color
+      document.body.style.backgroundColor = backgroundUrl;
+      document.body.style.backgroundImage = "none";
+    } else if (backgroundUrl) {
+      // It's an image or SVG
       document.body.style.backgroundImage = `url(${backgroundUrl})`;
       document.body.style.backgroundSize = "cover";
       document.body.style.backgroundPosition = "center";
       document.body.style.backgroundAttachment = "fixed";
+      document.body.style.backgroundColor = "transparent";
     } else {
       document.body.style.backgroundImage = "none";
+      document.body.style.backgroundColor = "#FEF5F9";
     }
   };
 

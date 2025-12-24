@@ -6,6 +6,7 @@ import CheckIn from './pages/CheckIn';
 import Contact from './pages/Contact';
 import DailyCheckIn from './pages/DailyCheckIn';
 import Dashboard from './pages/Dashboard';
+import DefineMyPurpose from './pages/DefineMyPurpose';
 import Experts from './pages/Experts';
 import Journal from './pages/Journal';
 import Landing from './pages/Landing';
@@ -19,7 +20,6 @@ import OurWhy from './pages/OurWhy';
 import Progress from './pages/Progress';
 import Settings from './pages/Settings';
 import ToolsHub from './pages/ToolsHub';
-import DefineMyPurpose from './pages/DefineMyPurpose';
 import __Layout from './Layout.jsx';
 
 
@@ -32,6 +32,7 @@ export const PAGES = {
     "Contact": Contact,
     "DailyCheckIn": DailyCheckIn,
     "Dashboard": Dashboard,
+    "DefineMyPurpose": DefineMyPurpose,
     "Experts": Experts,
     "Journal": Journal,
     "Landing": Landing,
@@ -45,7 +46,6 @@ export const PAGES = {
     "Progress": Progress,
     "Settings": Settings,
     "ToolsHub": ToolsHub,
-    "DefineMyPurpose": DefineMyPurpose,
 }
 
 export const pagesConfig = {

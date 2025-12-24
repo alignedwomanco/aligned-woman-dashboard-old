@@ -237,7 +237,7 @@ export default function Layout({ children, currentPageName }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/50 z-[60]"
+              className="fixed inset-0 bg-black/50 z-[9998]"
             />
 
             {/* Sidebar */}
@@ -246,7 +246,7 @@ export default function Layout({ children, currentPageName }) {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "tween", duration: 0.3 }}
-              className="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-white z-[70] shadow-2xl overflow-y-auto"
+              className="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-white z-[9999] shadow-2xl overflow-y-auto"
             >
               {/* Sidebar Header */}
               <div className="p-6 border-b flex items-center justify-between">
