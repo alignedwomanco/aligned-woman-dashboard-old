@@ -209,13 +209,13 @@ Be warm, specific, and synthesized. This is ONE intelligence speaking, not five 
 
   if (isProcessing) {
     return (
-      <div className="min-h-screen bg-[#772343] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[#611836] flex items-center justify-center p-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
         >
-          <Loader2 className="w-16 h-16 text-rose-300 animate-spin mx-auto mb-6" />
+          <Loader2 className="w-16 h-16 text-[#FECDD4] animate-spin mx-auto mb-6" />
           <h2 className="text-2xl font-bold text-white mb-2">Synthesizing Your Day...</h2>
           <p className="text-white/60">Creating your personalized snapshot.</p>
         </motion.div>
@@ -224,13 +224,13 @@ Be warm, specific, and synthesized. This is ONE intelligence speaking, not five 
   }
 
   return (
-    <div className="min-h-screen bg-[#772343] p-4 md:p-6">
+    <div className="min-h-screen bg-[#611836] p-4 md:p-6">
       <div className="max-w-2xl mx-auto w-full">
         <div className="py-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-rose-400/20 rounded-full flex items-center justify-center">
-                <Heart className="w-6 h-6 text-rose-300" />
+              <div className="w-12 h-12 bg-[#FECDD4]/20 rounded-full flex items-center justify-center">
+               <Heart className="w-6 h-6 text-[#FECDD4]" />
               </div>
               <div>
                 <h1 className="text-lg font-bold text-white">Daily Check-In</h1>
@@ -255,7 +255,7 @@ Be warm, specific, and synthesized. This is ONE intelligence speaking, not five 
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      How do you feel <span className="text-rose-300">today</span>?
+                      How do you feel <span className="text-[#FECDD4]">today</span>?
                     </h2>
                   </div>
                   <div className="grid grid-cols-5 gap-3">
@@ -265,7 +265,7 @@ Be warm, specific, and synthesized. This is ONE intelligence speaking, not five 
                         onClick={() => updateData("mood", mood.value)}
                         className={`p-6 rounded-2xl border-2 transition-all ${
                           checkInData.mood === mood.value
-                            ? "bg-rose-400/10 border-rose-400/50 scale-105"
+                            ? "bg-[#FECDD4]/10 border-[#FECDD4]/50 scale-105"
                             : "bg-white/5 border-white/10 hover:border-white/20"
                         }`}
                       >
@@ -282,7 +282,7 @@ Be warm, specific, and synthesized. This is ONE intelligence speaking, not five 
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      Your <span className="text-rose-300">energy</span> level today
+                      Your <span className="text-[#FECDD4]">energy</span> level today
                     </h2>
                   </div>
                   <Card className="bg-white/5 border-white/10 p-8">
@@ -300,7 +300,7 @@ Be warm, specific, and synthesized. This is ONE intelligence speaking, not five 
                         className="py-4"
                       />
                       <div className="text-center">
-                        <span className="text-6xl font-bold text-rose-300">{checkInData.energy}</span>
+                        <span className="text-6xl font-bold text-[#FECDD4]">{checkInData.energy}</span>
                         <span className="text-2xl text-white/40">/10</span>
                         <div className="text-white/60 mt-3">
                           {energyLevels[Math.floor((checkInData.energy - 1) / 2)]}
@@ -316,7 +316,7 @@ Be warm, specific, and synthesized. This is ONE intelligence speaking, not five 
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      What's <span className="text-rose-300">present</span> for you today?
+                      What's <span className="text-[#FECDD4]">present</span> for you today?
                     </h2>
                     <p className="text-white/60">How does today feel in your body?</p>
                   </div>
@@ -334,7 +334,7 @@ Be warm, specific, and synthesized. This is ONE intelligence speaking, not five 
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      What do you want to <span className="text-rose-300">focus on</span> today?
+                      What do you want to <span className="text-[#FECDD4]">focus on</span> today?
                     </h2>
                     <p className="text-white/60">Your intentions for today</p>
                   </div>
@@ -352,7 +352,7 @@ Be warm, specific, and synthesized. This is ONE intelligence speaking, not five 
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      What's been <span className="text-rose-300">challenging</span>?
+                      What's been <span className="text-[#FECDD4]">challenging</span>?
                     </h2>
                     <p className="text-white/60">This week or today</p>
                   </div>
@@ -370,7 +370,7 @@ Be warm, specific, and synthesized. This is ONE intelligence speaking, not five 
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      What do you <span className="text-rose-300">need</span> today?
+                      What do you <span className="text-[#FECDD4]">need</span> today?
                     </h2>
                     <p className="text-white/60">Select what feels true</p>
                   </div>
@@ -381,7 +381,7 @@ Be warm, specific, and synthesized. This is ONE intelligence speaking, not five 
                         onClick={() => toggleNeed(need)}
                         className={`p-4 rounded-2xl border-2 transition-all text-left ${
                           checkInData.needsHelp.includes(need)
-                            ? "bg-rose-400/10 border-rose-400/50 text-white"
+                            ? "bg-[#FECDD4]/10 border-[#FECDD4]/50 text-white"
                             : "bg-white/5 border-white/10 hover:border-white/20 text-white/70"
                         }`}
                       >
@@ -416,7 +416,7 @@ Be warm, specific, and synthesized. This is ONE intelligence speaking, not five 
             }}
             disabled={!canProceed()}
             size="lg"
-            className="flex-1 bg-rose-500 hover:bg-rose-600 text-white rounded-2xl py-6 text-lg font-semibold disabled:opacity-40"
+            className="flex-1 bg-[#FECDD4] hover:bg-[#FDB8C3] text-[#611836] rounded-2xl py-6 text-lg font-semibold disabled:opacity-40"
           >
             {step < totalSteps - 1 ? "Next →" : "Complete Check-In"}
           </Button>

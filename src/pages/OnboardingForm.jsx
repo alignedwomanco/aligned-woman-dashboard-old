@@ -354,13 +354,13 @@ Be warm, specific, and action-oriented.`;
 
   if (isProcessing) {
     return (
-      <div className="min-h-screen bg-[#772343] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[#611836] flex items-center justify-center p-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
         >
-          <Loader2 className="w-16 h-16 text-rose-300 animate-spin mx-auto mb-6" />
+          <Loader2 className="w-16 h-16 text-[#FECDD4] animate-spin mx-auto mb-6" />
           <h2 className="text-2xl font-bold text-white mb-2">Building Your Pathway...</h2>
           <p className="text-white/60">Analyzing your responses to create your personalized journey.</p>
         </motion.div>
@@ -369,7 +369,7 @@ Be warm, specific, and action-oriented.`;
   }
 
   return (
-    <div className="min-h-screen bg-[#772343] p-4 md:p-6">
+    <div className="min-h-screen bg-[#611836] p-4 md:p-6">
       <div className="max-w-2xl mx-auto w-full">
         {/* Header */}
         <div className="py-6">
@@ -402,8 +402,8 @@ Be warm, specific, and action-oriented.`;
               {/* Step 0: Welcome */}
               {step === 0 && (
                 <div className="space-y-6 text-center">
-                  <div className="w-20 h-20 bg-rose-400/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Sparkles className="w-10 h-10 text-rose-300" />
+                  <div className="w-20 h-20 bg-[#FECDD4]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Sparkles className="w-10 h-10 text-[#FECDD4]" />
                   </div>
                   <h2 className="text-4xl font-bold text-white mb-4">Welcome</h2>
                   <p className="text-xl text-white/80 mb-4">
@@ -421,7 +421,7 @@ Be warm, specific, and action-oriented.`;
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      What do you need <span className="text-rose-300">help with</span> this week?
+                      What do you need <span className="text-[#FECDD4]">help with</span> this week?
                     </h2>
                     <p className="text-white/60">Select all that resonate with you</p>
                   </div>
@@ -435,18 +435,18 @@ Be warm, specific, and action-oriented.`;
                           onClick={() => toggleConcern(concern.id)}
                           className={`w-full flex items-center gap-4 p-4 rounded-2xl border-2 transition-all ${
                             isSelected
-                              ? "bg-rose-400/10 border-rose-400/50"
+                              ? "bg-[#FECDD4]/10 border-[#FECDD4]/50"
                               : "bg-white/5 border-white/10 hover:border-white/20"
                           }`}
                         >
                           <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                            isSelected ? "bg-rose-400/20" : "bg-white/10"
+                            isSelected ? "bg-[#FECDD4]/20" : "bg-white/10"
                           }`}>
-                            <Icon className={`w-6 h-6 ${isSelected ? "text-rose-300" : "text-white/60"}`} />
+                            <Icon className={`w-6 h-6 ${isSelected ? "text-[#FECDD4]" : "text-white/60"}`} />
                           </div>
                           <span className="text-white font-medium flex-1 text-left">{concern.label}</span>
                           <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                            isSelected ? "border-rose-400 bg-rose-400" : "border-white/30"
+                            isSelected ? "border-[#FECDD4] bg-[#FECDD4]" : "border-white/30"
                           }`}>
                             {isSelected && <CheckCircle className="w-4 h-4 text-white" />}
                           </div>
@@ -462,7 +462,7 @@ Be warm, specific, and action-oriented.`;
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      What feels <span className="text-rose-300">hardest</span> at the moment?
+                      What feels <span className="text-[#FECDD4]">hardest</span> at the moment?
                     </h2>
                     <p className="text-white/60">Or in the last month</p>
                   </div>
@@ -489,7 +489,7 @@ Be warm, specific, and action-oriented.`;
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      How much <span className="text-rose-300">time</span> do you have?
+                      How much <span className="text-[#FECDD4]">time</span> do you have?
                     </h2>
                     <p className="text-white/60">Per day, realistically</p>
                   </div>
@@ -517,7 +517,7 @@ Be warm, specific, and action-oriented.`;
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      Capacity <span className="text-rose-300">right now</span>
+                      Capacity <span className="text-[#FECDD4]">right now</span>
                     </h2>
                     <p className="text-white/60">How resourced do you feel at the moment (i.e. last 30 days)?</p>
                   </div>
@@ -536,7 +536,7 @@ Be warm, specific, and action-oriented.`;
                         className="py-4"
                       />
                       <div className="text-center">
-                        <span className="text-6xl font-bold text-rose-300">{answers.capacityScore}</span>
+                        <span className="text-6xl font-bold text-[#FECDD4]">{answers.capacityScore}</span>
                         <span className="text-2xl text-white/40">/10</span>
                       </div>
                     </div>
@@ -549,7 +549,7 @@ Be warm, specific, and action-oriented.`;
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      Tell us what's <span className="text-rose-300">happening</span> for you
+                      Tell us what's <span className="text-[#FECDD4]">happening</span> for you
                     </h2>
                     <p className="text-white/60">
                       {answers.concerns.length > 0 
@@ -573,7 +573,7 @@ Be warm, specific, and action-oriented.`;
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      <span className="text-rose-300">Cycle</span> / Hormone Support
+                      <span className="text-[#FECDD4]">Cycle</span> / Hormone Support
                     </h2>
                     <p className="text-white/60">Optional - helps personalize energy guidance</p>
                   </div>
@@ -628,7 +628,7 @@ Be warm, specific, and action-oriented.`;
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      Want <span className="text-rose-300">deeper personalisation</span>?
+                      Want <span className="text-[#FECDD4]">deeper personalisation</span>?
                     </h2>
                     <p className="text-white/60">Add your birth details for Human Design + Astrology insights. Optional.</p>
                   </div>
@@ -681,7 +681,7 @@ Be warm, specific, and action-oriented.`;
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      Your <span className="text-rose-300">Values & Identity</span>
+                      Your <span className="text-[#FECDD4]">Values & Identity</span>
                     </h2>
                   </div>
 
@@ -694,7 +694,7 @@ Be warm, specific, and action-oriented.`;
                           onClick={() => toggleValue(value)}
                           className={`px-4 py-2 rounded-full border-2 transition-all ${
                             answers.values.includes(value)
-                              ? "bg-rose-400/20 border-rose-400 text-white"
+                              ? "bg-[#FECDD4]/20 border-[#FECDD4] text-white"
                               : "bg-white/5 border-white/20 text-white/70"
                           }`}
                         >
@@ -767,7 +767,7 @@ Be warm, specific, and action-oriented.`;
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
-                      Your <span className="text-rose-300">Snapshot</span> Preferences
+                      Your <span className="text-[#FECDD4]">Snapshot</span> Preferences
                     </h2>
                     <p className="text-white/60">How often would you like to see your full overview?</p>
                   </div>
@@ -814,8 +814,8 @@ Be warm, specific, and action-oriented.`;
               {step === 10 && (
                 <div className="space-y-6">
                   <div className="text-center">
-                    <div className="w-20 h-20 bg-rose-400/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle className="w-10 h-10 text-rose-300" />
+                    <div className="w-20 h-20 bg-[#FECDD4]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <CheckCircle className="w-10 h-10 text-[#FECDD4]" />
                     </div>
                     <h2 className="text-3xl font-bold text-white mb-2">You're All Set!</h2>
                     <p className="text-white/60">Here's your personalized pathway summary</p>
@@ -823,7 +823,7 @@ Be warm, specific, and action-oriented.`;
 
                   <Card className="bg-white/5 border-white/10 p-6 space-y-4">
                     <div>
-                      <Label className="text-rose-300 text-sm">Focus Areas</Label>
+                      <Label className="text-[#FECDD4] text-sm">Focus Areas</Label>
                       <div className="flex flex-wrap gap-2 mt-2">
                         {answers.concerns.map((concern) => (
                           <Badge key={concern} className="bg-white/10 text-white border-0">
@@ -834,22 +834,22 @@ Be warm, specific, and action-oriented.`;
                     </div>
 
                     <div>
-                      <Label className="text-rose-300 text-sm">Current State</Label>
+                      <Label className="text-[#FECDD4] text-sm">Current State</Label>
                       <p className="text-white mt-1">{answers.currentFeeling}</p>
                     </div>
 
                     <div>
-                      <Label className="text-rose-300 text-sm">Daily Time Available</Label>
+                      <Label className="text-[#FECDD4] text-sm">Daily Time Available</Label>
                       <p className="text-white mt-1">{answers.timeAvailable}</p>
                     </div>
 
                     <div>
-                      <Label className="text-rose-300 text-sm">Capacity Score</Label>
+                      <Label className="text-[#FECDD4] text-sm">Capacity Score</Label>
                       <p className="text-white mt-1">{answers.capacityScore}/10</p>
                     </div>
 
                     <div>
-                      <Label className="text-rose-300 text-sm">Snapshot Frequency</Label>
+                      <Label className="text-[#FECDD4] text-sm">Snapshot Frequency</Label>
                       <p className="text-white mt-1 capitalize">{answers.snapshotFrequency}</p>
                     </div>
                   </Card>
@@ -877,7 +877,7 @@ Be warm, specific, and action-oriented.`;
                 onClick={handleNext}
                 disabled={!canProceed()}
                 size="lg"
-                className="flex-1 bg-rose-500 hover:bg-rose-600 text-white rounded-2xl py-6 text-lg font-semibold disabled:opacity-40"
+                className="flex-1 bg-[#FECDD4] hover:bg-[#FDB8C3] text-[#611836] rounded-2xl py-6 text-lg font-semibold disabled:opacity-40"
               >
                 {step === 0 ? "Start My Journey" : step < totalSteps - 1 ? "Next →" : "Go to Dashboard"}
               </Button>
