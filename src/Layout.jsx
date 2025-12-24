@@ -299,27 +299,19 @@ export default function Layout({ children, currentPageName }) {
 
               {/* Bottom Action */}
               <div className="p-6 border-t flex-shrink-0 bg-white">
-                {isAuthenticated ? (
-                  <Button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
+                <Button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    if (isAuthenticated) {
                       handleLogout();
-                    }}
-                    className="w-full bg-[#6C1A3E] hover:bg-[#4A1228] text-white rounded-full py-4 text-base font-medium"
-                  >
-                    Sign Out
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
+                    } else {
                       base44.auth.redirectToLogin(createPageUrl("Dashboard"));
-                    }}
-                    className="w-full bg-[#6C1A3E] hover:bg-[#4A1228] text-white rounded-full py-4 text-base font-medium"
-                  >
-                    Sign Out
-                  </Button>
-                )}
+                    }
+                  }}
+                  className="w-full bg-[#6C1A3E] hover:bg-[#4A1228] text-white rounded-full py-4 text-base font-medium"
+                >
+                  Sign Out
+                </Button>
               </div>
               </motion.div>
               </>
