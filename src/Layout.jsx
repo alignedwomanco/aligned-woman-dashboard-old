@@ -382,12 +382,12 @@ export default function Layout({ children, currentPageName }) {
 
           {/* Navigation Bar */}
           <div className="pb-5">
-            <nav className="bg-[#6B1B3D] rounded-xl px-2 py-2 flex items-center justify-between">
+            <nav className="bg-[#6B1B3D] rounded-xl px-2 py-2 flex items-center justify-between overflow-x-auto scrollbar-hide">
               {visibleNavItems.map((item, index) => (
                 <React.Fragment key={item.name}>
                   <Link
                     to={createPageUrl(item.name)}
-                    className={`flex-1 px-4 py-2.5 text-sm font-bold whitespace-nowrap transition-all rounded-lg text-center ${
+                    className={`flex-1 px-3 py-2.5 text-sm font-bold whitespace-nowrap transition-all rounded-lg text-center ${
                       currentPageName === item.name
                         ? "bg-white text-[#6B1B3D]"
                         : "text-white hover:bg-white/10"
@@ -396,7 +396,7 @@ export default function Layout({ children, currentPageName }) {
                     {item.label}
                   </Link>
                   {index < visibleNavItems.length - 1 && (
-                    <div className="h-6 w-px bg-white/20 mx-1" />
+                    <div className="h-6 w-[2px] bg-white/40 mx-0.5 flex-shrink-0" />
                   )}
                 </React.Fragment>
               ))}
