@@ -127,14 +127,23 @@ export default function Layout({ children, currentPageName }) {
                 ))}
               </nav>
 
-              {!isAuthenticated && (
-                <Button
-                  onClick={() => base44.auth.redirectToLogin(createPageUrl("Dashboard"))}
-                  className="bg-burgundy hover:bg-burgundy-deep text-white"
-                >
-                  Sign In
-                </Button>
-              )}
+              <div className="flex items-center gap-3">
+                {isAuthenticated ? (
+                  <Button
+                    onClick={() => window.location.href = createPageUrl("Dashboard")}
+                    className="bg-burgundy hover:bg-burgundy-deep text-white"
+                  >
+                    Go to Dashboard
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => base44.auth.redirectToLogin(createPageUrl("Dashboard"))}
+                    className="bg-burgundy hover:bg-burgundy-deep text-white"
+                  >
+                    Sign In
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </header>
