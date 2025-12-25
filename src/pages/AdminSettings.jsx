@@ -160,10 +160,36 @@ export default function AdminSettings() {
   const adminUsers = allUsers.filter(u => ["admin", "master_admin", "moderator", "course_creator", "expert"].includes(u.role));
   const regularUsers = allUsers.filter(u => u.role === "user");
 
+  // Apply background
+  useEffect(() => {
+    if (currentUser?.background_image) {
+      const bg = currentUser.background_image;
+      if (bg.startsWith('#')) {
+        document.body.style.backgroundColor = bg;
+        document.body.style.backgroundImage = "none";
+      } else if (bg.startsWith('data:image/svg+xml')) {
+        document.body.style.backgroundImage = `url("${bg}")`;
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundPosition = "center";
+        document.body.style.backgroundAttachment = "fixed";
+        document.body.style.backgroundColor = "transparent";
+      } else {
+        document.body.style.backgroundImage = `url(${bg})`;
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundPosition = "center";
+        document.body.style.backgroundAttachment = "fixed";
+        document.body.style.backgroundColor = "transparent";
+      }
+    } else {
+      document.body.style.backgroundColor = "";
+      document.body.style.backgroundImage = "";
+    }
+  }, [currentUser?.background_image]);
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white p-6">
+    <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-12">
+        <div className="mb-16">
           <h1 className="text-3xl font-bold text-[#4A1228] mb-2">Admin Settings</h1>
           <p className="text-gray-600">Manage system settings and configurations</p>
         </div>

@@ -80,7 +80,7 @@ export default function ProfileSettings() {
   return (
     <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-12">
+        <div className="mb-16">
           <h1 className="text-3xl font-bold text-[#4A1228] mb-2">Profile Settings</h1>
           <p className="text-gray-600">Manage your profile and preferences</p>
         </div>

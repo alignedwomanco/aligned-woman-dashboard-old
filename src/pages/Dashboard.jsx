@@ -35,6 +35,27 @@ export default function Dashboard() {
     const loadUser = async () => {
       const userData = await base44.auth.me();
       setUser(userData);
+      
+      // Apply background
+      if (userData?.background_image) {
+        const bg = userData.background_image;
+        if (bg.startsWith('#')) {
+          document.body.style.backgroundColor = bg;
+          document.body.style.backgroundImage = "none";
+        } else if (bg.startsWith('data:image/svg+xml')) {
+          document.body.style.backgroundImage = `url("${bg}")`;
+          document.body.style.backgroundSize = "cover";
+          document.body.style.backgroundPosition = "center";
+          document.body.style.backgroundAttachment = "fixed";
+          document.body.style.backgroundColor = "transparent";
+        } else {
+          document.body.style.backgroundImage = `url(${bg})`;
+          document.body.style.backgroundSize = "cover";
+          document.body.style.backgroundPosition = "center";
+          document.body.style.backgroundAttachment = "fixed";
+          document.body.style.backgroundColor = "transparent";
+        }
+      }
     };
     loadUser();
   }, []);
