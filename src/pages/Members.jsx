@@ -127,14 +127,14 @@ export default function Members() {
       return newRequest;
     },
     onSuccess: async () => {
+      // Refetch all follow data immediately
+      await queryClient.refetchQueries({ queryKey: ["myFollows"] });
+      await queryClient.refetchQueries({ queryKey: ["connections"] });
+      await queryClient.refetchQueries({ queryKey: ["connectionRequests"] });
+      
       setConnectionNote("");
       setSelectedMember(null);
       setDialogOpen(false);
-      
-      // Force refresh queries
-      await queryClient.invalidateQueries({ queryKey: ["connections"] });
-      await queryClient.invalidateQueries({ queryKey: ["connectionRequests"] });
-      await queryClient.invalidateQueries({ queryKey: ["myFollows"] });
     },
   });
 
