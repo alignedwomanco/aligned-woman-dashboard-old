@@ -380,14 +380,14 @@ export default function Layout({ children, currentPageName }) {
             </div>
           </div>
 
-          {/* Navigation Bar - Rounded Pill Style */}
+          {/* Navigation Bar */}
           <div className="pb-5">
-            <nav className="bg-[#6B1B3D] rounded-full px-2 py-2 flex items-center overflow-x-auto">
+            <nav className="bg-[#6B1B3D] rounded-xl px-2 py-2 flex items-center justify-between">
               {visibleNavItems.map((item, index) => (
                 <React.Fragment key={item.name}>
                   <Link
                     to={createPageUrl(item.name)}
-                    className={`px-6 py-2.5 text-sm font-bold whitespace-nowrap transition-all rounded-full text-center ${
+                    className={`flex-1 px-4 py-2.5 text-sm font-bold whitespace-nowrap transition-all rounded-lg text-center ${
                       currentPageName === item.name
                         ? "bg-white text-[#6B1B3D]"
                         : "text-white hover:bg-white/10"
