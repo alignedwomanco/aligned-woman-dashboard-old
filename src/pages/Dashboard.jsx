@@ -546,7 +546,7 @@ export default function Dashboard() {
                 <h2 className="text-2xl font-bold text-[#4A1228]">Recommended for You</h2>
                 <p className="text-gray-600">Based on your diagnostic and current phase</p>
               </div>
-              <Link to={createPageUrl("ModulesLibrary")}>
+              <Link to={createPageUrl("Classroom")}>
                 <Button variant="ghost" className="text-[#6B1B3D]">
                   See all <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
@@ -566,7 +566,7 @@ export default function Dashboard() {
                     <p className="text-gray-600 text-sm mb-4">
                       Aligned with your current journey
                     </p>
-                    <Link to={createPageUrl("ModulesLibrary")}>
+                    <Link to={createPageUrl("Classroom")}>
                       <Button className="w-full bg-[#6B1B3D] hover:bg-[#4A1228]">
                         Start Module <ArrowRight className="ml-2 w-4 h-4" />
                       </Button>
