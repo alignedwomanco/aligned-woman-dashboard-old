@@ -20,7 +20,9 @@ import {
   MessageCircle,
   Send,
   Check,
+  Trophy,
 } from "lucide-react";
+import QuizSection from "@/components/classroom/QuizSection";
 
 export default function ModulePlayer() {
   const navigate = useNavigate();
@@ -28,6 +30,8 @@ export default function ModulePlayer() {
   const moduleId = searchParams.get("id");
   const [selectedSubModule, setSelectedSubModule] = useState(null);
   const [newComment, setNewComment] = useState("");
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: module } = useQuery({
@@ -61,6 +65,21 @@ export default function ModulePlayer() {
     enabled: !!selectedSubModule,
   });
 
+  const { data: quiz } = useQuery({
+    queryKey: ["quiz", selectedSubModule?.id],
+    queryFn: async () => {
+      const quizzes = await base44.entities.Quiz.filter({ subModuleId: selectedSubModule.id });
+      return quizzes[0] || null;
+    },
+    enabled: !!selectedSubModule,
+  });
+
+  const { data: quizAttempts = [] } = useQuery({
+    queryKey: ["quizAttempts", selectedSubModule?.id],
+    queryFn: () => base44.entities.QuizAttempt.filter({ subModuleId: selectedSubModule.id }),
+    enabled: !!selectedSubModule,
+  });
+
   const updateProgressMutation = useMutation({
     mutationFn: ({ subModuleId, watchedPercent, isComplete }) =>
       base44.entities.SubModuleProgress.create({
@@ -88,18 +107,116 @@ export default function ModulePlayer() {
     }
   }, [subModules]);
 
-  const handleMarkComplete = () => {
+  const handleMarkComplete = async () => {
     const progress = subModuleProgress.find(
       (p) => p.subModuleId === selectedSubModule.id
     );
     const watchedPercent = progress?.watchedPercent || 0;
 
     if (watchedPercent >= 50) {
-      updateProgressMutation.mutate({
-        subModuleId: selectedSubModule.id,
-        watchedPercent: 100,
-        isComplete: true,
+      // Check if there's a quiz
+      if (quiz && !quizCompleted) {
+        setShowQuiz(true);
+      } else {
+        await completeSubModule();
+      }
+    }
+  };
+
+  const completeSubModule = async () => {
+    updateProgressMutation.mutate({
+      subModuleId: selectedSubModule.id,
+      watchedPercent: 100,
+      isComplete: true,
+    });
+
+    // Check if all sub-modules are complete
+    const allComplete = subModules.every((sm) => {
+      if (sm.id === selectedSubModule.id) return true;
+      const prog = subModuleProgress.find((p) => p.subModuleId === sm.id);
+      return prog?.isComplete;
+    });
+
+    if (allComplete) {
+      // Award points for module completion
+      await awardModuleCompletion();
+    }
+  };
+
+  const awardModuleCompletion = async () => {
+    try {
+      const pointsRecords = await base44.entities.UserPoints.filter({});
+      const currentPoints = pointsRecords[0];
+      
+      const modulePoints = 50; // Base points for module completion
+      const streakBonus = (currentPoints?.currentStreak || 0) >= 3 ? 5 : 0;
+      const totalPoints = (currentPoints?.points || 0) + modulePoints + streakBonus;
+      const newLevel = Math.floor(totalPoints / 100) + 1;
+
+      if (currentPoints) {
+        await base44.entities.UserPoints.update(currentPoints.id, {
+          points: totalPoints,
+          level: newLevel,
+          lastActivityDate: new Date().toISOString().split('T')[0],
+        });
+      } else {
+        await base44.entities.UserPoints.create({
+          points: totalPoints,
+          level: newLevel,
+          lastActivityDate: new Date().toISOString().split('T')[0],
+        });
+      }
+
+      // Award badge for module completion
+      await base44.entities.UserBadge.create({
+        badgeId: `module-${moduleId}`,
+        badgeName: `${module.title} Complete`,
+        badgeIcon: "🎓",
+        earnedDate: new Date().toISOString(),
       });
+    } catch (error) {
+      console.error("Error awarding points:", error);
+    }
+  };
+
+  const handleQuizComplete = async (result) => {
+    try {
+      // Save quiz attempt
+      await base44.entities.QuizAttempt.create({
+        quizId: quiz.id,
+        subModuleId: selectedSubModule.id,
+        moduleId,
+        score: result.score,
+        answers: result.answers,
+        passed: result.passed,
+        pointsEarned: result.pointsEarned,
+      });
+
+      // Award points
+      if (result.passed) {
+        const pointsRecords = await base44.entities.UserPoints.filter({});
+        const currentPoints = pointsRecords[0];
+        const totalPoints = (currentPoints?.points || 0) + result.pointsEarned;
+        const newLevel = Math.floor(totalPoints / 100) + 1;
+
+        if (currentPoints) {
+          await base44.entities.UserPoints.update(currentPoints.id, {
+            points: totalPoints,
+            level: newLevel,
+          });
+        } else {
+          await base44.entities.UserPoints.create({
+            points: totalPoints,
+            level: newLevel,
+          });
+        }
+      }
+
+      setQuizCompleted(true);
+      setShowQuiz(false);
+      await completeSubModule();
+    } catch (error) {
+      console.error("Error saving quiz:", error);
     }
   };
 
@@ -295,6 +412,18 @@ export default function ModulePlayer() {
               </CardContent>
             </Card>
 
+            {/* Quiz Section */}
+            {showQuiz && quiz && (
+              <QuizSection
+                quiz={quiz}
+                onComplete={handleQuizComplete}
+                onSkip={() => {
+                  setShowQuiz(false);
+                  completeSubModule();
+                }}
+              />
+            )}
+
             {/* Comments Section */}
             <Card>
               <CardHeader>
@@ -398,8 +527,20 @@ export default function ModulePlayer() {
                     className="w-full mt-4 bg-green-600 hover:bg-green-700"
                   >
                     <CheckCircle className="w-4 h-4 mr-2" />
-                    Mark as Complete
+                    {quiz ? "Take Quiz & Complete" : "Mark as Complete"}
                   </Button>
+                )}
+
+                {quiz && quizAttempts.length > 0 && (
+                  <div className="mt-4 p-3 bg-purple-50 rounded-lg border border-purple-200">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Trophy className="w-4 h-4 text-purple-600" />
+                      <span className="text-sm font-medium text-purple-900">Quiz Status</span>
+                    </div>
+                    <p className="text-xs text-purple-700">
+                      Best Score: {Math.max(...quizAttempts.map(a => a.score))}%
+                    </p>
+                  </div>
                 )}
 
                 {currentProgress.isComplete && (
