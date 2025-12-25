@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
 import { base44 } from "@/api/base44Client";
 import {
   Clock,
@@ -45,6 +46,8 @@ export default function Classroom() {
   const [leaderboard, setLeaderboard] = useState([]);
   const [allModules, setAllModules] = useState([]);
   const [moduleProgress, setModuleProgress] = useState([]);
+  const [allPages, setAllPages] = useState([]);
+  const [subModuleProgress, setSubModuleProgress] = useState([]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -59,6 +62,13 @@ export default function Classroom() {
         // Load module progress
         const progress = await base44.entities.UserModuleProgress.list();
         setModuleProgress(progress);
+
+        // Load all pages and submodule progress for progress bars
+        const pages = await base44.entities.ModulePage.list();
+        setAllPages(pages);
+        
+        const subProgress = await base44.entities.SubModuleProgress.list();
+        setSubModuleProgress(subProgress);
 
         // Load user points
         const points = await base44.entities.UserPoints.filter({});
@@ -96,6 +106,18 @@ export default function Classroom() {
     const progress = moduleProgress.find(p => p.moduleId === moduleId);
     if (!progress) return "Available";
     return progress.status;
+  };
+
+  const getModuleProgressPercent = (moduleId) => {
+    const pages = allPages.filter(p => p.moduleId === moduleId);
+    if (pages.length === 0) return 0;
+    
+    const completedPages = pages.filter(page => {
+      const pageProgress = subModuleProgress.find(p => p.subModuleId === page.id);
+      return pageProgress?.isComplete;
+    }).length;
+    
+    return Math.round((completedPages / pages.length) * 100);
   };
 
   const filteredModules = allModules
@@ -200,19 +222,27 @@ export default function Classroom() {
                     {module.summary}
                   </p>
                   
-                  <div className="flex items-center gap-3 text-sm text-gray-500">
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {module.durationMinutes || 45} min
-                    </span>
-                    {status === "Locked" && (
-                      <span className="text-gray-400">Locked</span>
-                    )}
-                    {status === "Complete" && (
-                      <span className="text-green-600 font-medium">Complete</span>
-                    )}
-                    {status === "InProgress" && (
-                      <span className="text-[#6B1B3D] font-medium">In Progress</span>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3 text-sm text-gray-500">
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        {module.durationMinutes || 45} min
+                      </span>
+                      {status === "Locked" && (
+                        <span className="text-gray-400">Locked</span>
+                      )}
+                    </div>
+                    
+                    {status !== "Locked" && (
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs text-gray-600">Progress</span>
+                          <span className="text-xs font-medium text-[#6B1B3D]">
+                            {getModuleProgressPercent(module.id)}%
+                          </span>
+                        </div>
+                        <Progress value={getModuleProgressPercent(module.id)} className="h-2" />
+                      </div>
                     )}
                   </div>
                 </CardContent>
