@@ -28,6 +28,7 @@ export default function ModulePlayer() {
   const moduleId = searchParams.get("id");
   const [selectedPage, setSelectedPage] = useState(null);
   const [newComment, setNewComment] = useState("");
+  const [completedPages, setCompletedPages] = useState(new Set());
   const queryClient = useQueryClient();
 
   const { data: module } = useQuery({
@@ -110,6 +111,9 @@ export default function ModulePlayer() {
       status: "Complete",
       videoWatchedPercent: 100,
     });
+
+    // Mark current page as complete
+    setCompletedPages(prev => new Set([...prev, selectedPage.id]));
 
     // Award points for module completion
     await awardModuleCompletion();
@@ -220,6 +224,7 @@ export default function ModulePlayer() {
                 <ScrollArea className="h-[calc(100vh-300px)]">
                   <div className="space-y-1 p-4">
                     {pages.map((page, idx) => {
+                      const isCompleted = completedPages.has(page.id);
                       return (
                         <button
                           key={page.id}
@@ -231,8 +236,14 @@ export default function ModulePlayer() {
                           }`}
                         >
                           <div className="flex items-start gap-3">
-                            <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-200">
-                              <span className="text-xs text-gray-600">{idx + 1}</span>
+                            <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
+                              isCompleted ? "bg-green-100" : "bg-gray-200"
+                            }`}>
+                              {isCompleted ? (
+                                <CheckCircle className="w-4 h-4 text-green-600" />
+                              ) : (
+                                <span className="text-xs text-gray-600">{idx + 1}</span>
+                              )}
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="text-sm font-medium text-[#4A1228] truncate">
