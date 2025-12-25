@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Camera, Upload, Save, RefreshCw, Users, UserCheck, Heart, FileText, Plus, X, MessageCircle, UserMinus } from "lucide-react";
+import { Camera, Upload, Save, RefreshCw, Users, UserCheck, Heart, FileText, Plus, X, MessageCircle, UserMinus, UserPlus } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import AvatarGenerator from "@/components/admin/AvatarGenerator";
@@ -20,14 +21,19 @@ export default function ProfileSettings() {
   const [profileData, setProfileData] = useState({});
   const [socialLinks, setSocialLinks] = useState([]);
   const [activeTab, setActiveTab] = useState("profile");
+  const [showConnectionRequests, setShowConnectionRequests] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
     const loadUser = async () => {
       const user = await base44.auth.me();
       setCurrentUser(user);
+      const nameParts = (user.full_name || "").split(" ");
+      const firstName = nameParts[0] || "";
+      const lastName = nameParts.slice(1).join(" ") || "";
       setProfileData({
-        full_name: user.full_name,
+        first_name: firstName,
+        last_name: lastName,
         bio: user.bio || "",
         date_of_birth: user.date_of_birth || "",
         time_of_birth: user.time_of_birth || "",
@@ -56,12 +62,24 @@ export default function ProfileSettings() {
   });
 
   const handleProfileUpdate = async () => {
+    if (!profileData.bio || !profileData.bio.trim()) {
+      alert("Bio is required. Please add a bio before saving.");
+      return;
+    }
+
+    const toTitleCase = (str) => str
+      ?.split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+
+    const full_name = `${toTitleCase(profileData.first_name)} ${toTitleCase(profileData.last_name)}`.trim();
+    
     const formattedData = {
-      ...profileData,
-      full_name: profileData.full_name
-        ?.split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join(' '),
+      full_name,
+      bio: profileData.bio,
+      date_of_birth: profileData.date_of_birth,
+      time_of_birth: profileData.time_of_birth,
+      location: profileData.location,
       social_links: socialLinks,
     };
     await updateProfileMutation.mutateAsync(formattedData);
@@ -116,6 +134,20 @@ export default function ProfileSettings() {
     enabled: !!currentUser,
   });
 
+  const { data: connectionRequests = [] } = useQuery({
+    queryKey: ["connectionRequests"],
+    queryFn: () => base44.entities.UserFollow.filter({ status: "pending" }),
+    initialData: [],
+    enabled: !!currentUser,
+  });
+
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ["allUsers"],
+    queryFn: () => base44.entities.User.list(),
+    initialData: [],
+    enabled: !!currentUser,
+  });
+
   const { data: myPosts = [] } = useQuery({
     queryKey: ["myPosts"],
     queryFn: () => base44.entities.CommunityPost.filter({ created_by: currentUser?.email }),
@@ -140,6 +172,30 @@ export default function ProfileSettings() {
       queryClient.invalidateQueries({ queryKey: ["connections"] });
     },
   });
+
+  const acceptConnectionMutation = useMutation({
+    mutationFn: async (requestId) => {
+      await base44.entities.UserFollow.update(requestId, { status: "connected" });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["connectionRequests"] });
+      queryClient.invalidateQueries({ queryKey: ["connections"] });
+    },
+  });
+
+  const rejectConnectionMutation = useMutation({
+    mutationFn: async (requestId) => {
+      await base44.entities.UserFollow.delete(requestId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["connectionRequests"] });
+    },
+  });
+
+  const getUserName = (email) => {
+    const user = allUsers.find(u => u.email === email);
+    return user?.full_name || email;
+  };
 
   if (!currentUser) {
     return (
@@ -220,14 +276,27 @@ export default function ProfileSettings() {
 
                 {/* Basic Info */}
                 <div className="space-y-4">
-                  <div>
-                    <Label>Full Name</Label>
-                    <Input
-                      value={profileData.full_name || ""}
-                      onChange={(e) =>
-                        setProfileData({ ...profileData, full_name: e.target.value })
-                      }
-                    />
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label>First Name *</Label>
+                      <Input
+                        value={profileData.first_name || ""}
+                        onChange={(e) =>
+                          setProfileData({ ...profileData, first_name: e.target.value })
+                        }
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label>Last Name *</Label>
+                      <Input
+                        value={profileData.last_name || ""}
+                        onChange={(e) =>
+                          setProfileData({ ...profileData, last_name: e.target.value })
+                        }
+                        required
+                      />
+                    </div>
                   </div>
 
                   <div>
@@ -236,7 +305,7 @@ export default function ProfileSettings() {
                   </div>
 
                   <div>
-                    <Label>Bio</Label>
+                    <Label>Bio *</Label>
                     <Textarea
                       value={profileData.bio || ""}
                       onChange={(e) =>
@@ -244,7 +313,9 @@ export default function ProfileSettings() {
                       }
                       placeholder="Tell us about yourself..."
                       className="min-h-[100px]"
+                      required
                     />
+                    <p className="text-xs text-gray-500 mt-1">Required field</p>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
@@ -378,10 +449,60 @@ export default function ProfileSettings() {
             {/* Connections */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="w-5 h-5" />
-                  Connections ({connections.length})
-                </CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="w-5 h-5" />
+                    Connections ({connections.length})
+                  </CardTitle>
+                  <Dialog open={showConnectionRequests} onOpenChange={setShowConnectionRequests}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        <UserPlus className="w-4 h-4 mr-2" />
+                        Connection Requests {connectionRequests.length > 0 && `(${connectionRequests.length})`}
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl">
+                      <DialogHeader>
+                        <DialogTitle>Connection Requests</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-3 max-h-[400px] overflow-y-auto">
+                        {connectionRequests.length === 0 ? (
+                          <p className="text-gray-500 text-center py-8">No pending connection requests</p>
+                        ) : (
+                          connectionRequests.map((request) => (
+                            <div key={request.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                              <div className="flex items-center gap-3">
+                                <Avatar>
+                                  <AvatarFallback className="bg-[#6B1B3D] text-white">
+                                    {getUserName(request.created_by)?.[0]}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <span className="font-medium">{getUserName(request.created_by)}</span>
+                              </div>
+                              <div className="flex gap-2">
+                                <Button
+                                  size="sm"
+                                  onClick={() => acceptConnectionMutation.mutate(request.id)}
+                                  className="bg-green-600 hover:bg-green-700"
+                                >
+                                  Accept
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => rejectConnectionMutation.mutate(request.id)}
+                                  className="text-red-600"
+                                >
+                                  Reject
+                                </Button>
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -393,10 +514,10 @@ export default function ProfileSettings() {
                         <div className="flex items-center gap-3">
                           <Avatar>
                             <AvatarFallback className="bg-[#6B1B3D] text-white">
-                              {connection.followingEmail?.[0]}
+                              {getUserName(connection.followingEmail)?.[0]}
                             </AvatarFallback>
                           </Avatar>
-                          <span className="font-medium">{connection.followingEmail}</span>
+                          <span className="font-medium">{getUserName(connection.followingEmail)}</span>
                         </div>
                         <div className="flex gap-2">
                           <Button
@@ -440,10 +561,10 @@ export default function ProfileSettings() {
                         <div className="flex items-center gap-3">
                           <Avatar>
                             <AvatarFallback className="bg-[#6B1B3D] text-white">
-                              {follow.followingEmail?.[0]}
+                              {getUserName(follow.followingEmail)?.[0]}
                             </AvatarFallback>
                           </Avatar>
-                          <span className="font-medium">{follow.followingEmail}</span>
+                          <span className="font-medium">{getUserName(follow.followingEmail)}</span>
                         </div>
                         <Button
                           variant="outline"
