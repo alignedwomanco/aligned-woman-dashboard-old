@@ -202,14 +202,16 @@ export default function Members() {
                         )}
                       </Button>
                       
-                      <Link to={createPageUrl("Messages") + `?user=${user.email}`}>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                        >
-                          <MessageCircle className="w-4 h-4" />
-                        </Button>
-                      </Link>
+                      {isConnected(user.email) && (
+                        <Link to={createPageUrl("Messages") + `?user=${user.email}`}>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                          >
+                            <MessageCircle className="w-4 h-4" />
+                          </Button>
+                        </Link>
+                      )}
                     </div>
 
                     {isConnected(user.email) ? (

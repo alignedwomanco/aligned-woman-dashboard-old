@@ -17,6 +17,8 @@ import AdminMetricsContent from "@/components/admin/AdminMetricsContent";
 export default function ProfileSettings() {
   const [currentUser, setCurrentUser] = useState(null);
   const [profileData, setProfileData] = useState({});
+  const [socialLinks, setSocialLinks] = useState([]);
+  const [activeTab, setActiveTab] = useState("profile");
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -54,7 +56,8 @@ export default function ProfileSettings() {
       full_name: profileData.full_name
         ?.split(' ')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join(' ')
+        .join(' '),
+      social_links: socialLinks,
     };
     await updateProfileMutation.mutateAsync(formattedData);
     setCurrentUser({ ...currentUser, ...formattedData });
@@ -67,6 +70,31 @@ export default function ProfileSettings() {
     const { file_url } = await base44.integrations.Core.UploadFile({ file });
     await base44.auth.updateMe({ profile_picture: file_url });
     setCurrentUser({ ...currentUser, profile_picture: file_url });
+  };
+
+  const addSocialLink = () => {
+    setSocialLinks([...socialLinks, { platform: "", url: "" }]);
+  };
+
+  const updateSocialLink = (index, field, value) => {
+    const updated = [...socialLinks];
+    updated[index][field] = value;
+    setSocialLinks(updated);
+  };
+
+  const removeSocialLink = (index) => {
+    setSocialLinks(socialLinks.filter((_, i) => i !== index));
+  };
+
+  const getLevelInfo = (level = 1) => {
+    const levels = {
+      1: { label: "New Member", color: "from-gray-400 to-gray-500" },
+      2: { label: "Active Member", color: "from-blue-400 to-blue-600" },
+      3: { label: "Regular Contributor", color: "from-green-400 to-green-600" },
+      4: { label: "Valued Contributor", color: "from-purple-400 to-purple-600" },
+      5: { label: "Advanced Contributor", color: "from-orange-400 to-pink-600" },
+    };
+    return levels[level] || levels[1];
   };
 
   if (!currentUser) {
