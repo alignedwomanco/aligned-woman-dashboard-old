@@ -383,9 +383,14 @@ export default function AdminSettings() {
                           </TableCell>
                           <TableCell>{user.email}</TableCell>
                           <TableCell>
-                            <Badge className={getRoleBadgeColor(user.role)}>
-                              {user.role?.replace("_", " ")}
-                            </Badge>
+                            <div className="space-y-1">
+                              <Badge className={getRoleBadgeColor(user.role)}>
+                                {user.role?.replace("_", " ")}
+                              </Badge>
+                              {user.custom_title && (
+                                <div className="text-xs text-gray-600">{user.custom_title}</div>
+                              )}
+                            </div>
                           </TableCell>
                           <TableCell>
                             <Select
