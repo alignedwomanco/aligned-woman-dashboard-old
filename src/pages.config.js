@@ -1,4 +1,5 @@
 import ALIVEMethod from './pages/ALIVEMethod';
+import AdminSettings from './pages/AdminSettings';
 import Apply from './pages/Apply';
 import Blueprint from './pages/Blueprint';
 import CheckIn from './pages/CheckIn';
@@ -21,17 +22,17 @@ import MyMetrics from './pages/MyMetrics';
 import MyPathway from './pages/MyPathway';
 import OnboardingForm from './pages/OnboardingForm';
 import OurWhy from './pages/OurWhy';
+import ProfileSettings from './pages/ProfileSettings';
 import Progress from './pages/Progress';
 import Settings from './pages/Settings';
 import Support from './pages/Support';
 import ToolsHub from './pages/ToolsHub';
-import ProfileSettings from './pages/ProfileSettings';
-import AdminSettings from './pages/AdminSettings';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "ALIVEMethod": ALIVEMethod,
+    "AdminSettings": AdminSettings,
     "Apply": Apply,
     "Blueprint": Blueprint,
     "CheckIn": CheckIn,
@@ -54,12 +55,11 @@ export const PAGES = {
     "MyPathway": MyPathway,
     "OnboardingForm": OnboardingForm,
     "OurWhy": OurWhy,
+    "ProfileSettings": ProfileSettings,
     "Progress": Progress,
     "Settings": Settings,
     "Support": Support,
     "ToolsHub": ToolsHub,
-    "ProfileSettings": ProfileSettings,
-    "AdminSettings": AdminSettings,
 }
 
 export const pagesConfig = {

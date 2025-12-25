@@ -53,14 +53,19 @@ export default function ModuleEditor({ open, onOpenChange, module, sectionId }) 
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {
+      const saveData = {
+        ...data,
+        sectionId: data.sectionId || sectionId,
+      };
+      
       if (module) {
-        return base44.entities.Module.update(module.id, data);
+        return base44.entities.Module.update(module.id, saveData);
       } else {
-        return base44.entities.Module.create(data);
+        return base44.entities.Module.create(saveData);
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["modules"]);
+      queryClient.invalidateQueries({ queryKey: ["modules"] });
       onOpenChange(false);
     },
   });
