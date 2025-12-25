@@ -392,12 +392,27 @@ export default function AdminSettings() {
                       {adminUsers.map((user) => (
                         <TableRow key={user.id}>
                           <TableCell className="flex items-center gap-3">
-                            <Avatar>
-                              <AvatarImage src={user.profile_picture} />
-                              <AvatarFallback className="bg-[#6B1B3D] text-white">
-                                {user.full_name?.[0] || user.email?.[0]}
-                              </AvatarFallback>
-                            </Avatar>
+                            <div className="relative group">
+                              <Avatar className="cursor-pointer">
+                                <AvatarImage src={user.profile_picture} />
+                                <AvatarFallback className="bg-[#6B1B3D] text-white">
+                                  {user.full_name?.[0] || user.email?.[0]}
+                                </AvatarFallback>
+                              </Avatar>
+                              <label 
+                                htmlFor={`profile-pic-admin-${user.id}`}
+                                className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                              >
+                                <Camera className="w-4 h-4 text-white" />
+                              </label>
+                              <input
+                                id={`profile-pic-admin-${user.id}`}
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => handleProfilePictureForUser(e, user.id)}
+                              />
+                            </div>
                             <span className="font-medium">{user.full_name || "User"}</span>
                           </TableCell>
                           <TableCell>{user.email}</TableCell>
@@ -425,7 +440,9 @@ export default function AdminSettings() {
                               <SelectContent>
                                 <SelectItem value="user">User</SelectItem>
                                 <SelectItem value="expert">Expert</SelectItem>
-                                <SelectItem value="course_creator">Course Creator</SelectItem>
+                                <SelectItem value="educator">Educator</SelectItem>
+                                <SelectItem value="facilitator">Facilitator</SelectItem>
+                                <SelectItem value="support">Support</SelectItem>
                                 <SelectItem value="moderator">Moderator</SelectItem>
                                 <SelectItem value="admin">Admin</SelectItem>
                                 {(currentUser.role === "master_admin" || currentUser.role === "owner") && (
@@ -512,12 +529,27 @@ export default function AdminSettings() {
                       {regularUsers.map((user) => (
                         <TableRow key={user.id}>
                           <TableCell className="flex items-center gap-3">
-                            <Avatar>
-                              <AvatarImage src={user.profile_picture} />
-                              <AvatarFallback className="bg-[#6B1B3D] text-white">
-                                {user.full_name?.[0] || user.email?.[0]}
-                              </AvatarFallback>
-                            </Avatar>
+                            <div className="relative group">
+                              <Avatar className="cursor-pointer">
+                                <AvatarImage src={user.profile_picture} />
+                                <AvatarFallback className="bg-[#6B1B3D] text-white">
+                                  {user.full_name?.[0] || user.email?.[0]}
+                                </AvatarFallback>
+                              </Avatar>
+                              <label 
+                                htmlFor={`profile-pic-regular-${user.id}`}
+                                className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                              >
+                                <Camera className="w-4 h-4 text-white" />
+                              </label>
+                              <input
+                                id={`profile-pic-regular-${user.id}`}
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => handleProfilePictureForUser(e, user.id)}
+                              />
+                            </div>
                             <span className="font-medium">{user.full_name || "User"}</span>
                           </TableCell>
                           <TableCell>{user.email}</TableCell>
@@ -544,7 +576,9 @@ export default function AdminSettings() {
                               <SelectContent>
                                 <SelectItem value="user">User</SelectItem>
                                 <SelectItem value="expert">Expert</SelectItem>
-                                <SelectItem value="course_creator">Course Creator</SelectItem>
+                                <SelectItem value="educator">Educator</SelectItem>
+                                <SelectItem value="facilitator">Facilitator</SelectItem>
+                                <SelectItem value="support">Support</SelectItem>
                                 <SelectItem value="moderator">Moderator</SelectItem>
                                 <SelectItem value="admin">Admin</SelectItem>
                                 {(currentUser.role === "master_admin" || currentUser.role === "owner") && (
