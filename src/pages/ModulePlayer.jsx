@@ -504,31 +504,60 @@ export default function ModulePlayer() {
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between text-sm mb-2">
-                      <span className="text-gray-600">Video</span>
+                      <span className="text-gray-600">Video Progress</span>
                       <span className="font-medium">
                         {currentProgress.watchedPercent}%
                       </span>
                     </div>
                     <Progress value={currentProgress.watchedPercent} className="h-2" />
                   </div>
-                  <div>
-                    <div className="flex justify-between text-sm mb-2">
-                      <span className="text-gray-600">Assessment</span>
-                      <span className="font-medium">
-                        {selectedSubModule.isAssessment ? "Current" : "Not started"}
-                      </span>
-                    </div>
-                  </div>
+
+                  {/* Simulate video progress */}
+                  {!currentProgress.isComplete && currentProgress.watchedPercent < 100 && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const newPercent = Math.min(currentProgress.watchedPercent + 25, 100);
+                        updateProgressMutation.mutate({
+                          subModuleId: selectedSubModule.id,
+                          watchedPercent: newPercent,
+                          isComplete: false,
+                        });
+                      }}
+                      className="w-full text-xs"
+                    >
+                      Simulate +25% Watch Progress
+                    </Button>
+                  )}
                 </div>
 
+                {!canMarkComplete && (
+                  <div className="mt-4 p-3 bg-orange-50 rounded-lg border border-orange-200">
+                    <p className="text-xs text-orange-800">
+                      ⏳ Watch at least 50% of the video to unlock completion
+                    </p>
+                  </div>
+                )}
+
                 {canMarkComplete && !currentProgress.isComplete && (
-                  <Button
-                    onClick={handleMarkComplete}
-                    className="w-full mt-4 bg-green-600 hover:bg-green-700"
-                  >
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    {quiz ? "Take Quiz & Complete" : "Mark as Complete"}
-                  </Button>
+                  <div className="mt-4 space-y-3">
+                    <div className="flex items-center gap-2 p-3 bg-green-50 rounded-lg border border-green-200">
+                      <input
+                        type="checkbox"
+                        id="complete-checkbox"
+                        className="w-4 h-4 text-green-600 rounded"
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            handleMarkComplete();
+                          }
+                        }}
+                      />
+                      <label htmlFor="complete-checkbox" className="text-sm text-green-900 cursor-pointer">
+                        I've completed this lesson
+                      </label>
+                    </div>
+                  </div>
                 )}
 
                 {quiz && quizAttempts.length > 0 && (
@@ -547,27 +576,34 @@ export default function ModulePlayer() {
                   <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200 text-center">
                     <CheckCircle className="w-5 h-5 text-green-600 mx-auto mb-1" />
                     <span className="text-sm font-medium text-green-700">
-                      Completed
+                      ✓ Lesson Completed
                     </span>
-                  </div>
-                )}
-
-                {!canMarkComplete && (
-                  <div className="mt-4 p-3 bg-orange-50 rounded-lg border border-orange-200">
-                    <p className="text-xs text-orange-800">
-                      Watch at least 50% of the video to mark as complete
-                    </p>
                   </div>
                 )}
               </CardContent>
             </Card>
 
-            <Button
-              className="w-full bg-gradient-to-r from-[#6B1B3D] to-[#8B2E4D] text-white"
-              onClick={() => navigate(createPageUrl("Classroom"))}
-            >
-              Back to Classroom
-            </Button>
+            {/* Next Button */}
+            {(() => {
+              const currentIndex = subModules.findIndex(sm => sm.id === selectedSubModule.id);
+              const nextSubModule = subModules[currentIndex + 1];
+              return nextSubModule ? (
+                <Button
+                  className="w-full bg-[#6B1B3D] hover:bg-[#4A1228] text-white"
+                  onClick={() => setSelectedSubModule(nextSubModule)}
+                >
+                  Next Lesson →
+                </Button>
+              ) : (
+                <Button
+                  className="w-full bg-gradient-to-r from-[#6B1B3D] to-[#8B2E4D] text-white"
+                  onClick={() => navigate(createPageUrl("Classroom"))}
+                >
+                  Back to Classroom
+                </Button>
+              );
+            })()}
+          </div>
           </div>
         </div>
       </div>

@@ -35,27 +35,6 @@ const phaseColors = {
   VisionEmbodiment: "bg-rose-100 text-rose-700 border-rose-200",
 };
 
-const allModules = [
-  { id: "1", title: "Nervous System Regulation", phase: "Awareness", duration: 45, status: "Complete", summary: "Learn how your system responds to stress, and how to return to safety without forcing yourself." },
-  { id: "2", title: "Understanding Burnout", phase: "Awareness", duration: 30, status: "InProgress", summary: "Burnout is not a weakness. It is a predictable system pattern. Learn the stages and interrupts." },
-  { id: "3", title: "Hormones and The Female Body", phase: "Awareness", duration: 40, status: "Available", summary: "Understand cycles, energy rhythms, and why generic advice fails female physiology." },
-  { id: "4", title: "Nutrition for Women", phase: "Awareness", duration: 35, status: "Locked", summary: "Build stable energy, mood, and appetite without punishment or obsession." },
-  { id: "5", title: "Movement and The Body", phase: "Awareness", duration: 30, status: "Locked", summary: "Movement as support, not depletion. Learn training that respects hormones and capacity." },
-  { id: "6", title: "Releasing Shame", phase: "Liberation", duration: 45, status: "Locked", summary: "Shame keeps women small and compliant. Learn how it lives in the body and how to release safely." },
-  { id: "7", title: "People Pleasing Patterns", phase: "Liberation", duration: 40, status: "Locked", summary: "People pleasing is a survival strategy. Learn its cost and how to exit without becoming cold." },
-  { id: "8", title: "Trauma and The Body", phase: "Liberation", duration: 50, status: "Locked", summary: "Learn how protective patterns form, without needing to relive your story." },
-  { id: "9", title: "Inner Child Work", phase: "Liberation", duration: 45, status: "Locked", summary: "Meet the part of you that still believes she must earn love, safety, or approval." },
-  { id: "10", title: "Reclaiming Intuition", phase: "Liberation", duration: 35, status: "Locked", summary: "Intuition is not magic. It is body data plus self trust. Learn to hear it again." },
-  { id: "11", title: "Money Mindset", phase: "Intention", duration: 40, status: "Locked", summary: "Expose the hidden scripts that shape earning, receiving, spending, and self worth." },
-  { id: "12", title: "Financial Literacy", phase: "Intention", duration: 45, status: "Locked", summary: "Practical money clarity without shame. Learn budgeting, planning, and confidence basics." },
-  { id: "13", title: "Career Strategy", phase: "Intention", duration: 40, status: "Locked", summary: "Clarify what you want, what you are available for, and how you will move without self betrayal." },
-  { id: "14", title: "Communication and Boundaries", phase: "Intention", duration: 35, status: "Locked", summary: "Say the true thing kindly and clearly. Stop negotiating your needs after you state them." },
-  { id: "15", title: "Legal Literacy for Women", phase: "Intention", duration: 40, status: "Locked", summary: "Know your rights and your options. Learn the basics of advocacy and protection." },
-  { id: "16", title: "Identity Expansion", phase: "VisionEmbodiment", duration: 45, status: "Locked", summary: "Stop living as who you became to survive. Start living as who you are becoming." },
-  { id: "17", title: "Personal Branding", phase: "VisionEmbodiment", duration: 40, status: "Locked", summary: "Visibility without overexposure. Build a voice that feels true and sustainable." },
-  { id: "18", title: "Purpose and Leadership", phase: "VisionEmbodiment", duration: 50, status: "Locked", summary: "Lead from values, not performance. Build a life that matches what matters." },
-];
-
 export default function Classroom() {
   const [activePhase, setActivePhase] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -63,12 +42,22 @@ export default function Classroom() {
   const [userPoints, setUserPoints] = useState(null);
   const [userBadges, setUserBadges] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]);
+  const [allModules, setAllModules] = useState([]);
+  const [moduleProgress, setModuleProgress] = useState([]);
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const user = await base44.auth.me();
         setCurrentUser(user);
+
+        // Load modules
+        const modules = await base44.entities.Module.list("order");
+        setAllModules(modules);
+
+        // Load module progress
+        const progress = await base44.entities.UserModuleProgress.list();
+        setModuleProgress(progress);
 
         // Load user points
         const points = await base44.entities.UserPoints.filter({});
@@ -101,6 +90,12 @@ export default function Classroom() {
     };
     loadData();
   }, []);
+
+  const getModuleStatus = (moduleId) => {
+    const progress = moduleProgress.find(p => p.moduleId === moduleId);
+    if (!progress) return "Available";
+    return progress.status;
+  };
 
   const filteredModules = allModules.filter((module) => {
     const phaseMatch = activePhase === "all" || module.phase === activePhase;
@@ -179,7 +174,8 @@ export default function Classroom() {
             <div className="grid md:grid-cols-2 gap-6">
           {filteredModules.map((module, index) => {
             const PhaseIcon = phaseIcons[module.phase];
-            const isClickable = module.status !== "Locked";
+            const status = getModuleStatus(module.id);
+            const isClickable = status !== "Locked";
 
             const cardContent = (
               <Card className={`h-full transition-all ${isClickable ? "hover:shadow-lg cursor-pointer" : "opacity-60"}`}>
@@ -189,29 +185,29 @@ export default function Classroom() {
                       <PhaseIcon className="w-3 h-3 mr-1" />
                       {module.phase === "VisionEmbodiment" ? "Vision" : module.phase}
                     </Badge>
-                    {getStatusIcon(module.status)}
+                    {getStatusIcon(status)}
                   </div>
                   
-                  <h3 className={`text-lg font-bold mb-2 ${module.status === "Locked" ? "text-gray-400" : "text-[#4A1228]"}`}>
+                  <h3 className={`text-lg font-bold mb-2 ${status === "Locked" ? "text-gray-400" : "text-[#4A1228]"}`}>
                     {module.title}
                   </h3>
                   
-                  <p className={`text-sm mb-4 line-clamp-2 ${module.status === "Locked" ? "text-gray-400" : "text-gray-600"}`}>
+                  <p className={`text-sm mb-4 line-clamp-2 ${status === "Locked" ? "text-gray-400" : "text-gray-600"}`}>
                     {module.summary}
                   </p>
                   
                   <div className="flex items-center gap-3 text-sm text-gray-500">
                     <span className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />
-                      {module.duration} min
+                      {module.durationMinutes || 45} min
                     </span>
-                    {module.status === "Locked" && (
+                    {status === "Locked" && (
                       <span className="text-gray-400">Locked</span>
                     )}
-                    {module.status === "Complete" && (
+                    {status === "Complete" && (
                       <span className="text-green-600 font-medium">Complete</span>
                     )}
-                    {module.status === "InProgress" && (
+                    {status === "InProgress" && (
                       <span className="text-[#6B1B3D] font-medium">In Progress</span>
                     )}
                   </div>
