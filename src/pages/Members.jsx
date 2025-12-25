@@ -198,6 +198,9 @@ export default function Members() {
                 <TabsTrigger value="connections">Connections</TabsTrigger>
                 <TabsTrigger value="followers">Followers</TabsTrigger>
                 <TabsTrigger value="following">Following</TabsTrigger>
+                <TabsTrigger value="messages" onClick={() => window.location.href = createPageUrl("Messages")}>
+                  Messages
+                </TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
