@@ -114,6 +114,29 @@ export default function AdminSettings() {
     },
   });
 
+  // Apply background
+  useEffect(() => {
+    if (currentUser?.background_image) {
+      const bg = currentUser.background_image;
+      if (bg.startsWith('#')) {
+        document.body.style.backgroundColor = bg;
+        document.body.style.backgroundImage = "none";
+      } else if (bg.startsWith('data:image/svg+xml')) {
+        document.body.style.backgroundImage = `url("${bg}")`;
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundPosition = "center";
+        document.body.style.backgroundAttachment = "fixed";
+        document.body.style.backgroundColor = "transparent";
+      } else {
+        document.body.style.backgroundImage = `url(${bg})`;
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundPosition = "center";
+        document.body.style.backgroundAttachment = "fixed";
+        document.body.style.backgroundColor = "transparent";
+      }
+    }
+  }, [currentUser?.background_image]);
+
   const handleProfileUpdate = async () => {
     const formattedData = {
       ...profileData,
@@ -159,32 +182,6 @@ export default function AdminSettings() {
 
   const adminUsers = allUsers.filter(u => ["admin", "master_admin", "moderator", "course_creator", "expert"].includes(u.role));
   const regularUsers = allUsers.filter(u => u.role === "user");
-
-  // Apply background
-  useEffect(() => {
-    if (currentUser?.background_image) {
-      const bg = currentUser.background_image;
-      if (bg.startsWith('#')) {
-        document.body.style.backgroundColor = bg;
-        document.body.style.backgroundImage = "none";
-      } else if (bg.startsWith('data:image/svg+xml')) {
-        document.body.style.backgroundImage = `url("${bg}")`;
-        document.body.style.backgroundSize = "cover";
-        document.body.style.backgroundPosition = "center";
-        document.body.style.backgroundAttachment = "fixed";
-        document.body.style.backgroundColor = "transparent";
-      } else {
-        document.body.style.backgroundImage = `url(${bg})`;
-        document.body.style.backgroundSize = "cover";
-        document.body.style.backgroundPosition = "center";
-        document.body.style.backgroundAttachment = "fixed";
-        document.body.style.backgroundColor = "transparent";
-      }
-    } else {
-      document.body.style.backgroundColor = "";
-      document.body.style.backgroundImage = "";
-    }
-  }, [currentUser?.background_image]);
 
   return (
     <div className="min-h-screen p-6">
