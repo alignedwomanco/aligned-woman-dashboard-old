@@ -289,10 +289,10 @@ export default function Layout({ children, currentPageName }) {
       `}</style>
 
       {/* Global Header */}
-      <header className="bg-white mr-3 fixed top-0 left-0 right-0 z-50 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto">
           {/* Top Row: Logo, Search, Icons, Profile */}
-          <div className="pt-10 pr-6 pb-10 pl-6 flex items-center justify-between gap-6">
+          <div className="flex items-center justify-between py-6 gap-6 px-6">
             {/* Logo */}
             <Link to={createPageUrl("Home")} className="flex items-center gap-3 flex-shrink-0">
               <img
@@ -381,8 +381,8 @@ export default function Layout({ children, currentPageName }) {
           </div>
 
           {/* Navigation Bar */}
-          <div className="pb-6">
-            <nav className="bg-[#6B1B3D] pt-2 pb-2 rounded-xl scrollbar-hide flex items-center justify-between overflow-x-auto">
+          <div className="pb-6 px-6">
+            <nav className="bg-[#6B1B3D] rounded-xl py-2 flex items-center justify-between overflow-x-auto scrollbar-hide">
               {visibleNavItems.map((item, index) =>
               <React.Fragment key={item.name}>
                   <Link
@@ -416,7 +416,7 @@ export default function Layout({ children, currentPageName }) {
       }
 
       {/* Main Content */}
-      <main className="">
+      <main className="pt-[160px]">
         {children}
       </main>
     </div>);

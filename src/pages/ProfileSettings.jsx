@@ -25,7 +25,7 @@ export default function ProfileSettings() {
       setCurrentUser(user);
       setProfileData({
         full_name: user.full_name,
-        bio: user.bio || ""
+        bio: user.bio || "",
       });
     };
     loadUser();
@@ -35,26 +35,26 @@ export default function ProfileSettings() {
     mutationFn: (data) => base44.auth.updateMe(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
-    }
+    },
   });
 
   const restartOnboardingMutation = useMutation({
     mutationFn: async () => {
       const sessions = await base44.entities.DiagnosticSession.list();
-      await Promise.all(sessions.map((session) => base44.entities.DiagnosticSession.delete(session.id)));
+      await Promise.all(sessions.map(session => base44.entities.DiagnosticSession.delete(session.id)));
     },
     onSuccess: () => {
       window.location.href = createPageUrl("OnboardingForm");
-    }
+    },
   });
 
   const handleProfileUpdate = async () => {
     const formattedData = {
       ...profileData,
-      full_name: profileData.full_name?.
-      split(' ').
-      map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).
-      join(' ')
+      full_name: profileData.full_name
+        ?.split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ')
     };
     await updateProfileMutation.mutateAsync(formattedData);
     setCurrentUser({ ...currentUser, ...formattedData });
@@ -73,15 +73,15 @@ export default function ProfileSettings() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin w-8 h-8 border-4 border-[#6B1B3D] border-t-transparent rounded-full" />
-      </div>);
-
+      </div>
+    );
   }
 
   return (
     <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-12">
-          <h1 className="text-[#4A1228] mb-2 pt-5 text-3xl font-bold">Profile Settings</h1>
+          <h1 className="text-3xl font-bold text-[#4A1228] mb-2">Profile Settings</h1>
           <p className="text-gray-600">Manage your profile and preferences</p>
         </div>
 
@@ -124,13 +124,13 @@ export default function ProfileSettings() {
                           type="file"
                           accept="image/*"
                           className="hidden"
-                          onChange={handleProfilePicture} />
-
+                          onChange={handleProfilePicture}
+                        />
                       </Label>
-                      <AvatarGenerator
+                      <AvatarGenerator 
                         currentUser={currentUser}
-                        onAvatarGenerated={(url) => setCurrentUser({ ...currentUser, profile_picture: url })} />
-
+                        onAvatarGenerated={(url) => setCurrentUser({ ...currentUser, profile_picture: url })}
+                      />
                     </div>
                     <p className="text-xs text-gray-500">JPG, PNG, max 5MB</p>
                   </div>
@@ -143,9 +143,9 @@ export default function ProfileSettings() {
                     <Input
                       value={profileData.full_name || ""}
                       onChange={(e) =>
-                      setProfileData({ ...profileData, full_name: e.target.value })
-                      } />
-
+                        setProfileData({ ...profileData, full_name: e.target.value })
+                      }
+                    />
                   </div>
 
                   <div>
@@ -158,27 +158,27 @@ export default function ProfileSettings() {
                     <Textarea
                       value={profileData.bio || ""}
                       onChange={(e) =>
-                      setProfileData({ ...profileData, bio: e.target.value })
+                        setProfileData({ ...profileData, bio: e.target.value })
                       }
                       placeholder="Tell us about yourself..."
-                      className="min-h-[100px]" />
-
+                      className="min-h-[100px]"
+                    />
                   </div>
                 </div>
 
                 <div className="flex gap-3">
                   <Button
                     onClick={handleProfileUpdate}
-                    className="bg-[#6B1B3D] hover:bg-[#4A1228]">
-
+                    className="bg-[#6B1B3D] hover:bg-[#4A1228]"
+                  >
                     <Save className="w-4 h-4 mr-2" />
                     Save Changes
                   </Button>
                   <Button
                     onClick={() => restartOnboardingMutation.mutate()}
                     variant="outline"
-                    className="border-[#6B1B3D] text-[#6B1B3D] hover:bg-pink-50">
-
+                    className="border-[#6B1B3D] text-[#6B1B3D] hover:bg-pink-50"
+                  >
                     <RefreshCw className="w-4 h-4 mr-2" />
                     Restart Onboarding
                   </Button>
@@ -193,8 +193,8 @@ export default function ProfileSettings() {
               currentBackground={currentUser.background_image || "#FEF5F9"}
               onBackgroundChange={(backgroundUrl) => {
                 setCurrentUser({ ...currentUser, background_image: backgroundUrl });
-              }} />
-
+              }}
+            />
           </TabsContent>
 
           {/* Analytics Tab */}
@@ -203,6 +203,6 @@ export default function ProfileSettings() {
           </TabsContent>
         </Tabs>
       </div>
-    </div>);
-
+    </div>
+  );
 }
