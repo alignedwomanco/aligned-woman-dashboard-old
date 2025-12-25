@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Clock,
   Eye,
@@ -61,53 +60,47 @@ export default function Classroom() {
   const [activePhase, setActivePhase] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
-  const queryClient = useQueryClient();
+  const [userPoints, setUserPoints] = useState(null);
+  const [userBadges, setUserBadges] = useState([]);
+  const [leaderboard, setLeaderboard] = useState([]);
 
   useEffect(() => {
-    const loadUser = async () => {
-      const user = await base44.auth.me();
-      setCurrentUser(user);
+    const loadData = async () => {
+      try {
+        const user = await base44.auth.me();
+        setCurrentUser(user);
+
+        // Load user points
+        const points = await base44.entities.UserPoints.filter({});
+        setUserPoints(points[0] || null);
+
+        // Load user badges
+        const badges = await base44.entities.UserBadge.list("-earnedDate");
+        setUserBadges(badges);
+
+        // Load leaderboard
+        const allUsers = await base44.entities.User.list();
+        const allPoints = await base44.entities.UserPoints.list("-points");
+        
+        const leaderboardData = allPoints
+          .map((pts) => {
+            const usr = allUsers.find((u) => u.email === pts.created_by);
+            return {
+              ...pts,
+              email: pts.created_by,
+              full_name: usr?.full_name,
+              profile_picture: usr?.profile_picture,
+            };
+          })
+          .slice(0, 10);
+        
+        setLeaderboard(leaderboardData);
+      } catch (error) {
+        console.error("Error loading classroom data:", error);
+      }
     };
-    loadUser();
+    loadData();
   }, []);
-
-  const { data: userPoints } = useQuery({
-    queryKey: ["userPoints", currentUser?.email],
-    queryFn: async () => {
-      const points = await base44.entities.UserPoints.filter({});
-      return points[0] || null;
-    },
-    enabled: !!currentUser,
-  });
-
-  const { data: userBadges = [] } = useQuery({
-    queryKey: ["userBadges", currentUser?.email],
-    queryFn: () => base44.entities.UserBadge.list("-earnedDate"),
-    enabled: !!currentUser,
-  });
-
-  const { data: allUsers = [] } = useQuery({
-    queryKey: ["allUsers"],
-    queryFn: () => base44.entities.User.list(),
-  });
-
-  const { data: allUserPoints = [] } = useQuery({
-    queryKey: ["allUserPoints"],
-    queryFn: () => base44.entities.UserPoints.list("-points"),
-  });
-
-  // Build leaderboard
-  const leaderboard = allUserPoints
-    .map((points) => {
-      const user = allUsers.find((u) => u.email === points.created_by);
-      return {
-        ...points,
-        email: points.created_by,
-        full_name: user?.full_name,
-        profile_picture: user?.profile_picture,
-      };
-    })
-    .slice(0, 10);
 
   const filteredModules = allModules.filter((module) => {
     const phaseMatch = activePhase === "all" || module.phase === activePhase;
