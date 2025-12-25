@@ -46,6 +46,7 @@ export default function ProfileSettings() {
         first_name: firstName,
         last_name: lastName,
         bio: user.bio || "",
+        occupation: user.occupation || "",
         date_of_birth: user.date_of_birth || "",
         time_of_birth: user.time_of_birth || "",
         location: user.location || "",
@@ -103,6 +104,7 @@ export default function ProfileSettings() {
     const formattedData = {
       full_name,
       bio: profileData.bio,
+      occupation: profileData.occupation,
       date_of_birth: profileData.date_of_birth,
       time_of_birth: profileData.time_of_birth,
       location: profileData.location,
@@ -182,6 +184,7 @@ If you did not request this change, please ignore this email.
     "Telegram",
     "Threads",
     "TikTok",
+    "Website",
     "X",
   ];
 
@@ -444,6 +447,17 @@ If you did not request this change, please ignore this email.
                       className="min-h-[100px]"
                     />
                     <p className="text-xs text-gray-500 mt-1">Required field</p>
+                  </div>
+
+                  <div>
+                    <Label>Occupation</Label>
+                    <Input
+                      value={profileData.occupation || ""}
+                      onChange={(e) =>
+                        setProfileData({ ...profileData, occupation: e.target.value })
+                      }
+                      placeholder="What do you do?"
+                    />
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-4">
