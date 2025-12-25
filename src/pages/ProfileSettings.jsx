@@ -7,10 +7,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Camera, Upload, Save, RefreshCw, Users, UserCheck, Heart, FileText, Plus, X, MessageCircle, UserMinus, UserPlus } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Camera, Upload, Save, RefreshCw, Users, UserCheck, Heart, FileText, Plus, X, MessageCircle, UserMinus, UserPlus, Mail, AlertCircle } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import AvatarGenerator from "@/components/admin/AvatarGenerator";
 import BackgroundSelector from "@/components/settings/BackgroundSelector";
 import { createPageUrl } from "@/utils";
@@ -22,6 +30,8 @@ export default function ProfileSettings() {
   const [socialLinks, setSocialLinks] = useState([]);
   const [activeTab, setActiveTab] = useState("profile");
   const [showConnectionRequests, setShowConnectionRequests] = useState(false);
+  const [emailChangeDialogOpen, setEmailChangeDialogOpen] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -67,8 +77,14 @@ export default function ProfileSettings() {
       return;
     }
 
+    if (!profileData.first_name?.trim() || !profileData.last_name?.trim()) {
+      alert("First name and last name are required.");
+      return;
+    }
+
     const toTitleCase = (str) => str
-      ?.split(' ')
+      ?.trim()
+      .split(' ')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
       .join(' ');
 
@@ -80,10 +96,44 @@ export default function ProfileSettings() {
       date_of_birth: profileData.date_of_birth,
       time_of_birth: profileData.time_of_birth,
       location: profileData.location,
-      social_links: socialLinks,
+      social_links: socialLinks.filter(link => link.platform && link.url),
     };
-    await updateProfileMutation.mutateAsync(formattedData);
-    setCurrentUser({ ...currentUser, ...formattedData });
+    
+    try {
+      await updateProfileMutation.mutateAsync(formattedData);
+      setCurrentUser({ ...currentUser, ...formattedData });
+      alert("Profile updated successfully!");
+    } catch (error) {
+      alert("Failed to update profile. Please try again.");
+    }
+  };
+
+  const handleEmailChange = async () => {
+    if (!newEmail || !newEmail.includes("@")) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
+    try {
+      await base44.integrations.Core.SendEmail({
+        to: newEmail,
+        subject: "Verify Your Email Change - The Aligned Woman",
+        body: `You have requested to change your email address to ${newEmail}. 
+        
+Please click the link below to verify this change:
+${window.location.origin}${createPageUrl("ProfileSettings")}?verify_email=${newEmail}
+
+If you did not request this change, please ignore this email.
+
+- The Aligned Woman Team`,
+      });
+      
+      setEmailChangeDialogOpen(false);
+      setNewEmail("");
+      alert("Verification email sent! Please check your inbox and follow the instructions.");
+    } catch (error) {
+      alert("Failed to send verification email. Please try again.");
+    }
   };
 
   const handleProfilePicture = async (e) => {
@@ -94,6 +144,16 @@ export default function ProfileSettings() {
     await base44.auth.updateMe({ profile_picture: file_url });
     setCurrentUser({ ...currentUser, profile_picture: file_url });
   };
+
+  const platformOptions = [
+    "Facebook",
+    "Instagram",
+    "LinkedIn",
+    "Telegram",
+    "Threads",
+    "TikTok",
+    "X",
+  ];
 
   const addSocialLink = () => {
     setSocialLinks([...socialLinks, { platform: "", url: "" }]);
@@ -301,7 +361,48 @@ export default function ProfileSettings() {
 
                   <div>
                     <Label>Email</Label>
-                    <Input value={currentUser.email} disabled className="bg-gray-50" />
+                    <div className="flex gap-2">
+                      <Input value={currentUser.email} disabled className="bg-gray-50 flex-1" />
+                      <Dialog open={emailChangeDialogOpen} onOpenChange={setEmailChangeDialogOpen}>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm">
+                            <Mail className="w-4 h-4 mr-2" />
+                            Change
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Change Email Address</DialogTitle>
+                            <DialogDescription>
+                              Enter your new email address. We'll send a verification link to confirm the change.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <Alert>
+                              <AlertCircle className="h-4 w-4" />
+                              <AlertDescription>
+                                Current email: {currentUser.email}
+                              </AlertDescription>
+                            </Alert>
+                            <div>
+                              <Label>New Email Address</Label>
+                              <Input
+                                type="email"
+                                value={newEmail}
+                                onChange={(e) => setNewEmail(e.target.value)}
+                                placeholder="newemail@example.com"
+                              />
+                            </div>
+                            <Button
+                              onClick={handleEmailChange}
+                              className="w-full bg-[#6B1B3D] hover:bg-[#4A1228]"
+                            >
+                              Send Verification Email
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
                   </div>
 
                   <div>
@@ -365,12 +466,21 @@ export default function ProfileSettings() {
                     <div className="space-y-2">
                       {socialLinks.map((link, index) => (
                         <div key={index} className="flex gap-2">
-                          <Input
-                            placeholder="Platform (e.g., Instagram)"
+                          <Select
                             value={link.platform}
-                            onChange={(e) => updateSocialLink(index, "platform", e.target.value)}
-                            className="w-1/3"
-                          />
+                            onValueChange={(value) => updateSocialLink(index, "platform", value)}
+                          >
+                            <SelectTrigger className="w-40">
+                              <SelectValue placeholder="Platform" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {platformOptions.map((platform) => (
+                                <SelectItem key={platform} value={platform}>
+                                  {platform}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                           <Input
                             placeholder="URL"
                             value={link.url}
