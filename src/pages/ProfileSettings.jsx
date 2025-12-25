@@ -193,7 +193,6 @@ export default function ProfileSettings() {
               currentBackground={currentUser.background_image || "#FEF5F9"}
               onBackgroundChange={(backgroundUrl) => {
                 setCurrentUser({ ...currentUser, background_image: backgroundUrl });
-                window.location.reload();
               }}
             />
           </TabsContent>
