@@ -69,7 +69,32 @@ export default function AdminSettings() {
   });
 
   const updateUserRoleMutation = useMutation({
-    mutationFn: ({ userId, role }) => base44.entities.User.update(userId, { role }),
+    mutationFn: async ({ userId, role }) => {
+      const targetUser = allUsers.find(u => u.id === userId);
+      
+      // Require email confirmation for owner role changes
+      if (role === "owner" || targetUser?.role === "owner") {
+        const confirmed = window.confirm(
+          `⚠️ CRITICAL: You are ${role === "owner" ? "granting" : "removing"} OWNER privileges.\n\n` +
+          `This is the highest level of system access. Please verify:\n` +
+          `- Email: ${targetUser?.email}\n` +
+          `- New Role: ${role}\n\n` +
+          `Type "CONFIRM" in the next dialog to proceed.`
+        );
+        
+        if (!confirmed) return;
+        
+        const verification = window.prompt(
+          `Please type "CONFIRM" to verify this owner role change:`
+        );
+        
+        if (verification !== "CONFIRM") {
+          throw new Error("Owner role change cancelled - verification failed");
+        }
+      }
+      
+      return base44.entities.User.update(userId, { role });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["allUsers"] });
     },
@@ -160,6 +185,7 @@ export default function AdminSettings() {
 
   const getRoleBadgeColor = (role) => {
     const colors = {
+      owner: "bg-gradient-to-r from-purple-600 to-pink-600 text-white",
       master_admin: "bg-purple-100 text-purple-800",
       admin: "bg-blue-100 text-blue-800",
       moderator: "bg-green-100 text-green-800",
@@ -178,9 +204,9 @@ export default function AdminSettings() {
     );
   }
 
-  const canAccessAdmin = ["admin", "master_admin", "moderator", "expert", "course_creator"].includes(currentUser.role);
+  const canAccessAdmin = ["owner", "admin", "master_admin", "moderator", "expert", "course_creator"].includes(currentUser.role);
 
-  const adminUsers = allUsers.filter(u => ["admin", "master_admin", "moderator", "course_creator", "expert"].includes(u.role));
+  const adminUsers = allUsers.filter(u => ["owner", "admin", "master_admin", "moderator", "course_creator", "expert"].includes(u.role));
   const regularUsers = allUsers.filter(u => u.role === "user");
 
   return (

@@ -362,7 +362,7 @@ export default function Layout({ children, currentPageName }) {
                       Profile Settings
                     </Link>
                   </DropdownMenuItem>
-                  {user && ["admin", "master_admin", "moderator", "expert", "course_creator"].includes(user.role) &&
+                  {user && ["owner", "admin", "master_admin", "moderator", "expert", "course_creator"].includes(user.role) &&
                   <DropdownMenuItem asChild>
                       <Link to={createPageUrl("AdminSettings")} className="flex items-center gap-2">
                         <Settings className="w-4 h-4" />
