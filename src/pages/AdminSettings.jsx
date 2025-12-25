@@ -35,8 +35,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import CourseBuilderContent from "@/components/admin/CourseBuilderContent";
 import AdminMetricsContent from "@/components/admin/AdminMetricsContent";
 import AvatarGenerator from "@/components/admin/AvatarGenerator";
-import ExpertsManagementContent from "@/components/admin/ExpertsManagementContent";
-import DashboardConfiguratorContent from "@/components/admin/DashboardConfiguratorContent";
 import { createPageUrl } from "@/utils";
 import BackgroundSelector from "@/components/settings/BackgroundSelector";
 
@@ -46,7 +44,6 @@ export default function AdminSettings() {
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState("moderator");
-  const [activeTab, setActiveTab] = useState("users");
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -163,61 +160,20 @@ export default function AdminSettings() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-12">
+        <div className="mb-8">
           <h1 className="text-3xl font-bold text-[#4A1228] mb-2">Admin Settings</h1>
           <p className="text-gray-600">Manage system settings and configurations</p>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-white border border-gray-200">
-            <TabsTrigger 
-              value="users" 
-              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
-            >
-              Users
-            </TabsTrigger>
-            <TabsTrigger 
-              value="courses" 
-              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
-            >
-              Course Builder
-            </TabsTrigger>
-            <TabsTrigger 
-              value="experts" 
-              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
-            >
-              Experts
-            </TabsTrigger>
-            <TabsTrigger 
-              value="dashboard" 
-              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
-            >
-              Dashboard Configurator
-            </TabsTrigger>
-            <TabsTrigger 
-              value="integrations" 
-              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
-            >
-              Integrations
-            </TabsTrigger>
-            <TabsTrigger 
-              value="analytics" 
-              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
-            >
-              Analytics
-            </TabsTrigger>
-            <TabsTrigger 
-              value="ai-chat" 
-              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
-            >
-              AI Chat Widget
-            </TabsTrigger>
-            <TabsTrigger 
-              value="support" 
-              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
-            >
-              Support Room
-            </TabsTrigger>
+        <Tabs defaultValue="users" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="users">Users</TabsTrigger>
+            <TabsTrigger value="courses">Course Builder</TabsTrigger>
+            <TabsTrigger value="dashboard">Dashboard Configurator</TabsTrigger>
+            <TabsTrigger value="integrations">Integrations</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="ai-chat">AI Chat Widget</TabsTrigger>
+            <TabsTrigger value="support">Support Room</TabsTrigger>
           </TabsList>
 
           {/* User Management Tab */}
@@ -350,30 +306,6 @@ export default function AdminSettings() {
                 </CardContent>
               </Card>
 
-              {/* Experts & Course Creators Quick Link */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Users className="w-5 h-5" />
-                    Experts & Course Creators
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between p-4 bg-pink-50 rounded-lg border border-pink-200">
-                    <div>
-                      <p className="font-medium text-gray-900">Manage Expert Profiles</p>
-                      <p className="text-sm text-gray-600">View metrics, content, and manage expert accounts</p>
-                    </div>
-                    <Button 
-                      onClick={() => setActiveTab("experts")}
-                      className="bg-[#6B1B3D] hover:bg-[#4A1228]"
-                    >
-                      Go to Experts →
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Regular Users Section */}
               <Card>
                 <CardHeader>
@@ -450,20 +382,23 @@ export default function AdminSettings() {
                 </CardContent>
               </Card>
             </TabsContent>
+          )}
 
           {/* Course Builder Tab */}
           <TabsContent value="courses">
             <CourseBuilderContent />
           </TabsContent>
 
-          {/* Experts Tab */}
-          <TabsContent value="experts">
-            <ExpertsManagementContent />
-          </TabsContent>
-
           {/* Dashboard Configurator Tab */}
           <TabsContent value="dashboard">
-            <DashboardConfiguratorContent />
+            <Card>
+              <CardHeader>
+                <CardTitle>Dashboard Configurator</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">Dashboard layout and tools configuration coming soon...</p>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Integrations Tab */}
