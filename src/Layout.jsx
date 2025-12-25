@@ -31,7 +31,7 @@ const appNavigation = [
   { name: "Classroom", label: "Classroom" },
   { name: "ExpertsDirectory", label: "Experts" },
   { name: "ToolsHub", label: "Tools" },
-  { name: "ALIVEMethod", label: "ALIVE Method" },
+  { name: "MyALIVEJourney", label: "ALIVE Method" },
   { name: "Support", label: "Support" },
 ];
 
