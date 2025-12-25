@@ -69,14 +69,20 @@ export default function DefineMyPurpose() {
       if (sessions && sessions.length > 0) {
         const s = sessions[0];
         setSession(s);
-        setCurrentStep(s.currentStep);
+        
+        // Always restart from Q1 with the hardcoded question
+        setCurrentStep(1);
+        setCurrentQuestion(FIRST_QUESTION);
+        
+        // Load existing answer if any
+        if (s.dyp_ans1) {
+          setCurrentAnswer(s.dyp_ans1);
+        }
 
         if (s.currentStep === 10 && s.mirrorSummaryHtml) {
           setShowMirror(true);
           setMirrorHtml(s.mirrorSummaryHtml);
           setFinalQuestion(s.finalQuestionHtml);
-        } else if (s.currentStep > 1) {
-          loadNextQuestion(s.currentStep, s.id);
         }
       }
     }
@@ -119,9 +125,29 @@ export default function DefineMyPurpose() {
       );
       
       if (sessions && sessions.length > 0) {
-        setSession(sessions[0]);
+        const s = sessions[0];
+        setSession(s);
+        
+        // Check if question already exists in session
+        const existingQuestion = s[`dyp_q${step}`];
+        const existingAnswer = s[`dyp_ans${step}`];
+        
+        if (existingQuestion) {
+          // Use existing question from session
+          setCurrentQuestion({
+            questionNumber: step,
+            questionText: existingQuestion,
+            format: "short_text",
+            helperText: "Explore any underlying fears or patterns.",
+            storeAs: `dyp_q${step}`,
+          });
+          setCurrentAnswer(existingAnswer || "");
+          setIsLoading(false);
+          return;
+        }
       }
       
+      // Generate new question only if it doesn't exist
       const { data } = await base44.functions.invoke("defineMyPurposeNextQuestion", {
         sessionId: sessionId || session.id,
         currentStep: step,
@@ -142,12 +168,21 @@ export default function DefineMyPurpose() {
       const answerValue =
         Array.isArray(currentAnswer) ? currentAnswer.join(", ") : currentAnswer;
 
-      // Save answer and update session
-      const updatedSession = await base44.entities.DefineMyPurposeSession.update(session.id, {
+      // Save answer and update step
+      await base44.entities.DefineMyPurposeSession.update(session.id, {
         [`dyp_ans${currentStep}`]: answerValue,
+        currentStep: currentStep + 1,
       });
       
-      setSession(updatedSession);
+      // Refresh session
+      const sessions = await base44.entities.DefineMyPurposeSession.filter(
+        { id: session.id },
+        null,
+        1
+      );
+      if (sessions && sessions.length > 0) {
+        setSession(sessions[0]);
+      }
 
       if (currentStep === 9) {
         // Generate mirror summary
@@ -195,22 +230,28 @@ export default function DefineMyPurpose() {
       const prevStep = currentStep - 1;
       setCurrentStep(prevStep);
       
-      // Load previous question and answer
-      const prevAnswer = session[`dyp_ans${prevStep}`];
-      const prevQuestion = session[`dyp_q${prevStep}`];
-      
-      if (prevQuestion) {
-        setCurrentQuestion({
-          questionNumber: prevStep,
-          questionText: prevQuestion,
-          format: "short_text",
-          helperText: prevStep === 1 ? "Take your time. Be honest with yourself." : "Explore any underlying fears or patterns.",
-          storeAs: `dyp_q${prevStep}`,
-        });
+      // For Q1, always use the hardcoded question
+      if (prevStep === 1) {
+        setCurrentQuestion(FIRST_QUESTION);
+        setCurrentAnswer(session.dyp_ans1 || "");
+      } else {
+        // Load previous question and answer from session
+        const prevAnswer = session[`dyp_ans${prevStep}`];
+        const prevQuestion = session[`dyp_q${prevStep}`];
+        
+        if (prevQuestion) {
+          setCurrentQuestion({
+            questionNumber: prevStep,
+            questionText: prevQuestion,
+            format: "short_text",
+            helperText: "Explore any underlying fears or patterns.",
+            storeAs: `dyp_q${prevStep}`,
+          });
+        }
+        
+        // Restore previous answer
+        setCurrentAnswer(prevAnswer || "");
       }
-      
-      // Restore previous answer
-      setCurrentAnswer(prevAnswer || "");
     }
   };
 
