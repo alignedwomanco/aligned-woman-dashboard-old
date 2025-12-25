@@ -27,6 +27,7 @@ import Settings from './pages/Settings';
 import Support from './pages/Support';
 import ToolsHub from './pages/ToolsHub';
 import Home from './pages/Home';
+import MyALIVEJourney from './pages/MyALIVEJourney';
 import __Layout from './Layout.jsx';
 
 
@@ -60,6 +61,7 @@ export const PAGES = {
     "Support": Support,
     "ToolsHub": ToolsHub,
     "Home": Home,
+    "MyALIVEJourney": MyALIVEJourney,
 }
 
 export const pagesConfig = {

@@ -382,7 +382,7 @@ export default function Layout({ children, currentPageName }) {
 
           {/* Navigation Bar */}
           <div className="pb-5">
-            <nav className="bg-[#6B1B3D] rounded-xl px-2 py-2 flex items-center justify-between overflow-x-auto scrollbar-hide">
+            <nav className="bg-[#6B1B3D] rounded-xl py-2 flex items-center justify-between overflow-x-auto scrollbar-hide">
               {visibleNavItems.map((item, index) => (
                 <React.Fragment key={item.name}>
                   <Link
