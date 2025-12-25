@@ -21,6 +21,9 @@ import {
   BookOpen,
   CheckCircle,
   UserPlus,
+  UserCheck,
+  UserMinus,
+  Heart,
 } from "lucide-react";
 
 export default function ExpertsDirectory() {
@@ -47,6 +50,13 @@ export default function ExpertsDirectory() {
   // Fetch connection requests
   const { data: connectionRequests = [] } = useQuery({
     queryKey: ["connectionRequests"],
+    queryFn: () => base44.entities.UserFollow.filter({ status: "connected" }),
+    enabled: !!currentUser,
+  });
+
+  // Fetch follows
+  const { data: myFollows = [] } = useQuery({
+    queryKey: ["myFollows"],
     queryFn: () => base44.entities.UserFollow.list(),
     enabled: !!currentUser,
   });
@@ -55,11 +65,11 @@ export default function ExpertsDirectory() {
     mutationFn: async ({ expertEmail, note }) => {
       await base44.entities.UserFollow.create({
         followingEmail: expertEmail,
+        status: "pending",
       });
-      // Could also create a notification here
       await base44.entities.Notification.create({
-        type: "follow",
-        message: `${currentUser.full_name} wants to connect with you: ${note}`,
+        type: "connection_request",
+        message: `${currentUser.full_name} wants to connect: ${note}`,
         linkTo: `/members`,
       });
     },
@@ -67,6 +77,20 @@ export default function ExpertsDirectory() {
       queryClient.invalidateQueries({ queryKey: ["connectionRequests"] });
       setConnectionNote("");
       setSelectedExpert(null);
+    },
+  });
+
+  const followMutation = useMutation({
+    mutationFn: async (expertEmail) => {
+      const existingFollow = myFollows.find(f => f.followingEmail === expertEmail && !f.status);
+      if (existingFollow) {
+        await base44.entities.UserFollow.delete(existingFollow.id);
+      } else {
+        await base44.entities.UserFollow.create({ followingEmail: expertEmail });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["myFollows"] });
     },
   });
 
@@ -81,7 +105,21 @@ export default function ExpertsDirectory() {
   );
 
   const isConnected = (expertEmail) => {
-    return connectionRequests.some((req) => req.followingEmail === expertEmail);
+    return connectionRequests.some((req) => 
+      (req.followingEmail === expertEmail || req.created_by === expertEmail) && 
+      req.status === "connected"
+    );
+  };
+
+  const isPending = (expertEmail) => {
+    return connectionRequests.some(c => 
+      c.followingEmail === expertEmail && 
+      c.status === "pending"
+    );
+  };
+
+  const isFollowing = (expertEmail) => {
+    return myFollows.some(f => f.followingEmail === expertEmail && !f.status);
   };
 
   const handleConnect = (expert) => {
@@ -201,10 +239,35 @@ export default function ExpertsDirectory() {
 
                 {/* Action Buttons */}
                 <div className="space-y-2">
+                  <Button
+                    onClick={() => followMutation.mutate(expert.email)}
+                    variant={isFollowing(expert.email) ? "outline" : "default"}
+                    className={`w-full ${
+                      !isFollowing(expert.email) && "bg-gradient-to-r from-purple-600 to-pink-600"
+                    }`}
+                  >
+                    {isFollowing(expert.email) ? (
+                      <>
+                        <UserMinus className="w-4 h-4 mr-2" />
+                        Unfollow
+                      </>
+                    ) : (
+                      <>
+                        <Heart className="w-4 h-4 mr-2" />
+                        Follow
+                      </>
+                    )}
+                  </Button>
+
                   {isConnected(expert.email) ? (
                     <Button disabled className="w-full" variant="outline">
                       <CheckCircle className="w-4 h-4 mr-2" />
                       Connected
+                    </Button>
+                  ) : isPending(expert.email) ? (
+                    <Button disabled className="w-full" variant="outline">
+                      <UserCheck className="w-4 h-4 mr-2" />
+                      Pending
                     </Button>
                   ) : (
                     <Dialog>
@@ -213,7 +276,7 @@ export default function ExpertsDirectory() {
                           className="w-full bg-[#6B1B3D] hover:bg-[#4A1228]"
                           onClick={() => handleConnect(expert)}
                         >
-                          <UserPlus className="w-4 h-4 mr-2" />
+                          <UserCheck className="w-4 h-4 mr-2" />
                           Request Connection
                         </Button>
                       </DialogTrigger>

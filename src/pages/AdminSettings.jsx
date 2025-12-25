@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Users, Upload, Camera, Trash2, Save, UserPlus, RefreshCw } from "lucide-react";
+import { Shield, Users, Upload, Camera, Trash2, Save, UserPlus, RefreshCw, Edit } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -47,6 +47,9 @@ export default function AdminSettings() {
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState("moderator");
   const [activeTab, setActiveTab] = useState("users");
+  const [editingUser, setEditingUser] = useState(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editData, setEditData] = useState({});
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -106,6 +109,29 @@ export default function AdminSettings() {
       queryClient.invalidateQueries({ queryKey: ["allUsers"] });
     },
   });
+
+  const updateUserDataMutation = useMutation({
+    mutationFn: ({ userId, data }) => base44.entities.User.update(userId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["allUsers"] });
+      setEditDialogOpen(false);
+      setEditingUser(null);
+      setEditData({});
+    },
+  });
+
+  const handleEditUser = (user) => {
+    setEditingUser(user);
+    setEditData({
+      custom_title: user.custom_title || "",
+      bio: user.bio || "",
+      expertise: user.expertise || [],
+      years_experience: user.years_experience || "",
+      clients_served: user.clients_served || "",
+      rating: user.rating || "",
+    });
+    setEditDialogOpen(true);
+  };
 
   const sendInviteMutation = useMutation({
     mutationFn: async ({ email, role }) => {
@@ -388,15 +414,25 @@ export default function AdminSettings() {
                             </Select>
                           </TableCell>
                           <TableCell>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => deleteUserMutation.mutate(user.id)}
-                              disabled={user.id === currentUser.id}
-                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
+                            <div className="flex gap-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleEditUser(user)}
+                                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                              >
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => deleteUserMutation.mutate(user.id)}
+                                disabled={user.id === currentUser.id}
+                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -492,14 +528,24 @@ export default function AdminSettings() {
                             </Select>
                           </TableCell>
                           <TableCell>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => deleteUserMutation.mutate(user.id)}
-                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
+                            <div className="flex gap-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleEditUser(user)}
+                                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                              >
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => deleteUserMutation.mutate(user.id)}
+                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -507,6 +553,70 @@ export default function AdminSettings() {
                   </Table>
                 </CardContent>
               </Card>
+
+              {/* Edit User Dialog */}
+              <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Edit User: {editingUser?.full_name}</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <Label>Custom Title (e.g., "Lead Coach", "Senior Expert")</Label>
+                      <Input
+                        value={editData.custom_title || ""}
+                        onChange={(e) => setEditData({ ...editData, custom_title: e.target.value })}
+                        placeholder="Custom title or designation"
+                      />
+                    </div>
+                    <div>
+                      <Label>Bio</Label>
+                      <Textarea
+                        value={editData.bio || ""}
+                        onChange={(e) => setEditData({ ...editData, bio: e.target.value })}
+                        placeholder="User bio"
+                        className="min-h-[100px]"
+                      />
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <Label>Years Experience</Label>
+                        <Input
+                          value={editData.years_experience || ""}
+                          onChange={(e) => setEditData({ ...editData, years_experience: e.target.value })}
+                          placeholder="5+"
+                        />
+                      </div>
+                      <div>
+                        <Label>Clients Served</Label>
+                        <Input
+                          value={editData.clients_served || ""}
+                          onChange={(e) => setEditData({ ...editData, clients_served: e.target.value })}
+                          placeholder="100+"
+                        />
+                      </div>
+                      <div>
+                        <Label>Rating</Label>
+                        <Input
+                          value={editData.rating || ""}
+                          onChange={(e) => setEditData({ ...editData, rating: e.target.value })}
+                          placeholder="5.0"
+                        />
+                      </div>
+                    </div>
+                    <Button
+                      onClick={() => updateUserDataMutation.mutate({ 
+                        userId: editingUser.id, 
+                        data: editData 
+                      })}
+                      className="w-full bg-[#6B1B3D]"
+                    >
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Changes
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </TabsContent>
 
           {/* Course Builder Tab */}

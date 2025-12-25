@@ -7,14 +7,24 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageCircle, UserPlus, UserMinus, Search } from "lucide-react";
+import { MessageCircle, UserPlus, UserMinus, Search, UserCheck, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function Members() {
   const [currentUser, setCurrentUser] = React.useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterBy, setFilterBy] = useState("all");
+  const [selectedMember, setSelectedMember] = useState(null);
+  const [connectionNote, setConnectionNote] = useState("");
   const queryClient = useQueryClient();
 
   React.useEffect(() => {
@@ -38,9 +48,16 @@ export default function Members() {
     enabled: !!currentUser,
   });
 
+  const { data: connections = [] } = useQuery({
+    queryKey: ["connections"],
+    queryFn: () => base44.entities.UserFollow.filter({ status: "connected" }),
+    initialData: [],
+    enabled: !!currentUser,
+  });
+
   const followMutation = useMutation({
     mutationFn: async (userEmail) => {
-      const existingFollow = myFollows.find(f => f.followingEmail === userEmail);
+      const existingFollow = myFollows.find(f => f.followingEmail === userEmail && !f.status);
       if (existingFollow) {
         await base44.entities.UserFollow.delete(existingFollow.id);
       } else {
@@ -52,8 +69,41 @@ export default function Members() {
     },
   });
 
+  const requestConnectionMutation = useMutation({
+    mutationFn: async ({ userEmail, note }) => {
+      await base44.entities.UserFollow.create({
+        followingEmail: userEmail,
+        status: "pending",
+      });
+      await base44.entities.Notification.create({
+        type: "connection_request",
+        message: `${currentUser.full_name} wants to connect: ${note}`,
+        linkTo: `/members`,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["connections"] });
+      setConnectionNote("");
+      setSelectedMember(null);
+    },
+  });
+
   const isFollowing = (userEmail) => {
-    return myFollows.some(f => f.followingEmail === userEmail);
+    return myFollows.some(f => f.followingEmail === userEmail && !f.status);
+  };
+
+  const isConnected = (userEmail) => {
+    return connections.some(c => 
+      (c.followingEmail === userEmail || c.created_by === userEmail) && 
+      c.status === "connected"
+    );
+  };
+
+  const isPending = (userEmail) => {
+    return connections.some(c => 
+      c.followingEmail === userEmail && 
+      c.status === "pending"
+    );
   };
 
   const filteredUsers = users
@@ -129,36 +179,91 @@ export default function Members() {
                     </p>
                   )}
 
-                  <div className="flex gap-2 w-full mt-auto">
-                    <Button
-                      onClick={() => followMutation.mutate(user.email)}
-                      variant={isFollowing(user.email) ? "outline" : "default"}
-                      className={`flex-1 ${
-                        !isFollowing(user.email) && "bg-[#6B1B3D] hover:bg-[#4A1228]"
-                      }`}
-                      size="sm"
-                    >
-                      {isFollowing(user.email) ? (
-                        <>
-                          <UserMinus className="w-4 h-4 mr-1" />
-                          Unfollow
-                        </>
-                      ) : (
-                        <>
-                          <UserPlus className="w-4 h-4 mr-1" />
-                          Follow
-                        </>
-                      )}
-                    </Button>
-                    
-                    <Link to={createPageUrl("Messages") + `?user=${user.email}`}>
+                  <div className="space-y-2 w-full mt-auto">
+                    <div className="flex gap-2">
                       <Button
-                        variant="outline"
+                        onClick={() => followMutation.mutate(user.email)}
+                        variant={isFollowing(user.email) ? "outline" : "default"}
+                        className={`flex-1 ${
+                          !isFollowing(user.email) && "bg-[#6B1B3D] hover:bg-[#4A1228]"
+                        }`}
                         size="sm"
                       >
-                        <MessageCircle className="w-4 h-4" />
+                        {isFollowing(user.email) ? (
+                          <>
+                            <UserMinus className="w-4 h-4 mr-1" />
+                            Unfollow
+                          </>
+                        ) : (
+                          <>
+                            <UserPlus className="w-4 h-4 mr-1" />
+                            Follow
+                          </>
+                        )}
                       </Button>
-                    </Link>
+                      
+                      <Link to={createPageUrl("Messages") + `?user=${user.email}`}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                        </Button>
+                      </Link>
+                    </div>
+
+                    {isConnected(user.email) ? (
+                      <Button disabled className="w-full" variant="outline" size="sm">
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        Connected
+                      </Button>
+                    ) : isPending(user.email) ? (
+                      <Button disabled className="w-full" variant="outline" size="sm">
+                        <UserCheck className="w-4 h-4 mr-2" />
+                        Pending
+                      </Button>
+                    ) : (
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            className="w-full bg-gradient-to-r from-[#6B1B3D] to-[#8B2E4D]"
+                            size="sm"
+                            onClick={() => setSelectedMember(user)}
+                          >
+                            <UserCheck className="w-4 h-4 mr-2" />
+                            Connect
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Connect with {user.full_name}</DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <div>
+                              <label className="text-sm font-medium mb-2 block">
+                                Why would you like to connect?
+                              </label>
+                              <Textarea
+                                value={connectionNote}
+                                onChange={(e) => setConnectionNote(e.target.value)}
+                                placeholder="Share what you'd like to connect about..."
+                                className="min-h-[120px]"
+                              />
+                            </div>
+                            <Button
+                              onClick={() => requestConnectionMutation.mutate({ 
+                                userEmail: selectedMember.email, 
+                                note: connectionNote 
+                              })}
+                              disabled={!connectionNote.trim()}
+                              className="w-full bg-[#6B1B3D] hover:bg-[#4A1228]"
+                            >
+                              Send Connection Request
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    )}
                   </div>
                 </div>
               </CardContent>
