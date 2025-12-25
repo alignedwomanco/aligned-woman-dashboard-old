@@ -48,6 +48,23 @@ export default function BackgroundSelector({ currentBackground, onBackgroundChan
 
   const handleSave = async () => {
     await base44.auth.updateMe({ background_image: selectedBackground });
+    // Immediately apply the background
+    if (selectedBackground && selectedBackground.startsWith('#')) {
+      document.body.style.backgroundColor = selectedBackground;
+      document.body.style.backgroundImage = "none";
+    } else if (selectedBackground && selectedBackground.startsWith('data:image/svg+xml')) {
+      document.body.style.backgroundImage = `url("${selectedBackground}")`;
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundPosition = "center";
+      document.body.style.backgroundAttachment = "fixed";
+      document.body.style.backgroundColor = "transparent";
+    } else if (selectedBackground) {
+      document.body.style.backgroundImage = `url(${selectedBackground})`;
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundPosition = "center";
+      document.body.style.backgroundAttachment = "fixed";
+      document.body.style.backgroundColor = "transparent";
+    }
     onBackgroundChange(selectedBackground);
   };
 

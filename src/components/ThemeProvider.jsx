@@ -31,8 +31,15 @@ export default function ThemeProvider({ children }) {
       // It's a color
       document.body.style.backgroundColor = backgroundUrl;
       document.body.style.backgroundImage = "none";
+    } else if (backgroundUrl && backgroundUrl.startsWith('data:image/svg+xml')) {
+      // It's an SVG data URI
+      document.body.style.backgroundImage = `url("${backgroundUrl}")`;
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundPosition = "center";
+      document.body.style.backgroundAttachment = "fixed";
+      document.body.style.backgroundColor = "transparent";
     } else if (backgroundUrl) {
-      // It's an image or SVG
+      // It's an image URL
       document.body.style.backgroundImage = `url(${backgroundUrl})`;
       document.body.style.backgroundSize = "cover";
       document.body.style.backgroundPosition = "center";
