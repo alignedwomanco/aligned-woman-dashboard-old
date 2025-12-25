@@ -3,21 +3,18 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Heart, MessageSquare, Pin, Trash2, Send } from "lucide-react";
-import { motion } from "framer-motion";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import { Input } from "@/components/ui/input";
+import { Search, TrendingUp, Award } from "lucide-react";
+import CreatePostCard from "../components/community/CreatePostCard";
+import PostCard from "../components/community/PostCard";
+import CommunityLeaderboard from "../components/community/CommunityLeaderboard";
+import confetti from "canvas-confetti";
 
 export default function Community() {
   const [currentUser, setCurrentUser] = React.useState(null);
-  const [newPostContent, setNewPostContent] = useState("");
   const [sortBy, setSortBy] = useState("new");
-  const [commentingOnPost, setCommentingOnPost] = useState(null);
-  const [commentText, setCommentText] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const queryClient = useQueryClient();
 
   React.useEffect(() => {
@@ -47,7 +44,7 @@ export default function Community() {
 
   const { data: likes = [] } = useQuery({
     queryKey: ["postLikes"],
-    queryFn: () => base44.entities.PostLike.filter({ commentId: null }),
+    queryFn: () => base44.entities.PostLike.filter({}),
     initialData: [],
   });
 
@@ -58,26 +55,42 @@ export default function Community() {
   });
 
   const createPostMutation = useMutation({
-    mutationFn: (content) => base44.entities.CommunityPost.create({ content }),
+    mutationFn: (postData) => base44.entities.CommunityPost.create(postData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["communityPosts"] });
-      setNewPostContent("");
     },
   });
 
   const likePostMutation = useMutation({
     mutationFn: async (postId) => {
       const existingLike = likes.find(l => l.postId === postId && l.created_by === currentUser.email);
+      const post = posts.find(p => p.id === postId);
+      
       if (existingLike) {
         await base44.entities.PostLike.delete(existingLike.id);
         await base44.entities.CommunityPost.update(postId, { 
-          likes: Math.max(0, (posts.find(p => p.id === postId)?.likes || 0) - 1) 
+          likes: Math.max(0, (post?.likes || 0) - 1) 
         });
       } else {
         await base44.entities.PostLike.create({ postId });
         await base44.entities.CommunityPost.update(postId, { 
-          likes: (posts.find(p => p.id === postId)?.likes || 0) + 1 
+          likes: (post?.likes || 0) + 1 
         });
+        
+        // Award points for engagement
+        await awardPoints(2, "post_liked");
+        
+        // Notify post author
+        if (post.created_by !== currentUser.email) {
+          await base44.entities.Notification.create({
+            type: "like",
+            message: `${currentUser.full_name} liked your post`,
+            linkTo: `/community?post=${postId}`,
+            source_user_email: currentUser.email,
+            target_post_id: postId,
+            created_by: post.created_by,
+          });
+        }
       }
     },
     onSuccess: () => {
@@ -87,16 +100,39 @@ export default function Community() {
   });
 
   const commentMutation = useMutation({
-    mutationFn: ({ postId, content }) => base44.entities.PostComment.create({ postId, content }),
-    onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["postComments"] });
-      const post = posts.find(p => p.id === variables.postId);
-      base44.entities.CommunityPost.update(variables.postId, { 
+    mutationFn: async ({ postId, content, parentCommentId }) => {
+      const comment = await base44.entities.PostComment.create({ 
+        postId, 
+        content,
+        parentCommentId 
+      });
+      
+      const post = posts.find(p => p.id === postId);
+      await base44.entities.CommunityPost.update(postId, { 
         commentCount: (post?.commentCount || 0) + 1 
       });
+
+      // Award points
+      await awardPoints(5, "comment_created");
+
+      // Notify post author
+      if (post.created_by !== currentUser.email) {
+        await base44.entities.Notification.create({
+          type: "comment",
+          message: `${currentUser.full_name} commented on your post`,
+          linkTo: `/community?post=${postId}`,
+          source_user_email: currentUser.email,
+          target_post_id: postId,
+          target_comment_id: comment.id,
+          created_by: post.created_by,
+        });
+      }
+
+      return comment;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["postComments"] });
       queryClient.invalidateQueries({ queryKey: ["communityPosts"] });
-      setCommentingOnPost(null);
-      setCommentText("");
     },
   });
 
@@ -107,6 +143,54 @@ export default function Community() {
     },
   });
 
+  const sharePostMutation = useMutation({
+    mutationFn: async (post) => {
+      await base44.entities.CommunityPost.create({
+        content: `Reshared from ${getUserByEmail(post.created_by)?.full_name || post.created_by}`,
+        reshared_from_post_id: post.id,
+        media_urls: post.media_urls,
+        hashtags: post.hashtags,
+      });
+
+      await base44.entities.CommunityPost.update(post.id, {
+        shareCount: (post.shareCount || 0) + 1,
+      });
+
+      // Award points
+      await awardPoints(3, "post_shared");
+
+      confetti({
+        particleCount: 50,
+        spread: 60,
+        origin: { y: 0.7 }
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["communityPosts"] });
+    },
+  });
+
+  const awardPoints = async (points, reason) => {
+    try {
+      const userPoints = await base44.entities.UserPoints.filter({});
+      const current = userPoints[0];
+      
+      if (current) {
+        const newTotal = (current.points || 0) + points;
+        await base44.entities.UserPoints.update(current.id, {
+          points: newTotal,
+          level: Math.floor(newTotal / 100) + 1,
+        });
+      }
+
+      await base44.auth.updateMe({
+        total_community_points: ((currentUser.total_community_points || 0) + points),
+      });
+    } catch (error) {
+      console.error("Failed to award points:", error);
+    }
+  };
+
   const getUserByEmail = (email) => {
     return users.find(u => u.email === email);
   };
@@ -116,200 +200,114 @@ export default function Community() {
   };
 
   const getPostComments = (postId) => {
-    return comments.filter(c => c.postId === postId && !c.parentCommentId);
+    return comments.filter(c => c.postId === postId);
   };
 
-  const isAdmin = currentUser && ["admin", "master_admin", "moderator"].includes(currentUser.role);
+  const filteredPosts = posts.filter(post => {
+    if (!searchQuery) return true;
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      post.content.toLowerCase().includes(searchLower) ||
+      post.hashtags?.some(tag => tag.toLowerCase().includes(searchLower)) ||
+      getUserByEmail(post.created_by)?.full_name?.toLowerCase().includes(searchLower)
+    );
+  });
+
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-[#6B1B3D] border-t-transparent rounded-full" />
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Create Post */}
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex gap-4">
-              <Avatar className="w-10 h-10">
-                <AvatarImage src={currentUser?.profile_picture} />
-                <AvatarFallback className="bg-[#6B1B3D] text-white">
-                  {currentUser?.full_name?.[0] || "U"}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1">
-                <ReactQuill
-                  value={newPostContent}
-                  onChange={setNewPostContent}
-                  placeholder="Share something with the community..."
-                  className="mb-4"
-                  modules={{
-                    toolbar: [
-                      ["bold", "italic", "underline"],
-                      [{ list: "ordered" }, { list: "bullet" }],
-                      ["link"],
-                    ],
-                  }}
-                />
-                <Button
-                  onClick={() => createPostMutation.mutate(newPostContent)}
-                  disabled={!newPostContent.trim() || createPostMutation.isLoading}
-                  className="bg-[#6B1B3D] hover:bg-[#4A1228]"
-                >
-                  Post
-                </Button>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-8">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid lg:grid-cols-[1fr_320px] gap-6">
+          {/* Main Feed */}
+          <div className="space-y-6">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-[#4A1228] mb-1">Community</h1>
+                <p className="text-gray-600">Connect, share, and grow together</p>
               </div>
+              <Button 
+                variant="outline" 
+                className="gap-2"
+                onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+              >
+                <Award className="w-4 h-4" />
+                Leaderboard
+              </Button>
             </div>
-          </CardContent>
-        </Card>
 
-        {/* Sort Tabs */}
-        <Tabs value={sortBy} onValueChange={setSortBy}>
-          <TabsList>
-            <TabsTrigger value="new">New</TabsTrigger>
-            <TabsTrigger value="top">Top</TabsTrigger>
-          </TabsList>
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search posts, people, hashtags..."
+                className="pl-10 h-12 bg-white border-2"
+              />
+            </div>
 
-          <TabsContent value={sortBy} className="space-y-4 mt-6">
-            {posts.map((post) => {
-              const author = getUserByEmail(post.created_by);
-              const postComments = getPostComments(post.id);
-              const isLiked = hasLiked(post.id);
+            {/* Create Post */}
+            <CreatePostCard 
+              currentUser={currentUser} 
+              onPostCreated={(data) => createPostMutation.mutate(data)}
+            />
 
-              return (
-                <motion.div
-                  key={post.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
+            {/* Sort Tabs */}
+            <Tabs value={sortBy} onValueChange={setSortBy}>
+              <TabsList className="w-full grid grid-cols-2">
+                <TabsTrigger value="new" className="gap-2">
+                  <TrendingUp className="w-4 h-4" />
+                  New
+                </TabsTrigger>
+                <TabsTrigger value="top" className="gap-2">
+                  <Award className="w-4 h-4" />
+                  Top
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value={sortBy} className="space-y-4 mt-6">
+                {filteredPosts.map((post) => (
+                  <PostCard
+                    key={post.id}
+                    post={post}
+                    currentUser={currentUser}
+                    author={getUserByEmail(post.created_by)}
+                    isLiked={hasLiked(post.id)}
+                    comments={getPostComments(post.id)}
+                    onLike={likePostMutation.mutate}
+                    onComment={commentMutation.mutate}
+                    onDelete={deletePostMutation.mutate}
+                    onShare={(post) => sharePostMutation.mutate(post)}
+                    getUserByEmail={getUserByEmail}
+                  />
+                ))}
+
+                {filteredPosts.length === 0 && (
                   <Card>
-                    <CardContent className="p-6">
-                      {/* Post Header */}
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex gap-3">
-                          <Avatar className="w-10 h-10">
-                            <AvatarImage src={author?.profile_picture} />
-                            <AvatarFallback className="bg-[#6B1B3D] text-white">
-                              {author?.full_name?.[0] || post.created_by[0]}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-semibold">{author?.full_name || post.created_by}</p>
-                            <div className="flex items-center gap-2">
-                              {author?.role && ["admin", "expert", "moderator"].includes(author.role) && (
-                                <Badge className="bg-[#6B1B3D] text-white text-xs">
-                                  {author.role}
-                                </Badge>
-                              )}
-                              <span className="text-xs text-gray-500">
-                                {new Date(post.created_date).toLocaleDateString()}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        {(isAdmin || post.created_by === currentUser?.email) && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => deletePostMutation.mutate(post.id)}
-                            className="text-gray-400 hover:text-red-600"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        )}
-                      </div>
-
-                      {/* Post Content */}
-                      <div
-                        className="prose prose-sm max-w-none mb-4"
-                        dangerouslySetInnerHTML={{ __html: post.content }}
-                      />
-
-                      {/* Actions */}
-                      <div className="flex items-center gap-6 pt-4 border-t">
-                        <button
-                          onClick={() => likePostMutation.mutate(post.id)}
-                          className={`flex items-center gap-2 text-sm transition-colors ${
-                            isLiked ? "text-[#6B1B3D]" : "text-gray-600 hover:text-[#6B1B3D]"
-                          }`}
-                        >
-                          <Heart className={`w-4 h-4 ${isLiked ? "fill-current" : ""}`} />
-                          <span>{post.likes || 0}</span>
-                        </button>
-
-                        <button
-                          onClick={() => setCommentingOnPost(commentingOnPost === post.id ? null : post.id)}
-                          className="flex items-center gap-2 text-sm text-gray-600 hover:text-[#6B1B3D] transition-colors"
-                        >
-                          <MessageSquare className="w-4 h-4" />
-                          <span>{post.commentCount || 0}</span>
-                        </button>
-                      </div>
-
-                      {/* Comments */}
-                      {postComments.length > 0 && (
-                        <div className="mt-4 pt-4 border-t space-y-3">
-                          {postComments.map((comment) => {
-                            const commentAuthor = getUserByEmail(comment.created_by);
-                            return (
-                              <div key={comment.id} className="flex gap-3">
-                                <Avatar className="w-8 h-8">
-                                  <AvatarImage src={commentAuthor?.profile_picture} />
-                                  <AvatarFallback className="bg-gray-200 text-gray-600 text-xs">
-                                    {commentAuthor?.full_name?.[0] || comment.created_by[0]}
-                                  </AvatarFallback>
-                                </Avatar>
-                                <div className="flex-1">
-                                  <div className="bg-gray-50 rounded-lg p-3">
-                                    <p className="text-sm font-medium">{commentAuthor?.full_name || comment.created_by}</p>
-                                    <p className="text-sm text-gray-700">{comment.content}</p>
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-
-                      {/* Comment Input */}
-                      {commentingOnPost === post.id && (
-                        <div className="mt-4 pt-4 border-t flex gap-3">
-                          <Avatar className="w-8 h-8">
-                            <AvatarImage src={currentUser?.profile_picture} />
-                            <AvatarFallback className="bg-[#6B1B3D] text-white text-xs">
-                              {currentUser?.full_name?.[0] || "U"}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 flex gap-2">
-                            <Textarea
-                              value={commentText}
-                              onChange={(e) => setCommentText(e.target.value)}
-                              placeholder="Write a comment..."
-                              className="min-h-[60px]"
-                            />
-                            <Button
-                              onClick={() => commentMutation.mutate({ postId: post.id, content: commentText })}
-                              disabled={!commentText.trim()}
-                              size="icon"
-                              className="bg-[#6B1B3D] hover:bg-[#4A1228]"
-                            >
-                              <Send className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      )}
+                    <CardContent className="p-12 text-center text-gray-500">
+                      <p className="text-lg">
+                        {searchQuery ? "No posts found matching your search" : "No posts yet. Be the first to share!"}
+                      </p>
                     </CardContent>
                   </Card>
-                </motion.div>
-              );
-            })}
+                )}
+              </TabsContent>
+            </Tabs>
+          </div>
 
-            {posts.length === 0 && (
-              <Card>
-                <CardContent className="p-12 text-center text-gray-500">
-                  <p>No posts yet. Be the first to share!</p>
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
-        </Tabs>
+          {/* Sidebar */}
+          <div className="space-y-6">
+            <CommunityLeaderboard currentUser={currentUser} />
+          </div>
+        </div>
       </div>
     </div>
   );
