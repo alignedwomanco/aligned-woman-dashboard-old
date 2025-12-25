@@ -16,7 +16,6 @@ import Members from './pages/Members';
 import Messages from './pages/Messages';
 import ModuleFrameworkBuilder from './pages/ModuleFrameworkBuilder';
 import ModulePlayer from './pages/ModulePlayer';
-import ModulesLibrary from './pages/ModulesLibrary';
 import MyALIVEJourney from './pages/MyALIVEJourney';
 import MyMetrics from './pages/MyMetrics';
 import MyPathway from './pages/MyPathway';
@@ -50,7 +49,6 @@ export const PAGES = {
     "Messages": Messages,
     "ModuleFrameworkBuilder": ModuleFrameworkBuilder,
     "ModulePlayer": ModulePlayer,
-    "ModulesLibrary": ModulesLibrary,
     "MyALIVEJourney": MyALIVEJourney,
     "MyMetrics": MyMetrics,
     "MyPathway": MyPathway,
