@@ -63,14 +63,24 @@ export default function ExpertsDirectory() {
 
   const requestConnectionMutation = useMutation({
     mutationFn: async ({ expertEmail, note }) => {
+      // Create connection request
       await base44.entities.UserFollow.create({
         followingEmail: expertEmail,
         status: "pending",
       });
+      
+      // Send in-app notification
       await base44.entities.Notification.create({
         type: "connection_request",
         message: `${currentUser.full_name} wants to connect: ${note}`,
         linkTo: `/members`,
+      });
+
+      // Send email notification
+      await base44.integrations.Core.SendEmail({
+        to: expertEmail,
+        subject: "New Connection Request",
+        body: `${currentUser.full_name} (${currentUser.email}) wants to connect with you.\n\nMessage: ${note}\n\nView your connection requests at ${window.location.origin}${createPageUrl("Members")}`,
       });
     },
     onSuccess: () => {
@@ -127,7 +137,7 @@ export default function ExpertsDirectory() {
   };
 
   const submitConnection = () => {
-    if (selectedExpert) {
+    if (selectedExpert && connectionNote.trim()) {
       requestConnectionMutation.mutate({
         expertEmail: selectedExpert.email,
         note: connectionNote,
@@ -300,10 +310,10 @@ export default function ExpertsDirectory() {
                           </div>
                           <Button
                             onClick={submitConnection}
-                            disabled={!connectionNote.trim()}
+                            disabled={!connectionNote.trim() || requestConnectionMutation.isPending}
                             className="w-full bg-[#6B1B3D] hover:bg-[#4A1228]"
                           >
-                            Send Connection Request
+                            {requestConnectionMutation.isPending ? "Sending..." : "Send Connection Request"}
                           </Button>
                         </div>
                       </DialogContent>

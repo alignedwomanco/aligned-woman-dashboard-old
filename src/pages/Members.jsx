@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageCircle, UserPlus, UserMinus, Search, UserCheck, CheckCircle } from "lucide-react";
+import { MessageCircle, UserPlus, UserMinus, Search, UserCheck, CheckCircle, Check, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Textarea } from "@/components/ui/textarea";
@@ -55,6 +55,19 @@ export default function Members() {
     enabled: !!currentUser,
   });
 
+  const { data: connectionRequests = [] } = useQuery({
+    queryKey: ["connectionRequests"],
+    queryFn: async () => {
+      const requests = await base44.entities.UserFollow.filter({ 
+        followingEmail: currentUser?.email,
+        status: "pending" 
+      });
+      return requests;
+    },
+    initialData: [],
+    enabled: !!currentUser,
+  });
+
   const followMutation = useMutation({
     mutationFn: async (userEmail) => {
       const existingFollow = myFollows.find(f => f.followingEmail === userEmail && !f.status);
@@ -69,20 +82,50 @@ export default function Members() {
     },
   });
 
+  const acceptConnectionMutation = useMutation({
+    mutationFn: async (requestId) => {
+      await base44.entities.UserFollow.update(requestId, { status: "connected" });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["connections"] });
+      queryClient.invalidateQueries({ queryKey: ["connectionRequests"] });
+    },
+  });
+
+  const rejectConnectionMutation = useMutation({
+    mutationFn: async (requestId) => {
+      await base44.entities.UserFollow.delete(requestId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["connectionRequests"] });
+    },
+  });
+
   const requestConnectionMutation = useMutation({
     mutationFn: async ({ userEmail, note }) => {
+      // Create connection request
       await base44.entities.UserFollow.create({
         followingEmail: userEmail,
         status: "pending",
       });
+      
+      // Send in-app notification
       await base44.entities.Notification.create({
         type: "connection_request",
         message: `${currentUser.full_name} wants to connect: ${note}`,
         linkTo: `/members`,
       });
+
+      // Send email notification
+      await base44.integrations.Core.SendEmail({
+        to: userEmail,
+        subject: "New Connection Request",
+        body: `${currentUser.full_name} (${currentUser.email}) wants to connect with you.\n\nMessage: ${note}\n\nView your connection requests at ${window.location.origin}${createPageUrl("Members")}`,
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["connections"] });
+      queryClient.invalidateQueries({ queryKey: ["connectionRequests"] });
       setConnectionNote("");
       setSelectedMember(null);
     },
@@ -118,7 +161,11 @@ export default function Members() {
     })
     .filter(u => {
       if (filterBy === "all") return true;
-      if (filterBy === "experts") return ["expert", "contributor"].includes(u.role);
+      if (filterBy === "connections") return isConnected(u.email);
+      if (filterBy === "followers") {
+        // Users who follow current user
+        return myFollows.some(f => f.created_by === u.email);
+      }
       if (filterBy === "following") return isFollowing(u.email);
       return true;
     })
@@ -126,34 +173,37 @@ export default function Members() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#4A1228] mb-4">Members</h1>
-          
-          {/* Search Bar */}
-          <div className="relative mb-6">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <Input
-              type="text"
-              placeholder="Search members by name, email, or bio..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-[1fr_350px] gap-6">
+        {/* Left Column - Members List */}
+        <div>
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-[#4A1228] mb-4">Members</h1>
+            
+            {/* Search Bar */}
+            <div className="relative mb-6">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="Search members by name, email, or bio..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+
+            {/* Filters */}
+            <Tabs value={filterBy} onValueChange={setFilterBy}>
+              <TabsList>
+                <TabsTrigger value="all">All Members</TabsTrigger>
+                <TabsTrigger value="connections">Connections</TabsTrigger>
+                <TabsTrigger value="followers">Followers</TabsTrigger>
+                <TabsTrigger value="following">Following</TabsTrigger>
+              </TabsList>
+            </Tabs>
           </div>
 
-          {/* Filters */}
-          <Tabs value={filterBy} onValueChange={setFilterBy}>
-            <TabsList>
-              <TabsTrigger value="all">All Members</TabsTrigger>
-              <TabsTrigger value="experts">Experts</TabsTrigger>
-              <TabsTrigger value="following">Following</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-
-        {/* Members Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Members Grid */}
+          <div className="grid md:grid-cols-2 gap-6">
           {filteredUsers.map((user) => (
             <Card key={user.id} className="hover:shadow-lg transition-shadow">
               <CardContent className="p-6">
@@ -253,14 +303,18 @@ export default function Members() {
                               />
                             </div>
                             <Button
-                              onClick={() => requestConnectionMutation.mutate({ 
-                                userEmail: selectedMember.email, 
-                                note: connectionNote 
-                              })}
-                              disabled={!connectionNote.trim()}
+                              onClick={() => {
+                                if (selectedMember && connectionNote.trim()) {
+                                  requestConnectionMutation.mutate({ 
+                                    userEmail: selectedMember.email, 
+                                    note: connectionNote 
+                                  });
+                                }
+                              }}
+                              disabled={!connectionNote.trim() || requestConnectionMutation.isPending}
                               className="w-full bg-[#6B1B3D] hover:bg-[#4A1228]"
                             >
-                              Send Connection Request
+                              {requestConnectionMutation.isPending ? "Sending..." : "Send Connection Request"}
                             </Button>
                           </div>
                         </DialogContent>
@@ -273,13 +327,83 @@ export default function Members() {
           ))}
         </div>
 
-        {filteredUsers.length === 0 && (
+          {filteredUsers.length === 0 && (
+            <Card>
+              <CardContent className="p-12 text-center text-gray-500">
+                <p>No members found</p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+
+        {/* Right Column - Connection Requests */}
+        <div className="space-y-6">
           <Card>
-            <CardContent className="p-12 text-center text-gray-500">
-              <p>No members found</p>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <UserCheck className="w-5 h-5" />
+                Connection Requests
+                {connectionRequests.length > 0 && (
+                  <Badge className="bg-[#6B1B3D] text-white ml-auto">
+                    {connectionRequests.length}
+                  </Badge>
+                )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {connectionRequests.length === 0 ? (
+                  <p className="text-gray-500 text-center py-8 text-sm">
+                    No pending requests
+                  </p>
+                ) : (
+                  connectionRequests.map((request) => {
+                    const requester = users.find(u => u.email === request.created_by);
+                    return (
+                      <div key={request.id} className="p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-start gap-3 mb-3">
+                          <Avatar className="w-10 h-10">
+                            <AvatarImage src={requester?.profile_picture} />
+                            <AvatarFallback className="bg-[#6B1B3D] text-white">
+                              {requester?.full_name?.[0] || request.created_by?.[0]}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm">
+                              {requester?.full_name || request.created_by}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {request.created_by}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            onClick={() => acceptConnectionMutation.mutate(request.id)}
+                            size="sm"
+                            className="flex-1 bg-[#6B1B3D] hover:bg-[#4A1228]"
+                          >
+                            <Check className="w-4 h-4 mr-1" />
+                            Accept
+                          </Button>
+                          <Button
+                            onClick={() => rejectConnectionMutation.mutate(request.id)}
+                            size="sm"
+                            variant="outline"
+                            className="flex-1"
+                          >
+                            <X className="w-4 h-4 mr-1" />
+                            Decline
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
             </CardContent>
           </Card>
-        )}
+        </div>
       </div>
     </div>
   );
