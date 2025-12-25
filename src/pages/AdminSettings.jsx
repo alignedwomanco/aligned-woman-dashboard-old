@@ -40,6 +40,8 @@ import DashboardConfiguratorContent from "@/components/admin/DashboardConfigurat
 import { createPageUrl } from "@/utils";
 import BackgroundSelector from "@/components/settings/BackgroundSelector";
 import AIChatWidgetSettings from "@/components/admin/AIChatWidgetSettings";
+import StripeIntegrationContent from "@/components/admin/StripeIntegrationContent";
+import SupportRoomContent from "@/components/admin/SupportRoomContent";
 
 export default function AdminSettings() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -126,10 +128,13 @@ export default function AdminSettings() {
     setEditData({
       custom_title: user.custom_title || "",
       bio: user.bio || "",
+      is_expert: user.is_expert || false,
+      is_educator: user.is_educator || false,
       expertise: user.expertise || [],
       years_experience: user.years_experience || "",
       clients_served: user.clients_served || "",
       rating: user.rating || "",
+      profile_picture: user.profile_picture || "",
     });
     setEditDialogOpen(true);
   };
@@ -216,11 +221,22 @@ export default function AdminSettings() {
       master_admin: "bg-purple-100 text-purple-800",
       admin: "bg-blue-100 text-blue-800",
       moderator: "bg-green-100 text-green-800",
-      course_creator: "bg-orange-100 text-orange-800",
+      educator: "bg-orange-100 text-orange-800",
+      facilitator: "bg-teal-100 text-teal-800",
       expert: "bg-pink-100 text-pink-800",
+      support: "bg-indigo-100 text-indigo-800",
       user: "bg-gray-100 text-gray-800",
     };
     return colors[role] || colors.user;
+  };
+
+  const handleProfilePictureForUser = async (e, userId) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    await base44.entities.User.update(userId, { profile_picture: file_url });
+    queryClient.invalidateQueries({ queryKey: ["allUsers"] });
   };
 
   if (!currentUser) {
@@ -231,9 +247,9 @@ export default function AdminSettings() {
     );
   }
 
-  const canAccessAdmin = ["owner", "admin", "master_admin", "moderator", "expert", "course_creator"].includes(currentUser.role);
+  const canAccessAdmin = ["owner", "admin", "master_admin", "moderator", "expert", "educator", "facilitator", "support"].includes(currentUser.role);
 
-  const adminUsers = allUsers.filter(u => ["owner", "admin", "master_admin", "moderator", "course_creator", "expert"].includes(u.role));
+  const adminUsers = allUsers.filter(u => ["owner", "admin", "master_admin", "moderator", "educator", "facilitator", "expert", "support"].includes(u.role));
   const regularUsers = allUsers.filter(u => u.role === "user");
 
   return (
@@ -335,7 +351,9 @@ export default function AdminSettings() {
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="expert">Expert</SelectItem>
-                                <SelectItem value="course_creator">Course Creator</SelectItem>
+                                <SelectItem value="educator">Educator</SelectItem>
+                                <SelectItem value="facilitator">Facilitator</SelectItem>
+                                <SelectItem value="support">Support</SelectItem>
                                 <SelectItem value="moderator">Moderator</SelectItem>
                                 <SelectItem value="admin">Admin</SelectItem>
                                 {(currentUser.role === "master_admin" || currentUser.role === "owner") && (
@@ -447,19 +465,19 @@ export default function AdminSettings() {
                 </CardContent>
               </Card>
 
-              {/* Experts & Course Creators Quick Link */}
+              {/* Experts & Educators Quick Link */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Users className="w-5 h-5" />
-                    Experts & Course Creators
+                    Experts & Educators
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between p-4 bg-pink-50 rounded-lg border border-pink-200">
                     <div>
-                      <p className="font-medium text-gray-900">Manage Expert Profiles</p>
-                      <p className="text-sm text-gray-600">View metrics, content, and manage expert accounts</p>
+                      <p className="font-medium text-gray-900">Manage Expert & Educator Profiles</p>
+                      <p className="text-sm text-gray-600">View metrics, content, and manage expert/educator accounts</p>
                     </div>
                     <Button 
                       onClick={() => setActiveTab("experts")}
@@ -580,6 +598,62 @@ export default function AdminSettings() {
                         placeholder="Custom title or designation"
                       />
                     </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          id="is_expert"
+                          checked={editData.is_expert || false}
+                          onChange={(e) => setEditData({ ...editData, is_expert: e.target.checked })}
+                          className="w-4 h-4"
+                        />
+                        <Label htmlFor="is_expert" className="cursor-pointer">Mark as Expert</Label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          id="is_educator"
+                          checked={editData.is_educator || false}
+                          onChange={(e) => setEditData({ ...editData, is_educator: e.target.checked })}
+                          className="w-4 h-4"
+                        />
+                        <Label htmlFor="is_educator" className="cursor-pointer">Mark as Educator</Label>
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label>Profile Picture</Label>
+                      <div className="flex items-center gap-4">
+                        <Avatar className="w-16 h-16">
+                          <AvatarImage src={editData.profile_picture} />
+                          <AvatarFallback className="bg-[#6B1B3D] text-white">
+                            {editingUser?.full_name?.[0] || "U"}
+                          </AvatarFallback>
+                        </Avatar>
+                        <label htmlFor="edit-profile-pic" className="cursor-pointer">
+                          <Button type="button" variant="outline" size="sm" asChild>
+                            <span>
+                              <Upload className="w-4 h-4 mr-2" />
+                              Change Picture
+                            </span>
+                          </Button>
+                        </label>
+                        <input
+                          id="edit-profile-pic"
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={async (e) => {
+                            const file = e.target.files[0];
+                            if (!file) return;
+                            const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                            setEditData({ ...editData, profile_picture: file_url });
+                          }}
+                        />
+                      </div>
+                    </div>
+
                     <div>
                       <Label>Bio</Label>
                       <Textarea
@@ -647,14 +721,7 @@ export default function AdminSettings() {
 
           {/* Integrations Tab */}
           <TabsContent value="integrations">
-            <Card>
-              <CardHeader>
-                <CardTitle>Integrations</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">External integrations management coming soon...</p>
-              </CardContent>
-            </Card>
+            <StripeIntegrationContent currentUser={currentUser} />
           </TabsContent>
 
           {/* Analytics Tab */}
@@ -669,14 +736,7 @@ export default function AdminSettings() {
 
           {/* Support Room Tab */}
           <TabsContent value="support">
-            <Card>
-              <CardHeader>
-                <CardTitle>Support Room</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">User support tickets and requests coming soon...</p>
-              </CardContent>
-            </Card>
+            <SupportRoomContent currentUser={currentUser} />
           </TabsContent>
         </Tabs>
       </div>
