@@ -9,31 +9,31 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuTrigger } from
+"@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import NotificationsDropdown from "../components/navigation/NotificationsDropdown";
 import MessagesDrawer from "../components/navigation/MessagesDrawer";
 
 const publicPages = [
-  { name: "Home", label: "Home" },
-  { name: "OurWhy", label: "Our Why" },
-  { name: "ALIVEMethod", label: "ALIVE Method" },
-  { name: "Experts", label: "Experts" },
-  { name: "Apply", label: "Join" },
-  { name: "Contact", label: "Contact" },
-];
+{ name: "Home", label: "Home" },
+{ name: "OurWhy", label: "Our Why" },
+{ name: "ALIVEMethod", label: "ALIVE Method" },
+{ name: "Experts", label: "Experts" },
+{ name: "Apply", label: "Join" },
+{ name: "Contact", label: "Contact" }];
+
 
 const appNavigation = [
-  { name: "Dashboard", label: "Dashboard" },
-  { name: "Community", label: "Community" },
-  { name: "Members", label: "Members" },
-  { name: "Classroom", label: "Classroom" },
-  { name: "ExpertsDirectory", label: "Experts" },
-  { name: "ToolsHub", label: "Tools" },
-  { name: "MyALIVEJourney", label: "ALIVE Method" },
-  { name: "Support", label: "Support" },
-];
+{ name: "Dashboard", label: "Dashboard" },
+{ name: "Community", label: "Community" },
+{ name: "Members", label: "Members" },
+{ name: "Classroom", label: "Classroom" },
+{ name: "ExpertsDirectory", label: "Experts" },
+{ name: "ToolsHub", label: "Tools" },
+{ name: "MyALIVEJourney", label: "ALIVE Method" },
+{ name: "Support", label: "Support" }];
+
 
 export default function Layout({ children, currentPageName }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -44,7 +44,7 @@ export default function Layout({ children, currentPageName }) {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const location = useLocation();
 
-  const isPublicPage = publicPages.some(p => p.name === currentPageName) || currentPageName === "Login";
+  const isPublicPage = publicPages.some((p) => p.name === currentPageName) || currentPageName === "Login";
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -54,7 +54,7 @@ export default function Layout({ children, currentPageName }) {
         if (authenticated) {
           const userData = await base44.auth.me();
           setUser(userData);
-          
+
           // Redirect to onboarding if not completed
           if (!isPublicPage && currentPageName !== "OnboardingForm") {
             const sessions = await base44.entities.DiagnosticSession.filter(
@@ -106,11 +106,11 @@ export default function Layout({ children, currentPageName }) {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-20">
               <Link to={createPageUrl("Home")} className="flex items-center gap-3">
-                <img 
+                <img
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6945438e6f6e0e1d874ba569/fa1001979_AWLogo_.png"
                   alt="The Aligned Woman Logo"
-                  className="w-10 h-10 object-contain"
-                />
+                  className="w-10 h-10 object-contain" />
+
                 <span className="text-xl font-bold tracking-tight text-burgundy">
                   THE ALIGNED WOMAN
                 </span>
@@ -127,16 +127,16 @@ export default function Layout({ children, currentPageName }) {
                     }
                   }}
                   className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                  title={isAuthenticated ? "Go to Dashboard" : "Login"}
-                >
+                  title={isAuthenticated ? "Go to Dashboard" : "Login"}>
+
                   <User className="w-6 h-6 text-[#6B1B3D]" />
                 </button>
 
                 {/* Hamburger Menu Icon */}
                 <button
                   onClick={() => setShowMobileMenu(!showMobileMenu)}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                >
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+
                   <svg className="w-6 h-6 text-[#6B1B3D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
@@ -147,24 +147,24 @@ export default function Layout({ children, currentPageName }) {
         </header>
 
         {/* Mobile Sidebar Menu */}
-        {showMobileMenu && (
-          <>
+        {showMobileMenu &&
+        <>
             <div
-              className="fixed inset-0 bg-black/50 z-50"
-              onClick={() => setShowMobileMenu(false)}
-            />
+            className="fixed inset-0 bg-black/50 z-50"
+            onClick={() => setShowMobileMenu(false)} />
+
             <div className="fixed top-0 right-0 bottom-0 w-80 bg-white z-50 shadow-2xl">
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between p-6 border-b">
-                  <img 
-                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6945438e6f6e0e1d874ba569/fa1001979_AWLogo_.png"
-                    alt="AW"
-                    className="w-10 h-10"
-                  />
+                  <img
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6945438e6f6e0e1d874ba569/fa1001979_AWLogo_.png"
+                  alt="AW"
+                  className="w-10 h-10" />
+
                   <button
-                    onClick={() => setShowMobileMenu(false)}
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                  >
+                  onClick={() => setShowMobileMenu(false)}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -172,57 +172,57 @@ export default function Layout({ children, currentPageName }) {
                 </div>
 
                 <nav className="flex-1 p-6">
-                  {isAuthenticated && (
-                    <>
+                  {isAuthenticated &&
+                <>
                       <Button
-                        onClick={() => {
-                          setShowMobileMenu(false);
-                          window.location.href = createPageUrl("Dashboard");
-                        }}
-                        className="w-full mb-4 text-white"
-                        style={{ backgroundColor: '#6C1A3E' }}
-                      >
+                    onClick={() => {
+                      setShowMobileMenu(false);
+                      window.location.href = createPageUrl("Dashboard");
+                    }}
+                    className="w-full mb-4 text-white"
+                    style={{ backgroundColor: '#6C1A3E' }}>
+
                         Go to Dashboard
                       </Button>
                       <div className="h-px bg-gray-200 mb-6" />
                     </>
-                  )}
+                }
                   <ul className="space-y-2">
-                    {publicPages.map((item) => (
-                      <li key={item.name}>
+                    {publicPages.map((item) =>
+                  <li key={item.name}>
                         <Link
-                          to={createPageUrl(item.name)}
-                          onClick={() => setShowMobileMenu(false)}
-                          className="block px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-[#6B1B3D] rounded-lg transition-colors font-medium"
-                        >
+                      to={createPageUrl(item.name)}
+                      onClick={() => setShowMobileMenu(false)}
+                      className="block px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-[#6B1B3D] rounded-lg transition-colors font-medium">
+
                           {item.label}
                         </Link>
                       </li>
-                    ))}
+                  )}
                   </ul>
                 </nav>
 
                 <div className="p-6 border-t">
-                  {isAuthenticated ? (
-                    <Button
-                      onClick={handleLogout}
-                      className="w-full bg-burgundy hover:bg-burgundy-deep text-white"
-                    >
+                  {isAuthenticated ?
+                <Button
+                  onClick={handleLogout}
+                  className="w-full bg-burgundy hover:bg-burgundy-deep text-white">
+
                       Sign Out
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => base44.auth.redirectToLogin(createPageUrl("Dashboard"))}
-                      className="w-full bg-burgundy hover:bg-burgundy-deep text-white"
-                    >
+                    </Button> :
+
+                <Button
+                  onClick={() => base44.auth.redirectToLogin(createPageUrl("Dashboard"))}
+                  className="w-full bg-burgundy hover:bg-burgundy-deep text-white">
+
                       Sign In
                     </Button>
-                  )}
+                }
                 </div>
               </div>
             </div>
           </>
-        )}
+        }
 
         <main className="pt-20">
           {children}
@@ -240,13 +240,13 @@ export default function Layout({ children, currentPageName }) {
               <div>
                 <h4 className="font-semibold mb-4 text-rose-accent">Navigate</h4>
                 <ul className="space-y-2">
-                  {publicPages.slice(0, 4).map((item) => (
-                    <li key={item.name}>
+                  {publicPages.slice(0, 4).map((item) =>
+                  <li key={item.name}>
                       <Link to={createPageUrl(item.name)} className="text-white/70 hover:text-white transition-colors text-sm">
                         {item.label}
                       </Link>
                     </li>
-                  ))}
+                  )}
                 </ul>
               </div>
               <div>
@@ -270,14 +270,14 @@ export default function Layout({ children, currentPageName }) {
             </div>
           </div>
         </footer>
-      </div>
-    );
+      </div>);
+
   }
 
   // Authenticated app layout (Skool-inspired)
-  const visibleNavItems = currentPageName === "Dashboard" 
-    ? appNavigation.filter(item => item.name !== "Dashboard")
-    : appNavigation;
+  const visibleNavItems = currentPageName === "Dashboard" ?
+  appNavigation.filter((item) => item.name !== "Dashboard") :
+  appNavigation;
 
   return (
     <div className="min-h-screen">
@@ -289,17 +289,17 @@ export default function Layout({ children, currentPageName }) {
       `}</style>
 
       {/* Global Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto">
+      <header className="bg-white mr-16 ml-1 fixed top-0 left-0 right-0 z-50 border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-6">
           {/* Top Row: Logo, Search, Icons, Profile */}
-          <div className="flex items-center justify-between py-6 gap-6 px-6">
+          <div className="pt-10 pr-6 pb-10 pl-6 flex items-center justify-between gap-6">
             {/* Logo */}
             <Link to={createPageUrl("Home")} className="flex items-center gap-3 flex-shrink-0">
-              <img 
+              <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6945438e6f6e0e1d874ba569/fa1001979_AWLogo_.png"
                 alt="AW"
-                className="w-10 h-10"
-              />
+                className="w-10 h-10" />
+
               <span className="hidden lg:block text-lg font-bold text-[#6B1B3D]">
                 THE ALIGNED WOMAN
               </span>
@@ -314,8 +314,8 @@ export default function Layout({ children, currentPageName }) {
                   placeholder="Search community, modules, tools..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-11 bg-gray-50 border-gray-200 text-[20px]"
-                />
+                  className="pl-11 bg-gray-50 border-gray-200 text-[20px]" />
+
               </div>
             </form>
 
@@ -324,16 +324,16 @@ export default function Layout({ children, currentPageName }) {
               {/* Messages */}
               <button
                 onClick={() => setShowMessages(!showMessages)}
-                className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              >
+                className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
+
                 <MessageCircle className="w-5 h-5 text-gray-600" />
               </button>
 
               {/* Notifications */}
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              >
+                className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
+
                 <Bell className="w-5 h-5 text-gray-600" />
               </button>
 
@@ -342,15 +342,15 @@ export default function Layout({ children, currentPageName }) {
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center gap-2 p-1 hover:bg-gray-100 rounded-lg transition-colors">
                     <div className="w-10 h-10 rounded-full border-2 border-purple-500 overflow-hidden">
-                      {user?.profile_picture ? (
-                        <img src={user.profile_picture} alt={user.full_name} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full bg-[#6B1B3D] flex items-center justify-center">
+                      {user?.profile_picture ?
+                      <img src={user.profile_picture} alt={user.full_name} className="w-full h-full object-cover" /> :
+
+                      <div className="w-full h-full bg-[#6B1B3D] flex items-center justify-center">
                           <span className="text-white text-sm font-medium">
                             {user?.full_name?.[0] || user?.email?.[0] || "U"}
                           </span>
                         </div>
-                      )}
+                      }
                     </div>
                     <ChevronDown className="w-4 h-4 text-gray-600" />
                   </button>
@@ -362,14 +362,14 @@ export default function Layout({ children, currentPageName }) {
                       Profile Settings
                     </Link>
                   </DropdownMenuItem>
-                  {user && ["admin", "master_admin", "moderator", "expert", "course_creator"].includes(user.role) && (
-                    <DropdownMenuItem asChild>
+                  {user && ["admin", "master_admin", "moderator", "expert", "course_creator"].includes(user.role) &&
+                  <DropdownMenuItem asChild>
                       <Link to={createPageUrl("AdminSettings")} className="flex items-center gap-2">
                         <Settings className="w-4 h-4" />
                         Admin Settings
                       </Link>
                     </DropdownMenuItem>
-                  )}
+                  }
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout} className="text-red-600">
                     <LogOut className="w-4 h-4 mr-2" />
@@ -381,44 +381,44 @@ export default function Layout({ children, currentPageName }) {
           </div>
 
           {/* Navigation Bar */}
-          <div className="pb-6 px-6">
-            <nav className="bg-[#6B1B3D] rounded-xl py-2 flex items-center justify-between overflow-x-auto scrollbar-hide">
-              {visibleNavItems.map((item, index) => (
-                <React.Fragment key={item.name}>
+          <div className="pb-6">
+            <nav className="bg-[#6B1B3D] py-2 rounded-xl flex items-center justify-between overflow-x-auto scrollbar-hide">
+              {visibleNavItems.map((item, index) =>
+              <React.Fragment key={item.name}>
                   <Link
-                    to={createPageUrl(item.name)}
-                    className={`flex-1 px-3 py-2.5 text-sm font-bold whitespace-nowrap transition-all rounded-lg text-center ${
-                      currentPageName === item.name
-                        ? "bg-white text-[#6B1B3D]"
-                        : "text-white hover:bg-white/10"
-                    }`}
-                  >
+                  to={createPageUrl(item.name)}
+                  className={`flex-1 px-3 py-2.5 text-sm font-bold whitespace-nowrap transition-all rounded-lg text-center ${
+                  currentPageName === item.name ?
+                  "bg-white text-[#6B1B3D]" :
+                  "text-white hover:bg-white/10"}`
+                  }>
+
                     {item.label}
                   </Link>
-                  {index < visibleNavItems.length - 1 && (
-                    <div className="h-6 w-[2px] bg-white/40 mx-0.5 flex-shrink-0" />
-                  )}
+                  {index < visibleNavItems.length - 1 &&
+                <div className="h-6 w-[2px] bg-white/40 mx-0.5 flex-shrink-0" />
+                }
                 </React.Fragment>
-              ))}
+              )}
             </nav>
           </div>
         </div>
       </header>
 
       {/* Notifications Dropdown */}
-      {showNotifications && (
-        <NotificationsDropdown onClose={() => setShowNotifications(false)} />
-      )}
+      {showNotifications &&
+      <NotificationsDropdown onClose={() => setShowNotifications(false)} />
+      }
 
       {/* Messages Drawer */}
-      {showMessages && (
-        <MessagesDrawer onClose={() => setShowMessages(false)} />
-      )}
+      {showMessages &&
+      <MessagesDrawer onClose={() => setShowMessages(false)} />
+      }
 
       {/* Main Content */}
-      <main className="pt-[160px]">
+      <main className="">
         {children}
       </main>
-    </div>
-  );
+    </div>);
+
 }
