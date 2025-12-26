@@ -435,9 +435,9 @@ export default function DefineMyPurpose() {
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold text-white mb-2">
-                    {currentQuestion.questionText}
+                    {currentQuestion?.questionText || "Loading question..."}
                   </h2>
-                  {currentQuestion.helperText && (
+                  {currentQuestion?.helperText && (
                     <p className="text-white/60">{currentQuestion.helperText}</p>
                   )}
                 </div>
