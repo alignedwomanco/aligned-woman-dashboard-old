@@ -32,7 +32,7 @@ export default function GapSection() {
           <h2 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
             There Has Never Been One Place
             <br />
-            <span className="text-[#C67793]">That Holds the Whole Woman</span>
+            <span style={{ color: '#a861e9' }}>That Holds the Whole Woman</span>
           </h2>
         </motion.div>
 
