@@ -65,10 +65,16 @@ export default function ProfileSettings() {
     document.documentElement.style.setProperty('--theme-primary', theme.colors.primary);
     document.documentElement.style.setProperty('--theme-secondary', theme.colors.secondary);
     
-    // Apply to page background if needed
-    const mainContent = document.querySelector('.min-h-screen');
-    if (mainContent && mainContent.style.backgroundColor) {
-      mainContent.style.backgroundColor = theme.colors.primary;
+    // Apply to sidebar
+    const sidebar = document.querySelector('aside');
+    if (sidebar) {
+      sidebar.style.backgroundColor = theme.colors.primary;
+    }
+    
+    // Apply to header
+    const header = document.querySelector('header');
+    if (header) {
+      header.style.backgroundColor = theme.colors.secondary;
     }
   };
 
@@ -76,22 +82,37 @@ export default function ProfileSettings() {
     setSelectedTheme(themeId);
     applyTheme(themeId);
     
-    // Also update the layout header immediately
+    const themeOptions = [
+      { id: "aligned", colors: { primary: "#3B224E", secondary: "#5B2D83" } },
+      { id: "rose", colors: { primary: "#E11D48", secondary: "#F43F5E" } },
+      { id: "lavender", colors: { primary: "#9333EA", secondary: "#C084FC" } },
+      { id: "ocean", colors: { primary: "#0369A1", secondary: "#0EA5E9" } },
+      { id: "forest", colors: { primary: "#065F46", secondary: "#10B981" } },
+      { id: "sunset", colors: { primary: "#DC2626", secondary: "#F97316" } },
+      { id: "midnight", colors: { primary: "#1E293B", secondary: "#475569" } },
+      { id: "blush", colors: { primary: "#BE185D", secondary: "#EC4899" } },
+    ];
+    const theme = themeOptions.find(t => t.id === themeId) || themeOptions[0];
+    
+    // Update header
     const header = document.querySelector('header');
     if (header) {
-      const themeOptions = [
-        { id: "aligned", colors: { primary: "#3B224E", secondary: "#5B2D83" } },
-        { id: "rose", colors: { primary: "#E11D48", secondary: "#F43F5E" } },
-        { id: "lavender", colors: { primary: "#9333EA", secondary: "#C084FC" } },
-        { id: "ocean", colors: { primary: "#0369A1", secondary: "#0EA5E9" } },
-        { id: "forest", colors: { primary: "#065F46", secondary: "#10B981" } },
-        { id: "sunset", colors: { primary: "#DC2626", secondary: "#F97316" } },
-        { id: "midnight", colors: { primary: "#1E293B", secondary: "#475569" } },
-        { id: "blush", colors: { primary: "#BE185D", secondary: "#EC4899" } },
-      ];
-      const theme = themeOptions.find(t => t.id === themeId) || themeOptions[0];
       header.style.backgroundColor = theme.colors.secondary;
     }
+    
+    // Update sidebar
+    const sidebar = document.querySelector('aside');
+    if (sidebar) {
+      sidebar.style.backgroundColor = theme.colors.primary;
+    }
+    
+    // Update all gradient backgrounds on dashboard
+    const gradientCards = document.querySelectorAll('.bg-gradient-to-br, .bg-gradient-to-r');
+    gradientCards.forEach(card => {
+      if (card.classList.contains('from-[#3B224E]') || card.style.background.includes('#3B224E')) {
+        card.style.background = `linear-gradient(to bottom right, ${theme.colors.primary}, ${theme.colors.secondary})`;
+      }
+    });
   };
 
   const handleThemeSave = async () => {
