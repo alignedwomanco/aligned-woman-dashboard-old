@@ -65,11 +65,22 @@ export default function ProfileSettings() {
     document.documentElement.style.setProperty('--theme-secondary', theme.colors.secondary);
   };
 
-  const handleThemeChange = async (themeId) => {
+  const handleThemeChange = (themeId) => {
     setSelectedTheme(themeId);
     applyTheme(themeId);
-    await base44.auth.updateMe({ theme: themeId });
+  };
+
+  const handleThemeSave = async () => {
+    await base44.auth.updateMe({ theme: selectedTheme });
     queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+    setValidationError({
+      show: true,
+      title: "Success!",
+      message: "Your theme has been saved successfully."
+    });
+    setTimeout(() => {
+      setValidationError({ show: false, title: "", message: "" });
+    }, 3000);
   };
 
   useEffect(() => {
@@ -839,6 +850,7 @@ If you did not request this change, please ignore this email.
             <ThemeSelector
               currentTheme={selectedTheme}
               onThemeChange={handleThemeChange}
+              onSave={handleThemeSave}
             />
             <BackgroundSelector
               currentBackground={currentUser.background_image || "#FEF5F9"}

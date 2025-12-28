@@ -46,48 +46,51 @@ export const THEME_OPTIONS = [
   },
 ];
 
-export default function ThemeSelector({ currentTheme, onThemeChange }) {
+export default function ThemeSelector({ currentTheme, onThemeChange, onSave }) {
   const selectedTheme = THEME_OPTIONS.find((t) => t.id === currentTheme) || THEME_OPTIONS[0];
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Color Theme</CardTitle>
+        <CardTitle>Theme</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-4 gap-2 mb-4">
           {THEME_OPTIONS.map((theme) => (
             <button
               key={theme.id}
               onClick={() => onThemeChange(theme.id)}
-              className={`relative rounded-lg overflow-hidden border-2 transition-all p-4 ${
+              className={`relative rounded-lg overflow-hidden border-2 transition-all p-2 ${
                 currentTheme === theme.id
                   ? "border-[#2F1B3E] ring-2 ring-[#2F1B3E]/20"
                   : "border-gray-200 hover:border-gray-300"
               }`}
             >
-              <div className="flex gap-2 mb-2">
+              <div className="flex gap-1 mb-1">
                 <div
-                  className="w-10 h-10 rounded-full"
+                  className="w-6 h-6 rounded-full"
                   style={{ backgroundColor: theme.colors.primary }}
                 />
                 <div
-                  className="w-10 h-10 rounded-full"
+                  className="w-6 h-6 rounded-full"
                   style={{ backgroundColor: theme.colors.secondary }}
                 />
               </div>
-              <p className="text-sm font-medium text-gray-900">{theme.label}</p>
-              {theme.isDefault && (
-                <span className="text-xs text-gray-500 mt-1 block">Default</span>
-              )}
+              <p className="text-xs font-medium text-gray-900 truncate">{theme.label}</p>
               {currentTheme === theme.id && (
-                <div className="absolute top-2 right-2">
-                  <Check className="w-5 h-5 text-[#2F1B3E]" />
+                <div className="absolute top-1 right-1">
+                  <Check className="w-4 h-4 text-[#2F1B3E]" />
                 </div>
               )}
             </button>
           ))}
         </div>
+        <button
+          onClick={onSave}
+          className="w-full px-4 py-2 bg-[#2F1B3E] hover:bg-[#482C83] text-white rounded-lg text-sm font-medium transition-colors"
+        >
+          Save Theme
+        </button>
       </CardContent>
     </Card>
   );
