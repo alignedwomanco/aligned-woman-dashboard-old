@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Search, TrendingUp, Award, Plus, MessageSquare } from "lucide-react";
+import { createPageUrl } from "@/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { motion } from "framer-motion";
 import CreatePostCard from "../components/community/CreatePostCard";
@@ -224,15 +225,29 @@ export default function Community() {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen" style={{ backgroundColor: currentUser?.background_image?.startsWith('#') ? currentUser.background_image : 'transparent' }}>
+      {currentUser?.background_image && !currentUser.background_image.startsWith('#') && (
+        <div 
+          className="fixed inset-0 -z-10"
+          style={{
+            backgroundImage: currentUser.background_image.startsWith('data:image/svg+xml') 
+              ? `url("${currentUser.background_image}")`
+              : `url(${currentUser.background_image})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed'
+          }}
+        />
+      )}
       {/* Header Bar */}
       <motion.div 
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className="sticky top-0 z-40 backdrop-blur-xl bg-black/80 border-b border-white/10"
+        className="sticky top-0 z-40 backdrop-blur-xl border-b border-white/10"
+        style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)' }}
       >
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
-          <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          <h1 className="text-xl font-bold text-white">
             Community
           </h1>
           <div className="flex items-center gap-3">
@@ -240,7 +255,7 @@ export default function Community() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", delay: 0.2 }}
-              className="flex items-center gap-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 px-4 py-1.5 rounded-full border border-purple-500/30"
+              className="flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full border border-white/20"
             >
               <Award className="w-4 h-4 text-yellow-400" />
               <span className="text-sm font-semibold text-white">
@@ -257,7 +272,7 @@ export default function Community() {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1 }}
-          className="px-4 py-4 border-b border-white/10"
+          className="px-4 py-4 border-b border-gray-200"
         >
           <div className="flex gap-3 overflow-x-auto scrollbar-hide">
             {users.slice(0, 8).map((user, idx) => (
@@ -268,17 +283,17 @@ export default function Community() {
                 transition={{ delay: idx * 0.05, type: "spring" }}
                 className="flex-shrink-0 text-center"
               >
-                <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-purple-500 via-pink-500 to-yellow-500 p-0.5 mb-1">
-                  <div className="w-full h-full rounded-full bg-black p-0.5">
+                <div className="w-16 h-16 rounded-full p-0.5 mb-1" style={{ background: `linear-gradient(to top right, var(--theme-primary, #3C224F), var(--theme-secondary, #5B2E84))` }}>
+                  <div className="w-full h-full rounded-full bg-white/90 p-0.5">
                     <Avatar className="w-full h-full">
                       <AvatarImage src={user.profile_picture} />
-                      <AvatarFallback className="bg-gradient-to-br from-purple-600 to-pink-600 text-white text-xs">
+                      <AvatarFallback className="text-white text-xs" style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }}>
                         {user.full_name?.[0] || "U"}
                       </AvatarFallback>
                     </Avatar>
                   </div>
                 </div>
-                <p className="text-xs text-white/70 truncate w-16">{user.full_name?.split(" ")[0]}</p>
+                <p className="text-xs text-gray-700 truncate w-16">{user.full_name?.split(" ")[0]}</p>
               </motion.div>
             ))}
           </div>
@@ -292,12 +307,12 @@ export default function Community() {
           className="px-4 py-3"
         >
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search posts, people, #tags..."
-              className="pl-12 h-11 bg-white/5 border-white/10 text-white placeholder:text-white/40 rounded-full focus:bg-white/10"
+              className="pl-12 h-11 bg-white/90 border-gray-200 rounded-full"
             />
           </div>
         </motion.div>
@@ -315,9 +330,10 @@ export default function Community() {
             size="sm"
             className={`rounded-full ${
               sortBy === "new"
-                ? "bg-white text-black hover:bg-white/90"
-                : "bg-white/5 text-white/70 hover:bg-white/10"
+                ? "text-white"
+                : "bg-white/90 text-gray-700 hover:bg-white"
             }`}
+            style={sortBy === "new" ? { backgroundColor: 'var(--theme-secondary, #5B2E84)' } : {}}
           >
             <TrendingUp className="w-4 h-4 mr-1" />
             Latest
@@ -328,9 +344,10 @@ export default function Community() {
             size="sm"
             className={`rounded-full ${
               sortBy === "top"
-                ? "bg-white text-black hover:bg-white/90"
-                : "bg-white/5 text-white/70 hover:bg-white/10"
+                ? "text-white"
+                : "bg-white/90 text-gray-700 hover:bg-white"
             }`}
+            style={sortBy === "top" ? { backgroundColor: 'var(--theme-secondary, #5B2E84)' } : {}}
           >
             <Award className="w-4 h-4 mr-1" />
             Popular
@@ -351,7 +368,7 @@ export default function Community() {
         </motion.div>
 
         {/* Feed */}
-        <div className="space-y-0 border-t border-white/5">
+        <div className="space-y-0 border-t border-gray-200">
           {filteredPosts.map((post, idx) => (
             <motion.div
               key={post.id}
@@ -380,10 +397,10 @@ export default function Community() {
               animate={{ opacity: 1 }}
               className="p-12 text-center"
             >
-              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center mx-auto mb-4">
-                <Search className="w-10 h-10 text-white/40" />
+              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)', opacity: 0.2 }}>
+                <Search className="w-10 h-10 text-gray-600" />
               </div>
-              <p className="text-white/60">
+              <p className="text-gray-600">
                 {searchQuery ? "No posts found" : "Be the first to share!"}
               </p>
             </motion.div>
@@ -395,7 +412,8 @@ export default function Community() {
       <motion.div
         initial={{ y: 100 }}
         animate={{ y: 0 }}
-        className="fixed bottom-0 left-0 right-0 backdrop-blur-xl bg-black/90 border-t border-white/10 z-40"
+        className="fixed bottom-0 left-0 right-0 backdrop-blur-xl border-t border-white/10 z-40"
+        style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }}
       >
         <div className="max-w-2xl mx-auto px-6 py-3 flex items-center justify-around">
           <Button variant="ghost" size="icon" className="text-white">
@@ -406,7 +424,8 @@ export default function Community() {
           </Button>
           <Button
             size="icon"
-            className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 hover:scale-110 transition-transform"
+            className="w-12 h-12 rounded-full hover:scale-110 transition-transform"
+            style={{ background: `linear-gradient(to right, var(--theme-primary, #3C224F), var(--theme-secondary, #5B2E84))` }}
             onClick={() => document.querySelector('.ql-editor')?.focus()}
           >
             <Plus className="w-6 h-6" />
@@ -417,7 +436,7 @@ export default function Community() {
           <Button variant="ghost" size="icon" className="text-white" onClick={() => window.location.href = createPageUrl("ProfileSettings")}>
             <Avatar className="w-8 h-8">
               <AvatarImage src={currentUser?.profile_picture} />
-              <AvatarFallback className="bg-gradient-to-br from-purple-600 to-pink-600 text-white text-xs">
+              <AvatarFallback className="text-white text-xs" style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }}>
                 {currentUser?.full_name?.[0]}
               </AvatarFallback>
             </Avatar>
