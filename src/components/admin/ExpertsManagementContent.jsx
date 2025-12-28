@@ -33,6 +33,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { createPageUrl } from "@/utils";
 import { Link } from "react-router-dom";
+import ImageCropper from "./ImageCropper";
 
 export default function ExpertsManagementContent() {
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
@@ -49,6 +50,8 @@ export default function ExpertsManagementContent() {
     services: [],
     isPublished: true,
   });
+  const [cropperOpen, setCropperOpen] = useState(false);
+  const [tempImage, setTempImage] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: expertsProfiles = [] } = useQuery({
@@ -474,12 +477,17 @@ export default function ExpertsManagementContent() {
                     type="file"
                     accept="image/*"
                     className="hidden"
-                    onChange={async (e) => {
+                    onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) {
-                        const { file_url } = await base44.integrations.Core.UploadFile({ file });
-                        setExpertForm({ ...expertForm, profile_picture: file_url });
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                          setTempImage(event.target.result);
+                          setCropperOpen(true);
+                        };
+                        reader.readAsDataURL(file);
                       }
+                      e.target.value = null;
                     }}
                   />
                   <p className="text-xs text-gray-500">JPG, PNG, max 5MB</p>
@@ -571,6 +579,24 @@ export default function ExpertsManagementContent() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Image Cropper */}
+      {cropperOpen && tempImage && (
+        <ImageCropper
+          image={tempImage}
+          onCrop={async (blob) => {
+            const file = new File([blob], "profile.jpg", { type: "image/jpeg" });
+            const { file_url } = await base44.integrations.Core.UploadFile({ file });
+            setExpertForm({ ...expertForm, profile_picture: file_url });
+            setCropperOpen(false);
+            setTempImage(null);
+          }}
+          onCancel={() => {
+            setCropperOpen(false);
+            setTempImage(null);
+          }}
+        />
+      )}
     </div>
   );
 }
