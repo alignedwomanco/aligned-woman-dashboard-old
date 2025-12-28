@@ -50,12 +50,19 @@ export default function Layout({ children, currentPageName }) {
 
   useEffect(() => {
     const loadSettings = async () => {
-      const settings = await base44.entities.SiteSettings.list();
-      setSiteSettings(settings[0] || null);
+      try {
+        const settings = await base44.entities.SiteSettings.list();
+        setSiteSettings(settings[0] || null);
+      } catch (error) {
+        console.error("Failed to load site settings:", error);
+        setSiteSettings(null);
+      }
     };
     loadSettings();
+  }, []);
 
-    // Redirect root to Home page
+  // Separate useEffect for redirect to avoid conflicts
+  useEffect(() => {
     if (location.pathname === "/" || location.pathname === "") {
       navigate(createPageUrl("Home"), { replace: true });
     }
