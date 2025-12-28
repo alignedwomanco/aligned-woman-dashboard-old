@@ -724,26 +724,54 @@ export default function Dashboard() {
           className="mt-8"
         >
           <div className="grid grid-cols-4 gap-4">
-            <Link to={createPageUrl("Journal")}>
-              <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white h-14 flex items-center gap-2">
-                <Edit3 className="w-5 h-5" />
-                Reflect
-              </Button>
+            <Link to={createPageUrl("Journal")} className="block">
+              <Card className="bg-white/80 backdrop-blur-sm border-purple-200 hover:shadow-lg transition-all cursor-pointer h-full">
+                <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                    <Edit3 className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-center">
+                    <h3 className="font-semibold text-gray-900">Reflect</h3>
+                    <p className="text-xs text-gray-600 mt-1">Journal & insights</p>
+                  </div>
+                </CardContent>
+              </Card>
             </Link>
-            <Link to={createPageUrl("CheckIn")}>
-              <Button className="w-full bg-pink-500 hover:bg-pink-600 text-white h-14 flex items-center gap-2">
-                <Heart className="w-5 h-5" />
-                Regulate
-              </Button>
+            <Link to={createPageUrl("CheckIn")} className="block">
+              <Card className="bg-white/80 backdrop-blur-sm border-purple-200 hover:shadow-lg transition-all cursor-pointer h-full">
+                <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl flex items-center justify-center">
+                    <Heart className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-center">
+                    <h3 className="font-semibold text-gray-900">Regulate</h3>
+                    <p className="text-xs text-gray-600 mt-1">Daily check-in</p>
+                  </div>
+                </CardContent>
+              </Card>
             </Link>
-            <Button className="w-full bg-purple-500 hover:bg-purple-600 text-white h-14 flex items-center gap-2">
-              <Activity className="w-5 h-5" />
-              Cycle
-            </Button>
-            <Button className="w-full bg-indigo-500 hover:bg-indigo-600 text-white h-14 flex items-center gap-2">
-              <Moon className="w-5 h-5" />
-              Sleep
-            </Button>
+            <Card className="bg-white/80 backdrop-blur-sm border-purple-200 hover:shadow-lg transition-all cursor-pointer h-full">
+              <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                  <Activity className="w-6 h-6 text-white" />
+                </div>
+                <div className="text-center">
+                  <h3 className="font-semibold text-gray-900">Cycle</h3>
+                  <p className="text-xs text-gray-600 mt-1">Track your cycle</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-white/80 backdrop-blur-sm border-purple-200 hover:shadow-lg transition-all cursor-pointer h-full">
+              <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                  <Moon className="w-6 h-6 text-white" />
+                </div>
+                <div className="text-center">
+                  <h3 className="font-semibold text-gray-900">Sleep</h3>
+                  <p className="text-xs text-gray-600 mt-1">Rest insights</p>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </motion.div>
 

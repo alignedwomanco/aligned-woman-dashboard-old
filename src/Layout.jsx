@@ -425,6 +425,17 @@ export default function Layout({ children, currentPageName }) {
                 <ul className="mt-1 ml-8 space-y-1">
                   <li>
                     <Link
+                      to={createPageUrl("Journal")}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                      </svg>
+                      Reflect
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
                       to={createPageUrl("CheckIn")}
                       className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
                     >
