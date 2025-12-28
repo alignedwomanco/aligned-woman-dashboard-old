@@ -63,7 +63,9 @@ export default function Layout({ children, currentPageName }) {
 
   // Separate useEffect for redirect to avoid conflicts
   useEffect(() => {
-    if (location.pathname === "/" || location.pathname === "") {
+    // Only redirect if on actual root path or empty
+    const currentPath = location.pathname;
+    if (currentPath === "/" || currentPath === "" || currentPath === "/app") {
       navigate(createPageUrl("Home"), { replace: true });
     }
   }, [location.pathname, navigate]);
@@ -124,12 +126,13 @@ export default function Layout({ children, currentPageName }) {
               <img
                 src={siteSettings?.light_logo || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695154cb868ee011bb627195/23f49bf5a_AlignedWomanLogoPurple.png"}
                 alt="The Aligned Woman"
-                className="object-contain"
+                className="object-contain w-auto"
                 style={{ 
                   height: siteSettings?.logo_size === "small" ? "32px" : 
                          siteSettings?.logo_size === "medium" ? "48px" : 
                          siteSettings?.logo_size === "large" ? "64px" : 
-                         siteSettings?.logo_size === "custom" ? `${siteSettings.custom_logo_height}px` : "48px"
+                         siteSettings?.logo_size === "custom" ? `${siteSettings.custom_logo_height}px` : "48px",
+                  maxWidth: "200px"
                 }}
               />
             </Link>
