@@ -264,55 +264,64 @@ export default function AdminSettings() {
           <TabsList className="bg-white border border-gray-200">
             <TabsTrigger 
               value="users" 
-              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
+              className="data-[state=active]:text-white hover:bg-gray-100"
+              style={{ backgroundColor: activeTab === "users" ? 'var(--theme-secondary, #5B2E84)' : '' }}
             >
               Users
             </TabsTrigger>
             <TabsTrigger 
               value="courses" 
-              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
+              className="data-[state=active]:text-white hover:bg-gray-100"
+              style={{ backgroundColor: activeTab === "courses" ? 'var(--theme-secondary, #5B2E84)' : '' }}
             >
               Course Builder
             </TabsTrigger>
             <TabsTrigger 
               value="experts" 
-              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
+              className="data-[state=active]:text-white hover:bg-gray-100"
+              style={{ backgroundColor: activeTab === "experts" ? 'var(--theme-secondary, #5B2E84)' : '' }}
             >
               Experts
             </TabsTrigger>
             <TabsTrigger 
               value="dashboard" 
-              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
+              className="data-[state=active]:text-white hover:bg-gray-100"
+              style={{ backgroundColor: activeTab === "dashboard" ? 'var(--theme-secondary, #5B2E84)' : '' }}
             >
               Dashboard Configurator
             </TabsTrigger>
             <TabsTrigger 
               value="integrations" 
-              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
+              className="data-[state=active]:text-white hover:bg-gray-100"
+              style={{ backgroundColor: activeTab === "integrations" ? 'var(--theme-secondary, #5B2E84)' : '' }}
             >
               Integrations
             </TabsTrigger>
             <TabsTrigger 
               value="analytics" 
-              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
+              className="data-[state=active]:text-white hover:bg-gray-100"
+              style={{ backgroundColor: activeTab === "analytics" ? 'var(--theme-secondary, #5B2E84)' : '' }}
             >
               Analytics
             </TabsTrigger>
             <TabsTrigger 
               value="ai-chat" 
-              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
+              className="data-[state=active]:text-white hover:bg-gray-100"
+              style={{ backgroundColor: activeTab === "ai-chat" ? 'var(--theme-secondary, #5B2E84)' : '' }}
             >
               AI Chat Widget
             </TabsTrigger>
             <TabsTrigger 
               value="support" 
-              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
+              className="data-[state=active]:text-white hover:bg-gray-100"
+              style={{ backgroundColor: activeTab === "support" ? 'var(--theme-secondary, #5B2E84)' : '' }}
             >
               Support Room
             </TabsTrigger>
             <TabsTrigger 
               value="logos" 
-              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
+              className="data-[state=active]:text-white hover:bg-gray-100"
+              style={{ backgroundColor: activeTab === "logos" ? 'var(--theme-secondary, #5B2E84)' : '' }}
             >
               Logos
             </TabsTrigger>
