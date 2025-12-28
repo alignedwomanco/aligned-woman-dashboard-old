@@ -311,6 +311,12 @@ export default function AdminSettings() {
             >
               Support Room
             </TabsTrigger>
+            <TabsTrigger 
+              value="logos" 
+              className="data-[state=active]:bg-[#6C1A3E] data-[state=active]:text-white hover:bg-gray-100"
+            >
+              Logos
+            </TabsTrigger>
           </TabsList>
 
           {/* User Management Tab */}
@@ -776,6 +782,11 @@ export default function AdminSettings() {
           {/* Support Room Tab */}
           <TabsContent value="support">
             <SupportRoomContent currentUser={currentUser} />
+          </TabsContent>
+
+          {/* Logos Tab */}
+          <TabsContent value="logos">
+            <LogoManagement />
           </TabsContent>
         </Tabs>
       </div>
