@@ -42,9 +42,18 @@ export default function Layout({ children, currentPageName }) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showMessages, setShowMessages] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [siteSettings, setSiteSettings] = useState(null);
   const location = useLocation();
 
   const isPublicPage = publicPages.some((p) => p.name === currentPageName) || currentPageName === "Login";
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      const settings = await base44.entities.SiteSettings.list();
+      setSiteSettings(settings[0] || null);
+    };
+    loadSettings();
+  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -248,15 +257,6 @@ export default function Layout({ children, currentPageName }) {
 
             // Authenticated app layout with left sidebar
             const [showToolsDropdown, setShowToolsDropdown] = React.useState(false);
-            const [siteSettings, setSiteSettings] = React.useState(null);
-
-            React.useEffect(() => {
-              const loadSettings = async () => {
-                const settings = await base44.entities.SiteSettings.list();
-                setSiteSettings(settings[0] || null);
-              };
-              loadSettings();
-            }, []);
 
   return (
     <div className="min-h-screen flex">
