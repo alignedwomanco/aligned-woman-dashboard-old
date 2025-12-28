@@ -217,7 +217,7 @@ export default function AdminSettings() {
 
   const getRoleBadgeColor = (role) => {
     const colors = {
-      owner: "bg-gradient-to-r from-purple-600 to-pink-600 text-white",
+      owner: "text-white",
       master_admin: "bg-purple-100 text-purple-800",
       admin: "bg-blue-100 text-blue-800",
       moderator: "bg-green-100 text-green-800",
@@ -256,7 +256,7 @@ export default function AdminSettings() {
     <div className="min-h-screen p-12">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
-          <h1 className="text-3xl font-bold text-[#4A1228] mb-2">Admin Settings</h1>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--theme-primary, #3C224F)' }}>Admin Settings</h1>
           <p className="text-gray-600">Manage system settings and configurations</p>
         </div>
 
