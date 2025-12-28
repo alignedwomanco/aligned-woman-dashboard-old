@@ -143,6 +143,7 @@ User's question: ${userMessage}`;
                         ? "text-white"
                         : "bg-white text-gray-800 shadow-sm"
                     }`}
+                    style={message.role === "user" ? { backgroundColor: 'var(--theme-primary, #3C224F)' } : {}}
                   >
                     <p className="text-sm leading-relaxed">{message.content}</p>
                   </div>
