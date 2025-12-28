@@ -293,7 +293,7 @@ export default function Layout({ children, currentPageName }) {
             <img
               src={siteSettings?.dark_logo || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695154cb868ee011bb627195/3a7061782_AlignedWomanLogoWhite.png"}
               alt="The Aligned Woman"
-              className="object-contain"
+              className="object-contain w-auto max-w-full"
               style={{ 
                 height: siteSettings?.logo_size === "small" ? "28px" : 
                        siteSettings?.logo_size === "medium" ? "40px" : 
