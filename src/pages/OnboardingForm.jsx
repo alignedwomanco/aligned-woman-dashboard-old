@@ -369,7 +369,7 @@ Be warm, specific, and action-oriented.`;
   }
 
   return (
-    <div className="min-h-screen bg-[#4B397F] p-4 md:p-6">
+    <div className="min-h-screen p-4 md:p-6" style={{ backgroundColor: 'var(--theme-tertiary, #4B397F)' }}>
       <div className="max-w-2xl mx-auto w-full">
         {/* Header */}
         <div className="py-6">

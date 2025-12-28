@@ -320,7 +320,7 @@ export default function DefineMyPurpose() {
   // Mirror view
   if (showMirror) {
     return (
-      <div className="min-h-screen bg-[#4B397F] p-4 md:p-6">
+      <div className="min-h-screen p-4 md:p-6" style={{ backgroundColor: 'var(--theme-tertiary, #4B397F)' }}>
         <div className="max-w-2xl mx-auto">
           <div className="py-6">
             <h1 className="text-2xl font-bold text-white mb-2">
@@ -368,7 +368,7 @@ export default function DefineMyPurpose() {
   // Start screen
   if (!session) {
     return (
-      <div className="min-h-screen bg-[#4B397F] p-4 md:p-6 flex items-center justify-center">
+      <div className="min-h-screen p-4 md:p-6 flex items-center justify-center" style={{ backgroundColor: 'var(--theme-tertiary, #4B397F)' }}>
         <div className="max-w-lg text-center">
           <div className="w-20 h-20 bg-[#FECDD4]/20 rounded-full flex items-center justify-center mx-auto mb-6">
             <Sparkles className="w-10 h-10 text-[#FECDD4]" />
@@ -401,7 +401,7 @@ export default function DefineMyPurpose() {
 
   // Question flow
   return (
-    <div className="min-h-screen bg-[#4B397F] p-4 md:p-6">
+    <div className="min-h-screen p-4 md:p-6" style={{ backgroundColor: 'var(--theme-tertiary, #4B397F)' }}>
       <div className="max-w-2xl mx-auto">
         <div className="py-6">
           <div className="flex items-center justify-between mb-4">
