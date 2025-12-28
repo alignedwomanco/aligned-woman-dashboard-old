@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "./utils";
 import { base44 } from "@/api/base44Client";
-import { Bell, MessageCircle, LogOut, User, Settings, ChevronDown } from "lucide-react";
+import { Bell, MessageCircle, LogOut, User, Settings, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -43,6 +43,7 @@ export default function Layout({ children, currentPageName }) {
   const [showMessages, setShowMessages] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [siteSettings, setSiteSettings] = useState(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -285,47 +286,51 @@ export default function Layout({ children, currentPageName }) {
             // Authenticated app layout with left sidebar
             const [showToolsDropdown, setShowToolsDropdown] = React.useState(false);
 
-  return (
-    <div className="min-h-screen flex">
-      <style>{`
-        :root {
-          --burgundy: #3B224E;
-          --burgundy-deep: #1F0B2E;
-        }
-      `}</style>
+            return (
+              <div className="min-h-screen flex">
+                <style>{`
+                  :root {
+                    --burgundy: #3B224E;
+                    --burgundy-deep: #1F0B2E;
+                  }
+                `}</style>
 
-      {/* Left Sidebar */}
-      <aside className="fixed left-0 top-0 bottom-0 w-64 bg-[#3C224F] text-white flex flex-col z-50">
+                {/* Left Sidebar */}
+                <aside className={`fixed left-0 top-0 bottom-0 bg-[#3C224F] text-white flex flex-col z-50 transition-all duration-300 ${sidebarCollapsed ? 'w-16' : 'w-64'}`}>
         {/* Logo */}
         <div className="p-6 border-b border-white/10">
-          <Link to={createPageUrl("Home")}>
-            <img
-              src={siteSettings?.light_logo || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695154cb868ee011bb627195/23f49bf5a_AlignedWomanLogoPurple.png"}
-              alt="The Aligned Woman"
-              className="object-contain w-auto max-w-full"
-              style={{ 
-                height: siteSettings?.logo_size === "small" ? "28px" : 
-                       siteSettings?.logo_size === "medium" ? "40px" : 
-                       siteSettings?.logo_size === "large" ? "56px" : 
-                       siteSettings?.logo_size === "custom" ? `${Math.floor(siteSettings.custom_logo_height * 0.83)}px` : "40px"
-              }}
-            />
-          </Link>
+          {!sidebarCollapsed && (
+            <Link to={createPageUrl("Home")}>
+              <img
+                src={siteSettings?.light_logo || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695154cb868ee011bb627195/23f49bf5a_AlignedWomanLogoPurple.png"}
+                alt="The Aligned Woman"
+                className="object-contain w-auto max-w-full"
+                style={{ 
+                  height: siteSettings?.logo_size === "small" ? "28px" : 
+                         siteSettings?.logo_size === "medium" ? "40px" : 
+                         siteSettings?.logo_size === "large" ? "56px" : 
+                         siteSettings?.logo_size === "custom" ? `${Math.floor(siteSettings.custom_logo_height * 0.83)}px` : "40px"
+                }}
+              />
+            </Link>
+          )}
         </div>
 
         {/* Search */}
-        <div className="px-4 py-4">
-          <div className="relative">
-            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input
-              type="text"
-              placeholder="Search"
-              className="w-full bg-white/10 border border-white/20 rounded-lg pl-10 pr-4 py-2 text-sm text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30"
-            />
+        {!sidebarCollapsed && (
+          <div className="px-4 py-4">
+            <div className="relative">
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search"
+                className="w-full bg-white/10 border border-white/20 rounded-lg pl-10 pr-4 py-2 text-sm text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30"
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Navigation */}
         <nav className="flex-1 px-4 py-2 overflow-y-auto">
@@ -342,7 +347,7 @@ export default function Layout({ children, currentPageName }) {
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                 </svg>
-                <span className="font-medium">Dashboard</span>
+                {!sidebarCollapsed && <span className="font-medium">Dashboard</span>}
               </Link>
             </li>
 
@@ -358,7 +363,7 @@ export default function Layout({ children, currentPageName }) {
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
-                <span className="font-medium">Insights</span>
+                {!sidebarCollapsed && <span className="font-medium">Insights</span>}
               </Link>
             </li>
 
@@ -374,7 +379,7 @@ export default function Layout({ children, currentPageName }) {
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
-                <span className="font-medium">Journal</span>
+                {!sidebarCollapsed && <span className="font-medium">Journal</span>}
               </Link>
             </li>
 
@@ -392,7 +397,7 @@ export default function Layout({ children, currentPageName }) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
                 </svg>
-                <span className="font-medium">Classroom</span>
+                {!sidebarCollapsed && <span className="font-medium">Classroom</span>}
               </Link>
             </li>
 
@@ -408,7 +413,7 @@ export default function Layout({ children, currentPageName }) {
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-                <span className="font-medium">Community</span>
+                {!sidebarCollapsed && <span className="font-medium">Community</span>}
               </Link>
             </li>
 
@@ -426,7 +431,7 @@ export default function Layout({ children, currentPageName }) {
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                   </svg>
-                  <span className="font-medium">Tools</span>
+                  {!sidebarCollapsed && <span className="font-medium">Tools</span>}
                 </div>
                 <svg
                   className={`w-4 h-4 transition-transform ${showToolsDropdown ? "rotate-180" : ""}`}
@@ -495,10 +500,27 @@ export default function Layout({ children, currentPageName }) {
             </li>
           </ul>
         </nav>
+
+        {/* Toggle Button */}
+        <div className="p-4 border-t border-white/10">
+          <button
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+          >
+            {sidebarCollapsed ? (
+              <ChevronRight className="w-5 h-5" />
+            ) : (
+              <>
+                <ChevronLeft className="w-5 h-5" />
+                <span className="text-sm font-medium">Collapse</span>
+              </>
+            )}
+          </button>
+        </div>
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 ml-64">
+      <div className={`flex-1 transition-all duration-300 ${sidebarCollapsed ? 'ml-16' : 'ml-64'}`}>
         {/* Top Header */}
         <header className="sticky top-0 z-40 border-b border-gray-200" style={{ backgroundColor: '#5B2D83' }}>
           <div className="flex items-center justify-between gap-4 px-8 py-4">
