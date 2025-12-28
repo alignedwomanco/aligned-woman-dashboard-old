@@ -190,7 +190,7 @@ export default function Dashboard() {
   // If no diagnostic completed, show onboarding prompt
   if (!diagnosticSession) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white p-6">
+      <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white p-6">
         <div className="max-w-4xl mx-auto pt-12">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -198,10 +198,10 @@ export default function Dashboard() {
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <div className="w-20 h-20 bg-gradient-to-br from-[#6B1B3D] to-[#8B2E4D] rounded-full flex items-center justify-center mx-auto mb-8">
+            <div className="w-20 h-20 bg-gradient-to-br from-[#2F1B3E] to-[#4A2B5E] rounded-full flex items-center justify-center mx-auto mb-8">
               <Sparkles className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-4xl font-bold text-[#4A1228] mb-4">
+            <h1 className="text-4xl font-bold text-[#2F1B3E] mb-4">
               Welcome{currentUser?.full_name ? `, ${currentUser.full_name.split(" ")[0]}` : ""}!
             </h1>
             <p className="text-xl text-gray-600 max-w-xl mx-auto mb-8">
@@ -210,7 +210,7 @@ export default function Dashboard() {
             <Link to={createPageUrl("OnboardingForm")}>
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-[#6B1B3D] to-[#8B2E4D] hover:from-[#4A1228] hover:to-[#6B1B3D] text-white px-10 py-6 text-lg font-semibold rounded-full shadow-xl"
+                className="bg-gradient-to-r from-[#2F1B3E] to-[#4A2B5E] hover:from-[#1F0B2E] hover:to-[#2F1B3E] text-white px-10 py-6 text-lg font-semibold rounded-full shadow-xl"
               >
                 Begin Your Diagnostic
                 <ArrowRight className="ml-2 w-5 h-5" />
@@ -235,7 +235,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-purple-100">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-purple-100 pb-12">
       <div className="max-w-[1600px] mx-auto px-8 py-8">
         {/* Greeting Header */}
         <motion.div
@@ -243,7 +243,7 @@ export default function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-6"
         >
-          <h1 className="text-3xl font-bold text-[#4A1228] mb-1">
+          <h1 className="text-3xl font-bold text-[#2F1B3E] mb-1">
             {greeting.text}, {currentUser?.full_name?.split(" ")[0] || "there"} {greeting.emoji}
           </h1>
           <p className="text-gray-600">Hope you feel centered today.</p>
@@ -258,13 +258,13 @@ export default function Dashboard() {
         >
           <Tabs value={snapshotView} onValueChange={setSnapshotView} className="w-auto inline-block">
             <TabsList className="bg-white/80 backdrop-blur-sm border border-purple-200">
-              <TabsTrigger value={SNAPSHOT_VIEWS.DAILY} className="data-[state=active]:bg-[#6B1B3D] data-[state=active]:text-white">
+              <TabsTrigger value={SNAPSHOT_VIEWS.DAILY} className="data-[state=active]:bg-[#2F1B3E] data-[state=active]:text-white">
                 Daily
               </TabsTrigger>
-              <TabsTrigger value={SNAPSHOT_VIEWS.WEEKLY} className="data-[state=active]:bg-[#6B1B3D] data-[state=active]:text-white">
+              <TabsTrigger value={SNAPSHOT_VIEWS.WEEKLY} className="data-[state=active]:bg-[#2F1B3E] data-[state=active]:text-white">
                 Weekly
               </TabsTrigger>
-              <TabsTrigger value={SNAPSHOT_VIEWS.MONTHLY} className="data-[state=active]:bg-[#6B1B3D] data-[state=active]:text-white">
+              <TabsTrigger value={SNAPSHOT_VIEWS.MONTHLY} className="data-[state=active]:bg-[#2F1B3E] data-[state=active]:text-white">
                 Monthly
               </TabsTrigger>
             </TabsList>
@@ -420,7 +420,7 @@ export default function Dashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
-              <Card className="bg-gradient-to-br from-[#2D1B3D] to-[#4A1B4A] text-white border-0 overflow-hidden">
+              <Card className="bg-gradient-to-br from-[#2F1B3E] to-[#4A2B5E] text-white border-0 overflow-hidden">
                 <CardContent className="p-8">
                   <h2 className="text-2xl font-bold mb-6 text-center">Your Daily ALIVE Snapshot</h2>
                   
@@ -501,7 +501,7 @@ export default function Dashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
             >
-              <Card className="bg-gradient-to-br from-purple-900 to-indigo-900 text-white border-0">
+              <Card className="bg-gradient-to-br from-[#2F1B3E] to-[#4A2B5E] text-white border-0">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-white">
                     <Sparkles className="w-5 h-5" />

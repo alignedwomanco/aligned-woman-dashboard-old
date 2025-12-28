@@ -85,8 +85,8 @@ export default function Layout({ children, currentPageName }) {
       <div className="min-h-screen bg-pink-50/30">
         <style>{`
           :root {
-            --burgundy: #6B1B3D;
-            --burgundy-deep: #4A1228;
+            --burgundy: #2F1B3E;
+            --burgundy-deep: #1F0B2E;
             --rose-accent: #C67793;
             --rose-accent-2: #C4687D;
             --rose-dark: #8B2E4D;
@@ -104,7 +104,7 @@ export default function Layout({ children, currentPageName }) {
                   alt="The Aligned Woman Logo"
                   className="w-10 h-10 object-contain" />
 
-                <span className="text-xl font-bold tracking-tight text-burgundy">
+                <span className="text-xl font-bold tracking-tight" style={{ color: '#2F1B3E' }}>
                   THE ALIGNED WOMAN
                 </span>
               </Link>
@@ -122,7 +122,7 @@ export default function Layout({ children, currentPageName }) {
                   className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                   title={isAuthenticated ? "Go to Dashboard" : "Login"}>
 
-                  <User className="w-6 h-6 text-[#6B1B3D]" />
+                  <User className="w-6 h-6 text-[#2F1B3E]" />
                 </button>
 
                 {/* Hamburger Menu Icon */}
@@ -130,7 +130,7 @@ export default function Layout({ children, currentPageName }) {
                   onClick={() => setShowMobileMenu(!showMobileMenu)}
                   className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
 
-                  <svg className="w-6 h-6 text-[#6B1B3D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-[#2F1B3E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
                 </button>
@@ -186,7 +186,7 @@ export default function Layout({ children, currentPageName }) {
                         <Link
                       to={createPageUrl(item.name)}
                       onClick={() => setShowMobileMenu(false)}
-                      className="block px-4 py-3 text-gray-700 hover:bg-pink-50 hover:text-[#6B1B3D] rounded-lg transition-colors font-medium">
+                      className="block px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-[#2F1B3E] rounded-lg transition-colors font-medium">
 
                           {item.label}
                         </Link>
@@ -199,14 +199,16 @@ export default function Layout({ children, currentPageName }) {
                   {isAuthenticated ?
                 <Button
                   onClick={handleLogout}
-                  className="w-full bg-burgundy hover:bg-burgundy-deep text-white">
+                  className="w-full text-white"
+                  style={{ backgroundColor: '#2F1B3E' }}>
 
                       Sign Out
                     </Button> :
 
                 <Button
                   onClick={() => base44.auth.redirectToLogin(createPageUrl("Dashboard"))}
-                  className="w-full bg-burgundy hover:bg-burgundy-deep text-white">
+                  className="w-full text-white"
+                  style={{ backgroundColor: '#2F1B3E' }}>
 
                       Sign In
                     </Button>
@@ -276,8 +278,8 @@ export default function Layout({ children, currentPageName }) {
     <div className="min-h-screen">
       <style>{`
         :root {
-          --burgundy: #6B1B3D;
-          --burgundy-deep: #4A1228;
+          --burgundy: #2F1B3E;
+          --burgundy-deep: #1F0B2E;
         }
       `}</style>
 
@@ -324,7 +326,7 @@ export default function Layout({ children, currentPageName }) {
                       {user?.profile_picture ?
                       <img src={user.profile_picture} alt={user.full_name} className="w-full h-full object-cover" /> :
 
-                      <div className="w-full h-full bg-[#6B1B3D] flex items-center justify-center">
+                      <div className="w-full h-full bg-[#2F1B3E] flex items-center justify-center">
                           <span className="text-white text-sm font-medium">
                             {user?.full_name?.[0] || user?.email?.[0] || "U"}
                           </span>
@@ -361,7 +363,7 @@ export default function Layout({ children, currentPageName }) {
 
           {/* Navigation Bar */}
           <div className="pb-6 px-6">
-            <nav className="bg-[#6B1B3D] rounded-xl py-2 flex items-center justify-between overflow-x-auto scrollbar-hide">
+            <nav className="bg-[#2F1B3E] rounded-xl py-2 flex items-center justify-between overflow-x-auto scrollbar-hide">
               {visibleNavItems.map((item, index) =>
               <React.Fragment key={item.name}>
                   <Link
