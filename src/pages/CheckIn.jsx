@@ -72,7 +72,7 @@ export default function CheckIn() {
   if (submitted || todaysCheckIn) {
     const displayData = todaysCheckIn || values;
     return (
-      <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white p-6">
+      <div className="min-h-screen p-6" style={{ backgroundColor: 'var(--theme-tertiary, #4B397F)' }}>
         <div className="max-w-2xl mx-auto pt-12">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -151,7 +151,7 @@ export default function CheckIn() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white p-6">
+    <div className="min-h-screen p-6" style={{ backgroundColor: 'var(--theme-tertiary, #4B397F)' }}>
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <motion.div
