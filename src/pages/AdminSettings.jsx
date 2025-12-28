@@ -242,7 +242,7 @@ export default function AdminSettings() {
   if (!currentUser) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-[#6B1B3D] border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-4 border-t-transparent rounded-full" style={{ borderColor: 'var(--theme-primary, #3C224F)', borderTopColor: 'transparent' }} />
       </div>
     );
   }
@@ -416,8 +416,8 @@ export default function AdminSettings() {
                             <div className="relative group">
                               <Avatar className="cursor-pointer">
                                 <AvatarImage src={user.profile_picture} />
-                                <AvatarFallback className="bg-[#6B1B3D] text-white">
-                                  {user.full_name?.[0] || user.email?.[0]}
+                                <AvatarFallback style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }} className="text-white">
+                                 {user.full_name?.[0] || user.email?.[0]}
                                 </AvatarFallback>
                               </Avatar>
                               <label 
@@ -519,7 +519,8 @@ export default function AdminSettings() {
                     </div>
                     <Button 
                       onClick={() => setActiveTab("experts")}
-                      className="bg-[#6B1B3D] hover:bg-[#4A1228]"
+                      className="text-white"
+                      style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)' }}
                     >
                       Go to Experts →
                     </Button>
@@ -553,8 +554,8 @@ export default function AdminSettings() {
                             <div className="relative group">
                               <Avatar className="cursor-pointer">
                                 <AvatarImage src={user.profile_picture} />
-                                <AvatarFallback className="bg-[#6B1B3D] text-white">
-                                  {user.full_name?.[0] || user.email?.[0]}
+                                <AvatarFallback style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }} className="text-white">
+                                 {user.full_name?.[0] || user.email?.[0]}
                                 </AvatarFallback>
                               </Avatar>
                               <label 
