@@ -175,24 +175,22 @@ export default function AdminSettings() {
 
   // Apply background
   useEffect(() => {
-    if (currentUser?.background_image) {
-      const bg = currentUser.background_image;
-      if (bg.startsWith('#')) {
-        document.body.style.backgroundColor = bg;
-        document.body.style.backgroundImage = "none";
-      } else if (bg.startsWith('data:image/svg+xml')) {
-        document.body.style.backgroundImage = `url("${bg}")`;
-        document.body.style.backgroundSize = "cover";
-        document.body.style.backgroundPosition = "center";
-        document.body.style.backgroundAttachment = "fixed";
-        document.body.style.backgroundColor = "transparent";
-      } else {
-        document.body.style.backgroundImage = `url(${bg})`;
-        document.body.style.backgroundSize = "cover";
-        document.body.style.backgroundPosition = "center";
-        document.body.style.backgroundAttachment = "fixed";
-        document.body.style.backgroundColor = "transparent";
-      }
+    const bg = currentUser?.background_image || '#FBF4FD';
+    if (bg.startsWith('#')) {
+      document.body.style.backgroundColor = bg;
+      document.body.style.backgroundImage = "none";
+    } else if (bg.startsWith('data:image/svg+xml')) {
+      document.body.style.backgroundImage = `url("${bg}")`;
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundPosition = "center";
+      document.body.style.backgroundAttachment = "fixed";
+      document.body.style.backgroundColor = "transparent";
+    } else {
+      document.body.style.backgroundImage = `url(${bg})`;
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundPosition = "center";
+      document.body.style.backgroundAttachment = "fixed";
+      document.body.style.backgroundColor = "transparent";
     }
   }, [currentUser?.background_image]);
 
@@ -255,7 +253,7 @@ export default function AdminSettings() {
   const regularUsers = allUsers.filter(u => u.role === "user");
 
   return (
-    <div className="min-h-screen p-12" style={{ backgroundColor: '#FBF4FD' }}>
+    <div className="min-h-screen p-12">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
           <h1 className="text-3xl font-bold text-[#4A1228] mb-2">Admin Settings</h1>

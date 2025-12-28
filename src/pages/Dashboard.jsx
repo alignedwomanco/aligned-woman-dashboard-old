@@ -173,6 +173,27 @@ export default function Dashboard() {
 
   const greeting = getGreeting();
 
+  // Apply background
+  useEffect(() => {
+    const bg = currentUser?.background_image || '#FBF4FD';
+    if (bg.startsWith('#')) {
+      document.body.style.backgroundColor = bg;
+      document.body.style.backgroundImage = "none";
+    } else if (bg.startsWith('data:image/svg+xml')) {
+      document.body.style.backgroundImage = `url("${bg}")`;
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundPosition = "center";
+      document.body.style.backgroundAttachment = "fixed";
+      document.body.style.backgroundColor = "transparent";
+    } else {
+      document.body.style.backgroundImage = `url(${bg})`;
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundPosition = "center";
+      document.body.style.backgroundAttachment = "fixed";
+      document.body.style.backgroundColor = "transparent";
+    }
+  }, [currentUser?.background_image]);
+
   // Mock stress/energy calendar data (would come from CheckIn entities)
   const stressCalendarData = useMemo(() => {
     const data = {};
@@ -235,7 +256,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-purple-100 pb-12">
+    <div className="min-h-screen pb-12">
       <div className="max-w-[1600px] mx-auto px-8 py-8">
 
 

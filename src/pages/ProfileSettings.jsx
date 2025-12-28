@@ -412,7 +412,7 @@ If you did not request this change, please ignore this email.
   }
 
   return (
-    <div className="min-h-screen p-12" style={{ backgroundColor: '#FBF4FD' }}>
+    <div className="min-h-screen p-12">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
           <h1 className="text-3xl font-bold text-[#3B224E] mb-2">Profile Settings</h1>
