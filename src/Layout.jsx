@@ -85,7 +85,7 @@ export default function Layout({ children, currentPageName }) {
       <div className="min-h-screen bg-pink-50/30">
         <style>{`
           :root {
-            --burgundy: #2F1B3E;
+            --burgundy: #3B224E;
             --burgundy-deep: #1F0B2E;
             --rose-accent: #C67793;
             --rose-accent-2: #C4687D;
@@ -104,7 +104,7 @@ export default function Layout({ children, currentPageName }) {
                   alt="The Aligned Woman Logo"
                   className="w-10 h-10 object-contain" />
 
-                <span className="text-xl font-bold tracking-tight" style={{ color: '#2F1B3E' }}>
+                <span className="text-xl font-bold tracking-tight" style={{ color: '#3B224E' }}>
                   THE ALIGNED WOMAN
                 </span>
               </Link>
@@ -122,7 +122,7 @@ export default function Layout({ children, currentPageName }) {
                   className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                   title={isAuthenticated ? "Go to Dashboard" : "Login"}>
 
-                  <User className="w-6 h-6 text-[#2F1B3E]" />
+                  <User className="w-6 h-6 text-[#3B224E]" />
                 </button>
 
                 {/* Hamburger Menu Icon */}
@@ -130,7 +130,7 @@ export default function Layout({ children, currentPageName }) {
                   onClick={() => setShowMobileMenu(!showMobileMenu)}
                   className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
 
-                  <svg className="w-6 h-6 text-[#2F1B3E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-[#3B224E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
                 </button>
@@ -186,7 +186,7 @@ export default function Layout({ children, currentPageName }) {
                         <Link
                       to={createPageUrl(item.name)}
                       onClick={() => setShowMobileMenu(false)}
-                      className="block px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-[#2F1B3E] rounded-lg transition-colors font-medium">
+                      className="block px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-[#3B224E] rounded-lg transition-colors font-medium">
 
                           {item.label}
                         </Link>
@@ -200,7 +200,7 @@ export default function Layout({ children, currentPageName }) {
                 <Button
                   onClick={handleLogout}
                   className="w-full text-white"
-                  style={{ backgroundColor: '#2F1B3E' }}>
+                  style={{ backgroundColor: '#3B224E' }}>
 
                       Sign Out
                     </Button> :
@@ -208,7 +208,7 @@ export default function Layout({ children, currentPageName }) {
                 <Button
                   onClick={() => base44.auth.redirectToLogin(createPageUrl("Dashboard"))}
                   className="w-full text-white"
-                  style={{ backgroundColor: '#2F1B3E' }}>
+                  style={{ backgroundColor: '#3B224E' }}>
 
                       Sign In
                     </Button>
@@ -223,7 +223,7 @@ export default function Layout({ children, currentPageName }) {
           {children}
         </main>
 
-        <footer className="bg-[#2F1B3E] text-white">
+        <footer className="bg-[#3B224E] text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
               <div className="col-span-1 md:col-span-2">
@@ -276,13 +276,13 @@ export default function Layout({ children, currentPageName }) {
     <div className="min-h-screen flex">
       <style>{`
         :root {
-          --burgundy: #2F1B3E;
+          --burgundy: #3B224E;
           --burgundy-deep: #1F0B2E;
         }
       `}</style>
 
       {/* Left Sidebar */}
-      <aside className="fixed left-0 top-0 bottom-0 w-64 bg-[#2F1B3E] text-white flex flex-col z-50">
+      <aside className="fixed left-0 top-0 bottom-0 w-64 bg-[#3B224E] text-white flex flex-col z-50">
         {/* Logo */}
         <div className="p-6 border-b border-white/10">
           <Link to={createPageUrl("Home")} className="flex items-center gap-3">

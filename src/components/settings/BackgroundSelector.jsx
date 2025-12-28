@@ -19,7 +19,7 @@ export const BACKGROUND_OPTIONS = [
     id: "pattern1", 
     label: "Purple Gradient", 
     type: "svg",
-    value: `<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#2F1B3E;stop-opacity:1" /><stop offset="100%" style="stop-color:#5B2D83;stop-opacity:1" /></linearGradient></defs><rect width="100%" height="100%" fill="url(#grad1)"/><circle cx="85%" cy="30%" r="200" fill="rgba(91, 45, 131, 0.3)"/><circle cx="15%" cy="70%" r="150" fill="rgba(91, 45, 131, 0.2)"/></svg>`
+    value: `<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#3B224E;stop-opacity:1" /><stop offset="100%" style="stop-color:#5B2D83;stop-opacity:1" /></linearGradient></defs><rect width="100%" height="100%" fill="url(#grad1)"/><circle cx="85%" cy="30%" r="200" fill="rgba(91, 45, 131, 0.3)"/><circle cx="15%" cy="70%" r="150" fill="rgba(91, 45, 131, 0.2)"/></svg>`
   },
   { 
     id: "pattern2", 
@@ -83,7 +83,7 @@ export default function BackgroundSelector({ currentBackground, onBackgroundChan
               onClick={() => setSelectedBackground(bg.type === "color" ? bg.value : `data:image/svg+xml,${encodeURIComponent(bg.value)}`)}
               className={`relative rounded-lg overflow-hidden border-2 transition-all h-20 ${
                 selectedBackground === (bg.type === "color" ? bg.value : `data:image/svg+xml,${encodeURIComponent(bg.value)}`)
-                  ? "border-[#2F1B3E] ring-2 ring-[#2F1B3E]/20"
+                  ? "border-[#3B224E] ring-2 ring-[#3B224E]/20"
                   : "border-gray-200 hover:border-gray-300"
               }`}
             >
@@ -99,7 +99,7 @@ export default function BackgroundSelector({ currentBackground, onBackgroundChan
                 />
               )}
               {selectedBackground === (bg.type === "color" ? bg.value : `data:image/svg+xml,${encodeURIComponent(bg.value)}`) && (
-                <div className="absolute inset-0 bg-[#2F1B3E]/20 flex items-center justify-center">
+                <div className="absolute inset-0 bg-[#3B224E]/20 flex items-center justify-center">
                   <Check className="w-6 h-6 text-white drop-shadow" />
                 </div>
               )}
@@ -113,8 +113,8 @@ export default function BackgroundSelector({ currentBackground, onBackgroundChan
         <div className="pt-4 border-t space-y-3">
           <Label htmlFor="bg-upload" className="cursor-pointer">
             <div className="flex items-center gap-2 px-4 py-3 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors border border-pink-200">
-              <Upload className="w-4 h-4 text-[#2F1B3E]" />
-              <span className="text-sm font-medium text-[#2F1B3E]">
+              <Upload className="w-4 h-4 text-[#3B224E]" />
+              <span className="text-sm font-medium text-[#3B224E]">
                 {isUploading ? "Uploading..." : "Upload Custom Background"}
               </span>
             </div>
@@ -130,7 +130,7 @@ export default function BackgroundSelector({ currentBackground, onBackgroundChan
 
           <Button 
             onClick={handleSave} 
-            className="w-full bg-[#2F1B3E] hover:bg-[#5B2D83]"
+            className="w-full bg-[#3B224E] hover:bg-[#5B2D83]"
             disabled={isUploading}
           >
             Save Background

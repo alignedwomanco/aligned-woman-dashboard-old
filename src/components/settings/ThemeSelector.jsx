@@ -6,7 +6,7 @@ export const THEME_OPTIONS = [
   {
     id: "aligned",
     label: "Aligned",
-    colors: { primary: "#2F1B3E", secondary: "#5B2D83" },
+    colors: { primary: "#3B224E", secondary: "#5B2D83" },
     isDefault: true,
   },
   {
@@ -62,7 +62,7 @@ export default function ThemeSelector({ currentTheme, onThemeChange, onSave }) {
               onClick={() => onThemeChange(theme.id)}
               className={`relative rounded-lg overflow-hidden border-2 transition-all p-2 ${
                 currentTheme === theme.id
-                  ? "border-[#2F1B3E] ring-2 ring-[#2F1B3E]/20"
+                  ? "border-[#3B224E] ring-2 ring-[#3B224E]/20"
                   : "border-gray-200 hover:border-gray-300"
               }`}
             >
@@ -79,7 +79,7 @@ export default function ThemeSelector({ currentTheme, onThemeChange, onSave }) {
               <p className="text-xs font-medium text-gray-900 truncate">{theme.label}</p>
               {currentTheme === theme.id && (
                 <div className="absolute top-1 right-1">
-                  <Check className="w-4 h-4 text-[#2F1B3E]" />
+                  <Check className="w-4 h-4 text-[#3B224E]" />
                 </div>
               )}
             </button>
@@ -87,7 +87,7 @@ export default function ThemeSelector({ currentTheme, onThemeChange, onSave }) {
         </div>
         <button
           onClick={onSave}
-          className="w-full px-4 py-2 bg-[#2F1B3E] hover:bg-[#5B2D83] text-white rounded-lg text-sm font-medium transition-colors"
+          className="w-full px-4 py-2 bg-[#3B224E] hover:bg-[#5B2D83] text-white rounded-lg text-sm font-medium transition-colors"
         >
           Save Theme
         </button>

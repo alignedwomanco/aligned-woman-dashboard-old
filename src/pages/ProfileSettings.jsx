@@ -49,7 +49,7 @@ export default function ProfileSettings() {
 
   const applyTheme = (themeId) => {
     const themeOptions = [
-      { id: "aligned", colors: { primary: "#2F1B3E", secondary: "#5B2D83" } },
+      { id: "aligned", colors: { primary: "#3B224E", secondary: "#5B2D83" } },
       { id: "rose", colors: { primary: "#E11D48", secondary: "#F43F5E" } },
       { id: "lavender", colors: { primary: "#9333EA", secondary: "#C084FC" } },
       { id: "ocean", colors: { primary: "#0369A1", secondary: "#0EA5E9" } },
@@ -367,7 +367,7 @@ If you did not request this change, please ignore this email.
   if (!currentUser) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-[#2F1B3E] border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-4 border-[#3B224E] border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -376,7 +376,7 @@ If you did not request this change, please ignore this email.
     <div className="min-h-screen p-12">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
-          <h1 className="text-3xl font-bold text-[#2F1B3E] mb-2">Profile Settings</h1>
+          <h1 className="text-3xl font-bold text-[#3B224E] mb-2">Profile Settings</h1>
           <p className="text-gray-600">Manage your profile and preferences</p>
         </div>
 
@@ -405,7 +405,7 @@ If you did not request this change, please ignore this email.
                     <div className={`w-32 h-32 rounded-full bg-gradient-to-br ${getLevelInfo(currentUser?.level).color} p-1`}>
                       <Avatar className="w-full h-full border-4 border-white">
                         <AvatarImage src={currentUser.profile_picture} />
-                        <AvatarFallback className="bg-[#2F1B3E] text-white text-3xl">
+                        <AvatarFallback className="bg-[#3B224E] text-white text-3xl">
                           {currentUser.full_name?.[0] || currentUser.email?.[0]}
                         </AvatarFallback>
                       </Avatar>
@@ -420,8 +420,8 @@ If you did not request this change, please ignore this email.
                     <div className="flex items-center gap-2 mb-2">
                       <Label htmlFor="profile-pic" className="cursor-pointer">
                         <div className="flex items-center gap-2 px-4 py-2 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors">
-                          <Upload className="w-4 h-4 text-[#2F1B3E]" />
-                          <span className="text-sm font-medium text-[#2F1B3E]">
+                          <Upload className="w-4 h-4 text-[#3B224E]" />
+                          <span className="text-sm font-medium text-[#3B224E]">
                             Change Picture
                           </span>
                         </div>
@@ -501,7 +501,7 @@ If you did not request this change, please ignore this email.
                             </div>
                             <Button
                               onClick={handleEmailChange}
-                              className="w-full bg-[#2F1B3E] hover:bg-[#2F1B3E]"
+                              className="w-full bg-[#3B224E] hover:bg-[#3B224E]"
                             >
                               Send Verification Email
                             </Button>
@@ -620,7 +620,7 @@ If you did not request this change, please ignore this email.
                 <div className="flex gap-3">
                   <Button
                     onClick={handleProfileUpdate}
-                    className="bg-[#2F1B3E] hover:bg-[#2F1B3E]"
+                    className="bg-[#3B224E] hover:bg-[#3B224E]"
                   >
                     <Save className="w-4 h-4 mr-2" />
                     Save Changes
@@ -628,7 +628,7 @@ If you did not request this change, please ignore this email.
                   <Button
                     onClick={() => restartOnboardingMutation.mutate()}
                     variant="outline"
-                    className="border-[#2F1B3E] text-[#2F1B3E] hover:bg-pink-50"
+                    className="border-[#3B224E] text-[#3B224E] hover:bg-pink-50"
                   >
                     <RefreshCw className="w-4 h-4 mr-2" />
                     Restart Onboarding
@@ -650,7 +650,7 @@ If you did not request this change, please ignore this email.
             <div className="grid md:grid-cols-4 gap-4">
               <Card>
                 <CardContent className="p-6 text-center">
-                  <Users className="w-8 h-8 mx-auto mb-2 text-[#2F1B3E]" />
+                  <Users className="w-8 h-8 mx-auto mb-2 text-[#3B224E]" />
                   <div className="text-2xl font-bold">{connections.length}</div>
                   <div className="text-sm text-gray-600">Connections</div>
                 </CardContent>
@@ -705,7 +705,7 @@ If you did not request this change, please ignore this email.
                             <div key={request.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                               <div className="flex items-center gap-3">
                                 <Avatar>
-                                  <AvatarFallback className="bg-[#2F1B3E] text-white">
+                                  <AvatarFallback className="bg-[#3B224E] text-white">
                                     {getUserName(request.created_by)?.[0]}
                                   </AvatarFallback>
                                 </Avatar>
@@ -745,7 +745,7 @@ If you did not request this change, please ignore this email.
                       <div key={connection.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <div className="flex items-center gap-3">
                           <Avatar>
-                            <AvatarFallback className="bg-[#2F1B3E] text-white">
+                            <AvatarFallback className="bg-[#3B224E] text-white">
                               {getUserName(connection.followingEmail)?.[0]}
                             </AvatarFallback>
                           </Avatar>
@@ -792,7 +792,7 @@ If you did not request this change, please ignore this email.
                       <div key={follow.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <div className="flex items-center gap-3">
                           <Avatar>
-                            <AvatarFallback className="bg-[#2F1B3E] text-white">
+                            <AvatarFallback className="bg-[#3B224E] text-white">
                               {getUserName(follow.followingEmail)?.[0]}
                             </AvatarFallback>
                           </Avatar>
@@ -877,7 +877,7 @@ If you did not request this change, please ignore this email.
                   </div>
                 ) : (
                   <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center">
-                    <AlertCircle className="w-6 h-6 text-[#2F1B3E]" />
+                    <AlertCircle className="w-6 h-6 text-[#3B224E]" />
                   </div>
                 )}
                 <DialogTitle className="text-xl">{validationError.title}</DialogTitle>
@@ -889,7 +889,7 @@ If you did not request this change, please ignore this email.
             <div className="flex justify-end">
               <Button
                 onClick={() => setValidationError({ show: false, title: "", message: "" })}
-                className="bg-[#2F1B3E] hover:bg-[#2F1B3E]"
+                className="bg-[#3B224E] hover:bg-[#3B224E]"
               >
                 Got it
               </Button>
