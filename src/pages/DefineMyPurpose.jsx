@@ -275,7 +275,7 @@ export default function DefineMyPurpose() {
   // Results view
   if (showResults) {
     return (
-      <div className="min-h-screen bg-[#611836] p-4 md:p-6">
+      <div className="min-h-screen bg-[#4B397F] p-4 md:p-6">
         <div className="max-w-4xl mx-auto">
           <div className="py-6 mb-6 text-center">
             <div className="w-20 h-20 bg-[#FECDD4]/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -307,7 +307,7 @@ export default function DefineMyPurpose() {
             </Button>
             <Button
               onClick={() => navigate(createPageUrl("Dashboard"))}
-              className="flex-1 bg-[#FECDD4] hover:bg-[#FDB8C3] text-[#611836]"
+              className="flex-1 bg-[#FECDD4] hover:bg-[#FDB8C3] text-[#4B397F]"
             >
               Return to Dashboard
             </Button>
@@ -320,7 +320,7 @@ export default function DefineMyPurpose() {
   // Mirror view
   if (showMirror) {
     return (
-      <div className="min-h-screen bg-[#611836] p-4 md:p-6">
+      <div className="min-h-screen bg-[#4B397F] p-4 md:p-6">
         <div className="max-w-2xl mx-auto">
           <div className="py-6">
             <h1 className="text-2xl font-bold text-white mb-2">
@@ -349,7 +349,7 @@ export default function DefineMyPurpose() {
           <Button
             onClick={handleFinalAnswer}
             disabled={!finalAnswer.trim() || isLoading}
-            className="w-full bg-[#FECDD4] hover:bg-[#FDB8C3] text-[#611836] py-6"
+            className="w-full bg-[#FECDD4] hover:bg-[#FDB8C3] text-[#4B397F] py-6"
           >
             {isLoading ? (
               <>
@@ -368,7 +368,7 @@ export default function DefineMyPurpose() {
   // Start screen
   if (!session) {
     return (
-      <div className="min-h-screen bg-[#611836] p-4 md:p-6 flex items-center justify-center">
+      <div className="min-h-screen bg-[#4B397F] p-4 md:p-6 flex items-center justify-center">
         <div className="max-w-lg text-center">
           <div className="w-20 h-20 bg-[#FECDD4]/20 rounded-full flex items-center justify-center mx-auto mb-6">
             <Sparkles className="w-10 h-10 text-[#FECDD4]" />
@@ -383,7 +383,7 @@ export default function DefineMyPurpose() {
             onClick={startSession}
             disabled={isLoading}
             size="lg"
-            className="bg-[#FECDD4] hover:bg-[#FDB8C3] text-[#611836] px-10 py-6 text-lg"
+            className="bg-[#FECDD4] hover:bg-[#FDB8C3] text-[#4B397F] px-10 py-6 text-lg"
           >
             {isLoading ? (
               <>
@@ -401,7 +401,7 @@ export default function DefineMyPurpose() {
 
   // Question flow
   return (
-    <div className="min-h-screen bg-[#611836] p-4 md:p-6">
+    <div className="min-h-screen bg-[#4B397F] p-4 md:p-6">
       <div className="max-w-2xl mx-auto">
         <div className="py-6">
           <div className="flex items-center justify-between mb-4">
@@ -471,7 +471,7 @@ export default function DefineMyPurpose() {
             onClick={handleAnswer}
             disabled={!canProceed() || isLoading}
             size="lg"
-            className="flex-1 bg-[#FECDD4] hover:bg-[#FDB8C3] text-[#611836] py-6"
+            className="flex-1 bg-[#FECDD4] hover:bg-[#FDB8C3] text-[#4B397F] py-6"
           >
             {isLoading ? (
               <>

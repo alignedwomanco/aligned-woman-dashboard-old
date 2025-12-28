@@ -87,7 +87,7 @@ User's question: ${userMessage}`;
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-6 right-6 w-16 h-16 bg-[#3B224E] hover:bg-[#2A1438] rounded-full shadow-2xl flex items-center justify-center z-50 transition-colors"
+            className="fixed bottom-6 right-6 w-16 h-16 bg-[#3C224F] hover:bg-[#2A1438] rounded-full shadow-2xl flex items-center justify-center z-50 transition-colors"
           >
             <MessageCircle className="w-8 h-8 text-white" />
           </motion.button>
@@ -105,7 +105,7 @@ User's question: ${userMessage}`;
             className="fixed bottom-6 right-6 w-[380px] h-[600px] bg-white rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-[#3B224E] to-[#5B2D83] p-4 flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#3C224F] to-[#5B2E84] p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white/30">
                   <img
@@ -137,7 +137,7 @@ User's question: ${userMessage}`;
                   <div
                     className={`max-w-[80%] rounded-2xl px-4 py-2 ${
                       message.role === "user"
-                        ? "bg-[#3B224E] text-white"
+                        ? "bg-[#3C224F] text-white"
                         : "bg-white text-gray-800 shadow-sm"
                     }`}
                   >
@@ -173,7 +173,7 @@ User's question: ${userMessage}`;
                 <Button
                   onClick={handleSend}
                   disabled={!input.trim() || isLoading}
-                  className="bg-[#3B224E] hover:bg-[#2A1438] rounded-full w-10 h-10 p-0"
+                  className="bg-[#3C224F] hover:bg-[#2A1438] rounded-full w-10 h-10 p-0"
                 >
                   <Send className="w-4 h-4" />
                 </Button>
