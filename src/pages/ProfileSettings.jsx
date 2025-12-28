@@ -75,6 +75,23 @@ export default function ProfileSettings() {
   const handleThemeChange = (themeId) => {
     setSelectedTheme(themeId);
     applyTheme(themeId);
+    
+    // Also update the layout header immediately
+    const header = document.querySelector('header');
+    if (header) {
+      const themeOptions = [
+        { id: "aligned", colors: { primary: "#3B224E", secondary: "#5B2D83" } },
+        { id: "rose", colors: { primary: "#E11D48", secondary: "#F43F5E" } },
+        { id: "lavender", colors: { primary: "#9333EA", secondary: "#C084FC" } },
+        { id: "ocean", colors: { primary: "#0369A1", secondary: "#0EA5E9" } },
+        { id: "forest", colors: { primary: "#065F46", secondary: "#10B981" } },
+        { id: "sunset", colors: { primary: "#DC2626", secondary: "#F97316" } },
+        { id: "midnight", colors: { primary: "#1E293B", secondary: "#475569" } },
+        { id: "blush", colors: { primary: "#BE185D", secondary: "#EC4899" } },
+      ];
+      const theme = themeOptions.find(t => t.id === themeId) || themeOptions[0];
+      header.style.backgroundColor = theme.colors.secondary;
+    }
   };
 
   const handleThemeSave = async () => {
