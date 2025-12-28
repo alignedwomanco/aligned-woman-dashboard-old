@@ -62,12 +62,7 @@ export default function Layout({ children, currentPageName }) {
     loadSettings();
   }, []);
 
-  useEffect(() => {
-    const currentPath = location.pathname;
-    if (currentPath === "/" || currentPath === "/app" || currentPath === "") {
-      navigate(createPageUrl("Home"), { replace: true });
-    }
-  }, [location.pathname, navigate]);
+  // No redirect needed - Home page is served at root
 
   useEffect(() => {
     const checkAuth = async () => {
