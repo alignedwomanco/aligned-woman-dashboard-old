@@ -330,7 +330,12 @@ export default function AdminSettings() {
                     </CardTitle>
                     <Dialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
                       <DialogTrigger asChild>
-                        <Button className="bg-[#6B1B3D] hover:bg-[#4A1228]">
+                        <Button 
+                          className="text-white"
+                          style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)' }}
+                          onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                          onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                        >
                           <UserPlus className="w-4 h-4 mr-2" />
                           Invite Admin
                         </Button>
@@ -374,7 +379,8 @@ export default function AdminSettings() {
                           <Button
                             onClick={() => sendInviteMutation.mutate({ email: inviteEmail, role: inviteRole })}
                             disabled={!inviteEmail}
-                            className="w-full bg-[#6B1B3D]"
+                            className="w-full text-white"
+                            style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)' }}
                           >
                             Send Invitation
                           </Button>
@@ -734,7 +740,8 @@ export default function AdminSettings() {
                         userId: editingUser.id, 
                         data: editData 
                       })}
-                      className="w-full bg-[#6B1B3D]"
+                      className="w-full text-white"
+                      style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)' }}
                     >
                       <Save className="w-4 h-4 mr-2" />
                       Save Changes
