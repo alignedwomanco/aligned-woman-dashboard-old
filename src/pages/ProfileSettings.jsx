@@ -406,7 +406,7 @@ If you did not request this change, please ignore this email.
   if (!currentUser) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-[#3B224E] border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-4 border-t-transparent rounded-full" style={{ borderColor: 'var(--theme-primary, #3C224F)', borderTopColor: 'transparent' }} />
       </div>
     );
   }
@@ -415,17 +415,47 @@ If you did not request this change, please ignore this email.
     <div className="min-h-screen p-12">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
-          <h1 className="text-3xl font-bold text-[#3B224E] mb-2">Profile Settings</h1>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--theme-primary, #3C224F)' }}>Profile Settings</h1>
           <p className="text-gray-600">Manage your profile and preferences</p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="profile">Profile</TabsTrigger>
-            <TabsTrigger value="messages">Messages</TabsTrigger>
-            <TabsTrigger value="social">Social & Connections</TabsTrigger>
-            <TabsTrigger value="appearance">Appearance</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsList className="bg-white border border-gray-200">
+            <TabsTrigger 
+              value="profile"
+              className="data-[state=active]:text-white hover:bg-gray-100"
+              style={{ backgroundColor: activeTab === "profile" ? 'var(--theme-secondary, #5B2E84)' : '' }}
+            >
+              Profile
+            </TabsTrigger>
+            <TabsTrigger 
+              value="messages"
+              className="data-[state=active]:text-white hover:bg-gray-100"
+              style={{ backgroundColor: activeTab === "messages" ? 'var(--theme-secondary, #5B2E84)' : '' }}
+            >
+              Messages
+            </TabsTrigger>
+            <TabsTrigger 
+              value="social"
+              className="data-[state=active]:text-white hover:bg-gray-100"
+              style={{ backgroundColor: activeTab === "social" ? 'var(--theme-secondary, #5B2E84)' : '' }}
+            >
+              Social & Connections
+            </TabsTrigger>
+            <TabsTrigger 
+              value="appearance"
+              className="data-[state=active]:text-white hover:bg-gray-100"
+              style={{ backgroundColor: activeTab === "appearance" ? 'var(--theme-secondary, #5B2E84)' : '' }}
+            >
+              Appearance
+            </TabsTrigger>
+            <TabsTrigger 
+              value="analytics"
+              className="data-[state=active]:text-white hover:bg-gray-100"
+              style={{ backgroundColor: activeTab === "analytics" ? 'var(--theme-secondary, #5B2E84)' : '' }}
+            >
+              Analytics
+            </TabsTrigger>
           </TabsList>
 
           {/* Profile Tab */}
@@ -444,7 +474,7 @@ If you did not request this change, please ignore this email.
                     <div className={`w-32 h-32 rounded-full bg-gradient-to-br ${getLevelInfo(currentUser?.level).color} p-1`}>
                       <Avatar className="w-full h-full border-4 border-white">
                         <AvatarImage src={currentUser.profile_picture} />
-                        <AvatarFallback className="bg-[#3B224E] text-white text-3xl">
+                        <AvatarFallback className="text-white text-3xl" style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }}>
                           {currentUser.full_name?.[0] || currentUser.email?.[0]}
                         </AvatarFallback>
                       </Avatar>
@@ -458,9 +488,9 @@ If you did not request this change, please ignore this email.
                     <p className="text-sm text-gray-600 mb-3">Keep contributing to level up!</p>
                     <div className="flex items-center gap-2 mb-2">
                       <Label htmlFor="profile-pic" className="cursor-pointer">
-                        <div className="flex items-center gap-2 px-4 py-2 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors">
-                          <Upload className="w-4 h-4 text-[#3B224E]" />
-                          <span className="text-sm font-medium text-[#3B224E]">
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-white" style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)' }}>
+                          <Upload className="w-4 h-4" />
+                          <span className="text-sm font-medium">
                             Change Picture
                           </span>
                         </div>
@@ -541,7 +571,7 @@ If you did not request this change, please ignore this email.
                             <Button
                               onClick={handleEmailChange}
                               className="w-full text-white"
-                              style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }}
+                              style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)' }}
                             >
                               Send Verification Email
                             </Button>
@@ -661,12 +691,7 @@ If you did not request this change, please ignore this email.
                   <Button
                     onClick={handleProfileUpdate}
                     className="text-white"
-                    style={{ 
-                      backgroundColor: 'var(--theme-primary, #3C224F)',
-                      opacity: 0.95
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                    onMouseLeave={(e) => e.currentTarget.style.opacity = '0.95'}
+                    style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)' }}
                   >
                     <Save className="w-4 h-4 mr-2" />
                     Save Changes
@@ -674,10 +699,9 @@ If you did not request this change, please ignore this email.
                   <Button
                     onClick={() => restartOnboardingMutation.mutate()}
                     variant="outline"
-                    className="hover:bg-pink-50"
                     style={{ 
-                      borderColor: 'var(--theme-primary, #3C224F)',
-                      color: 'var(--theme-primary, #3C224F)'
+                      borderColor: 'var(--theme-secondary, #5B2E84)',
+                      color: 'var(--theme-secondary, #5B2E84)'
                     }}
                   >
                     <RefreshCw className="w-4 h-4 mr-2" />
@@ -700,7 +724,7 @@ If you did not request this change, please ignore this email.
             <div className="grid md:grid-cols-4 gap-4">
               <Card>
                 <CardContent className="p-6 text-center">
-                  <Users className="w-8 h-8 mx-auto mb-2 text-[#3B224E]" />
+                  <Users className="w-8 h-8 mx-auto mb-2" style={{ color: 'var(--theme-primary, #3C224F)' }} />
                   <div className="text-2xl font-bold">{connections.length}</div>
                   <div className="text-sm text-gray-600">Connections</div>
                 </CardContent>
@@ -755,7 +779,7 @@ If you did not request this change, please ignore this email.
                             <div key={request.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                               <div className="flex items-center gap-3">
                                 <Avatar>
-                                  <AvatarFallback className="bg-[#3B224E] text-white">
+                                  <AvatarFallback className="text-white" style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }}>
                                     {getUserName(request.created_by)?.[0]}
                                   </AvatarFallback>
                                 </Avatar>
@@ -795,7 +819,7 @@ If you did not request this change, please ignore this email.
                       <div key={connection.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <div className="flex items-center gap-3">
                           <Avatar>
-                            <AvatarFallback className="bg-[#3B224E] text-white">
+                            <AvatarFallback className="text-white" style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }}>
                               {getUserName(connection.followingEmail)?.[0]}
                             </AvatarFallback>
                           </Avatar>
@@ -842,7 +866,7 @@ If you did not request this change, please ignore this email.
                       <div key={follow.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <div className="flex items-center gap-3">
                           <Avatar>
-                            <AvatarFallback className="bg-[#3B224E] text-white">
+                            <AvatarFallback className="text-white" style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }}>
                               {getUserName(follow.followingEmail)?.[0]}
                             </AvatarFallback>
                           </Avatar>
@@ -928,7 +952,7 @@ If you did not request this change, please ignore this email.
                   </div>
                 ) : (
                   <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center">
-                    <AlertCircle className="w-6 h-6 text-[#3B224E]" />
+                  <AlertCircle className="w-6 h-6" style={{ color: 'var(--theme-primary, #3C224F)' }} />
                   </div>
                 )}
                 <DialogTitle className="text-xl">{validationError.title}</DialogTitle>
@@ -941,7 +965,7 @@ If you did not request this change, please ignore this email.
               <Button
                 onClick={() => setValidationError({ show: false, title: "", message: "" })}
                 className="text-white"
-                style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }}
+                style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)' }}
               >
                 Got it
               </Button>
