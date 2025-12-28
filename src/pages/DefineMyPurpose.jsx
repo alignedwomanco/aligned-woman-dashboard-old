@@ -275,7 +275,7 @@ export default function DefineMyPurpose() {
   // Results view
   if (showResults) {
     return (
-      <div className="min-h-screen bg-[#4B397F] p-4 md:p-6">
+      <div className="min-h-screen p-4 md:p-6" style={{ backgroundColor: 'var(--theme-tertiary, #4B397F)' }}>
         <div className="max-w-4xl mx-auto">
           <div className="py-6 mb-6 text-center">
             <div className="w-20 h-20 bg-[#FECDD4]/20 rounded-full flex items-center justify-center mx-auto mb-4">
