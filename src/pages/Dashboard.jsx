@@ -34,6 +34,7 @@ import {
   BarChart3,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Waves,
 } from "lucide-react";
 
@@ -516,669 +517,364 @@ Format: JSON with keys: summary, guidance, helps (array), avoid (array)`;
   };
 
   return (
-    <div className="min-h-screen pb-12" style={{ backgroundColor: '#F3E8FF' }}>
-      <div className="max-w-[1600px] mx-auto px-8 py-8">
-        {/* Timeframe Toggle - Moved Below */}
-
-        {/* Main Grid Layout */}
-        <div className="grid lg:grid-cols-12 gap-6">
-          {/* Left Column: Your Inner Systems + Life Domains */}
-          <div className="lg:col-span-3 space-y-6">
-            {/* Timeframe Toggle Above Left Column */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              <Tabs value={snapshotView} onValueChange={setSnapshotView} className="w-full">
-                <TabsList className="w-full bg-white/90 backdrop-blur-sm border-0 h-11 p-1 rounded-xl">
-                  <TabsTrigger value={SNAPSHOT_VIEWS.DAILY} className="flex-1 data-[state=active]:bg-[#3B224E] data-[state=active]:text-white rounded-lg font-medium">
-                    Daily
-                  </TabsTrigger>
-                  <TabsTrigger value={SNAPSHOT_VIEWS.WEEKLY} className="flex-1 data-[state=active]:bg-[#3B224E] data-[state=active]:text-white rounded-lg font-medium">
-                    Weekly
-                  </TabsTrigger>
-                  <TabsTrigger value={SNAPSHOT_VIEWS.MONTHLY} className="flex-1 data-[state=active]:bg-[#3B224E] data-[state=active]:text-white rounded-lg font-medium">
-                    Monthly
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </motion.div>
-            {/* Your Inner Systems */}
-            <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            >
-            <Card className="bg-white/95 backdrop-blur-sm border-0 rounded-2xl shadow-lg">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base font-semibold text-gray-900">Your Inner Systems</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* My Nervous System */}
-              <button 
-                onClick={() => handleSystemClick('nervous_system')}
-                className="w-full bg-pink-50 rounded-lg p-4 border border-pink-200 hover:shadow-md transition-shadow text-left"
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center">
-                    <Heart className="w-4 h-4 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-sm text-pink-900">My Nervous System</h3>
-                </div>
-                <p className="text-xs text-gray-600 mb-1">
-                  <span className="font-medium">Current State:</span> {checkIns?.[0]?.nervous_system_state || "Fawn"}
-                </p>
-                <p className="text-xs text-gray-600 mb-2">
-                  Your system is prioritizing safety today
-                </p>
-                <span className="text-xs text-pink-600 hover:text-pink-700 font-medium flex items-center gap-1">
-                  View nervous system guidance →
-                </span>
-              </button>
-
-              {/* My Human Design */}
-              <Link 
-                to={createPageUrl("MyHumanDesign")}
-                className="block w-full bg-purple-50 rounded-lg p-4 border border-purple-200 hover:shadow-md transition-shadow text-left"
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
-                    <Target className="w-4 h-4 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-sm text-purple-900">My Human Design</h3>
-                </div>
-                <p className="text-xs text-gray-600 mb-1">
-                  <span className="font-medium">Type:</span> {diagnosticSession?.humanDesignProfile?.type || "Projector"}
-                </p>
-                <p className="text-xs text-gray-600 mb-1">
-                  <span className="font-medium">Authority:</span> {diagnosticSession?.humanDesignProfile?.authority || "Emotional"}
-                </p>
-                <p className="text-xs text-gray-500 mb-2">
-                  Discernment beats effort today
-                </p>
-                <span className="text-xs text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1">
-                  View design guidance →
-                </span>
-              </Link>
-
-              {/* My Cycle */}
-              <Link 
-                to={createPageUrl("MyCycle")}
-                className="block w-full bg-indigo-50 rounded-lg p-4 border border-indigo-200 hover:shadow-md transition-shadow text-left"
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
-                    <Moon className="w-4 h-4 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-sm text-indigo-900">My Cycle</h3>
-                </div>
-                <p className="text-xs text-gray-600 mb-1">
-                  <span className="font-medium">Phase:</span> {checkIns?.[0]?.cycle_phase || diagnosticSession?.cycleProfile?.cycleStage || "Luteal"}
-                </p>
-                <p className="text-xs text-gray-500 mb-2">
-                  Lower energy is natural in this phase. Adapt, don't push.
-                </p>
-                <span className="text-xs text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-1">
-                  View cycle guidance →
-                </span>
-              </Link>
-
-              {/* My Astrology */}
-              <Link 
-                to={createPageUrl("MyAstrology")}
-                className="block w-full bg-amber-50 rounded-lg p-4 border border-amber-200 hover:shadow-md transition-shadow text-left"
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center">
-                    <Sparkles className="w-4 h-4 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-sm text-amber-900">My Astrology</h3>
-                </div>
-                <div className="flex gap-2 mb-2">
-                  <Badge className="bg-amber-200 text-amber-900 text-xs">
-                    ☉ {diagnosticSession?.astrologyProfile?.sunSign || "Sagittarius"}
-                  </Badge>
-                </div>
-                <p className="text-xs text-gray-500 mb-2">
-                  {diagnosticSession?.astrologyProfile?.currentTransitSummary?.slice(0, 80) || "Current transits support vision and refinement"}...
-                </p>
-              </Link>
-            </CardContent>
-            </Card>
-            </motion.div>
-
-            {/* Your Life Domains */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <Card className="bg-white/95 backdrop-blur-sm border-0 rounded-2xl shadow-lg">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                    <div className="w-6 h-6 bg-pink-500 rounded-lg flex items-center justify-center">
-                      <Target className="w-4 h-4 text-white" />
-                    </div>
-                    Your Life Domains
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {/* Business & Career */}
-                  <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
-                    <h3 className="font-semibold text-sm text-blue-900 mb-2">Business + Career</h3>
-                    <p className="text-xs text-gray-600 mb-1">
-                      <span className="font-medium">Current theme:</span> Clarity before momentum
-                    </p>
-                    <button className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1">
-                      View work guidance/guidance →
-                    </button>
-                  </div>
-
-                  {/* Finance */}
-                  <div className="bg-green-50 rounded-lg p-3 border border-green-200">
-                    <h3 className="font-semibold text-sm text-green-900 mb-2">Finance <Badge className="bg-purple-200 text-purple-900 text-xs ml-2">Intention</Badge></h3>
-                    <p className="text-xs text-gray-600 mb-1">
-                      <span className="font-medium">Focus today:</span> Conscious spending habits
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
-
-          {/* Center Column: Main Snapshot */}
-          <div className="lg:col-span-6 space-y-6">
-            {/* Your Daily ALIVE Snapshot */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <Card className="bg-gradient-to-br from-[#2D1B3D] to-[#4A2B5E] text-white border-0 overflow-hidden rounded-2xl shadow-xl">
-                <CardContent className="p-8">
-                  <h2 className="text-2xl font-bold mb-8 text-center">Your Daily ALIVE Snapshot</h2>
-                  
-                  {isGeneratingSnapshot ? (
-                    <div className="flex items-center justify-center py-12">
-                      <div className="text-center">
-                        <div className="animate-spin w-12 h-12 border-4 border-white/20 border-t-white rounded-full mx-auto mb-4" />
-                        <p className="text-white/70">Generating your personalized snapshot...</p>
-                      </div>
-                    </div>
-                  ) : snapshotData ? (
-                    <>
-                      {/* System Icons - Now Clickable */}
-                      <div className="flex justify-center gap-4 mb-8">
-                        {snapshotData.astrology?.sunSign && (
-                          <button 
-                            onClick={() => setSelectedIcon(selectedIcon === 'astrology' ? null : 'astrology')}
-                            className="text-center hover:scale-110 transition-transform cursor-pointer"
-                          >
-                            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 mx-auto hover:bg-white/30">
-                              <Sparkles className="w-8 h-8 text-yellow-300" />
-                            </div>
-                            <p className="text-xs font-medium">{snapshotData.astrology.sunSign}</p>
-                          </button>
-                        )}
-                        <button 
-                          onClick={() => setSelectedIcon(selectedIcon === 'humanDesign' ? null : 'humanDesign')}
-                          className="text-center hover:scale-110 transition-transform cursor-pointer"
-                        >
-                          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 mx-auto hover:bg-white/30">
-                            <Target className="w-8 h-8 text-purple-300" />
-                          </div>
-                          <p className="text-xs font-medium">{snapshotData.humanDesign?.type || "Projector"}</p>
-                        </button>
-                        <button 
-                          onClick={() => setSelectedIcon(selectedIcon === 'cycle' ? null : 'cycle')}
-                          className="text-center hover:scale-110 transition-transform cursor-pointer"
-                        >
-                          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 mx-auto hover:bg-white/30">
-                            <Moon className="w-8 h-8 text-blue-300" />
-                          </div>
-                          <p className="text-xs font-medium">{snapshotData.cyclePhase}</p>
-                        </button>
-                        <button 
-                          onClick={() => setSelectedIcon(selectedIcon === 'nervousSystem' ? null : 'nervousSystem')}
-                          className="text-center hover:scale-110 transition-transform cursor-pointer"
-                        >
-                          <div className="w-16 h-16 bg-pink-500 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 mx-auto hover:bg-pink-600">
-                            <Heart className="w-8 h-8 text-white" />
-                          </div>
-                          <p className="text-xs font-medium">{snapshotData.nervousSystemState}</p>
-                        </button>
-                        <button 
-                          onClick={() => setSelectedIcon(selectedIcon === 'alive' ? null : 'alive')}
-                          className="text-center hover:scale-110 transition-transform cursor-pointer"
-                        >
-                          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 mx-auto hover:bg-white/30">
-                            <Waves className="w-8 h-8 text-indigo-300" />
-                          </div>
-                          <p className="text-xs font-medium">{snapshotData.alivePhase}</p>
-                        </button>
-                      </div>
-
-                      {/* Icon Explanation (appears when clicked) */}
-                      {selectedIcon && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="bg-white/10 rounded-xl p-4 mb-6"
-                        >
-                          <p className="text-sm text-white/90">
-                            {snapshotData.iconExplanations?.[selectedIcon] || "Understanding this aspect of your system..."}
-                          </p>
-                        </motion.div>
-                      )}
-
-                      {/* Main Narrative - Now Scrollable */}
-                      <div className="mb-6 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
-                        <p className="text-white/90 leading-relaxed whitespace-pre-line">
-                          {snapshotData.narrative}
-                        </p>
-                      </div>
-
-                      {/* Guiding Phrase */}
-                      <div className="bg-gradient-to-r from-pink-500 to-purple-500 rounded-xl p-4 mb-6 text-center">
-                        <p className="font-bold text-lg">{snapshotData.guidingPhrase}</p>
-                      </div>
-
-                      {/* Ask LaurAI */}
-                      <div className="bg-pink-100 rounded-xl p-4">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center flex-shrink-0">
-                            <Sparkles className="w-5 h-5 text-white" />
-                          </div>
-                          <p className="text-sm font-semibold text-gray-900">Ask LaurAI about today</p>
-                        </div>
-                        
-                        {/* Quick Questions */}
-                        <div className="flex gap-2 flex-wrap mb-3">
-                          <button
-                            onClick={() => handleQuickQuestion("How should I work today?")}
-                            className="bg-white text-gray-700 text-xs border-0 shadow-sm px-3 py-1.5 rounded-full hover:bg-gray-50 transition-colors"
-                          >
-                            How should I work today?
-                          </button>
-                          <button
-                            onClick={() => handleQuickQuestion("Why does this feel harder than usual?")}
-                            className="bg-white text-gray-700 text-xs border-0 shadow-sm px-3 py-1.5 rounded-full hover:bg-gray-50 transition-colors"
-                          >
-                            Why does this feel harder than usual?
-                          </button>
-                          <button
-                            onClick={() => handleQuickQuestion("What should I focus on this week?")}
-                            className="bg-white text-gray-700 text-xs border-0 shadow-sm px-3 py-1.5 rounded-full hover:bg-gray-50 transition-colors"
-                          >
-                            What should I focus on this week?
-                          </button>
-                        </div>
-
-                        {/* Custom Question Input */}
-                        <div className="flex gap-2">
-                          <Input
-                            value={lauraiQuestion}
-                            onChange={(e) => setLauraiQuestion(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && handleCustomQuestion()}
-                            placeholder="Ask your own question..."
-                            className="flex-1 bg-white text-gray-900 border-0"
-                            disabled={isLauraiThinking}
-                          />
-                          <Button 
-                            onClick={handleCustomQuestion}
-                            disabled={isLauraiThinking || !lauraiQuestion.trim()}
-                            className="bg-pink-500 hover:bg-pink-600 text-white"
-                          >
-                            {isLauraiThinking ? (
-                              <div className="animate-spin w-4 h-4 border-2 border-white/20 border-t-white rounded-full" />
-                            ) : (
-                              <Heart className="w-4 h-4" />
-                            )}
-                          </Button>
-                        </div>
-
-                        {/* LaurAI Response */}
-                        {lauraiResponse && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="mt-4 bg-white rounded-lg p-4"
-                          >
-                            <p className="text-sm text-gray-900 whitespace-pre-line">{lauraiResponse}</p>
-                          </motion.div>
-                        )}
-                      </div>
-                    </>
-                  ) : (
-                    <div className="text-center py-8">
-                      <Button onClick={generateSnapshot} className="bg-pink-500 hover:bg-pink-600">
-                        Generate Today's Snapshot
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Recommended For You Right Now */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              <Card className="bg-gradient-to-br from-[#2D1B3D] to-[#4A2B5E] text-white border-0 rounded-2xl shadow-xl">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-white text-lg">
-                    <Sparkles className="w-5 h-5" />
-                    Recommended For You Right Now
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    {/* Module 1 */}
-                    <div className="bg-gradient-to-br from-pink-500 to-rose-600 rounded-xl p-5">
-                      <h3 className="font-bold mb-2">In your Orbit Today</h3>
-                      <p className="text-sm mb-3">Understanding your inner Operating System</p>
-                      <p className="text-xs mb-3 text-white/80">
-                        🎬 Emotional to stop letting your feelings entangle
-                      </p>
-                      <div className="flex items-center gap-2 mb-3">
-                        <Clock className="w-4 h-4" />
-                        <span className="text-xs">12 min • Video</span>
-                      </div>
-                      <div className="flex gap-2">
-                        <Badge className="bg-white/20 text-white text-xs border-0 flex items-center gap-1">
-                          <CheckCircle className="w-3 h-3" />
-                          Lesson 01
-                        </Badge>
-                        <Badge className="bg-white/20 text-white text-xs border-0">Nervous system ready</Badge>
-                      </div>
-                      <Button className="w-full mt-4 bg-white text-pink-600 hover:bg-white/90">
-                        Start
-                      </Button>
-                    </div>
-
-                    {/* Module 2 */}
-                    <div className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl p-5">
-                      <h3 className="font-bold mb-2">Your Cubaneer Focus</h3>
-                      <p className="text-sm mb-3">Setting Boundaries Without Guilt</p>
-                      <p className="text-xs mb-3 text-white/80">
-                        🎬 Removing because Life loves 2 hrs
-                      </p>
-                      <div className="flex items-center gap-2 mb-3">
-                        <Clock className="w-4 h-4" />
-                        <span className="text-xs">20 min • Video</span>
-                      </div>
-                      <div className="flex gap-2">
-                        <Badge className="bg-white/20 text-white text-xs border-0">Binds path</Badge>
-                        <Badge className="bg-white/20 text-white text-xs border-0">Mam in ascendance</Badge>
-                      </div>
-                      <Button className="w-full mt-4 bg-white text-purple-600 hover:bg-white/90">
-                        Start
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
-
-          {/* Right Column: Cycle, Activity, Patterns */}
-          <div className="lg:col-span-3 space-y-6">
-            {/* Cycle & Capacity */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6 }}
-            >
-              <Card className="bg-white/95 backdrop-blur-sm border-0 rounded-2xl shadow-lg">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                    <Activity className="w-5 h-5 text-purple-600" />
-                    Cycle & Capacity
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="bg-gradient-to-br from-pink-400 to-rose-500 rounded-xl p-5 text-white mb-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm font-medium">Luteal</span>
-                      <span className="text-3xl font-bold">{diagnosticSession?.capacityScore || 5.5}</span>
-                    </div>
-                    <Progress value={(diagnosticSession?.capacityScore || 5.5) * 10} className="h-2 bg-white/30 mb-3" />
-                    <p className="text-xs text-white/90">Gentle movement & warm foods</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Recent Activity */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.7 }}
-            >
-              <Card className="bg-white/95 backdrop-blur-sm border-0 rounded-2xl shadow-lg">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-purple-600" />
-                    Recent Activity
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex justify-between items-center">
-                    {['Thu', 'Fri', 'Mar', 'Apr', 'May', 'Jun', 'Jul'].map((day, i) => (
-                      <div key={day} className="text-center">
-                        <div className={`w-8 h-8 rounded-full mb-1 ${i < 3 ? 'bg-purple-500' : i < 5 ? 'bg-purple-300' : 'bg-gray-200'}`} />
-                        <span className="text-xs text-gray-600">{day}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Body Patterns */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8 }}
-            >
-              <Card className="bg-white/95 backdrop-blur-sm border-0 rounded-2xl shadow-lg">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base font-semibold text-gray-900">Body Patterns</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-4">
-                    <div className="flex justify-between text-xs text-gray-600 mb-2">
-                      <span>Energy</span>
-                      <span>Capacity</span>
-                    </div>
-                    <div className="h-32 bg-purple-50 rounded-lg flex items-center justify-center">
-                      {/* Placeholder for wave chart */}
-                      <svg className="w-full h-full" viewBox="0 0 200 80">
-                        <path
-                          d="M 0 40 Q 25 20, 50 40 T 100 40 T 150 40 T 200 40"
-                          stroke="#C67793"
-                          strokeWidth="2"
-                          fill="none"
-                        />
-                        <path
-                          d="M 0 50 Q 25 30, 50 50 T 100 50 T 150 50 T 200 50"
-                          stroke="#9333EA"
-                          strokeWidth="2"
-                          fill="none"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="flex justify-center gap-2">
-                    <Button size="sm" variant="ghost" className="text-xs">Daily</Button>
-                    <Button size="sm" variant="ghost" className="text-xs">Weekly</Button>
-                    <Button size="sm" className="text-xs bg-pink-500 text-white">Monthly</Button>
-                    <span className="text-xs text-gray-600 self-center">Jul</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Stress & Energy Patterns Calendar */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.9 }}
-            >
-              <Card className="bg-white/95 backdrop-blur-sm border-0 rounded-2xl shadow-lg">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-base font-semibold text-gray-900">Your Stress & Energy Patterns</CardTitle>
-                    <div className="flex gap-1">
-                      <Button size="icon" variant="ghost" className="h-6 w-6">
-                        <ChevronLeft className="w-4 h-4" />
-                      </Button>
-                      <Button size="icon" variant="ghost" className="h-6 w-6">
-                        <ChevronRight className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-2">
-                    <div className="flex justify-between items-center mb-2">
-                      <h3 className="font-semibold text-sm">May 2024</h3>
-                      <div className="flex gap-2 text-xs">
-                        <Button size="sm" variant="ghost" className="text-xs h-6 px-2">Daily</Button>
-                        <Button size="sm" variant="ghost" className="text-xs h-6 px-2">Weekly</Button>
-                        <Button size="sm" variant="ghost" className="text-xs h-6 px-2">(More)</Button>
-                      </div>
-                    </div>
-                  </div>
-                  {/* Calendar Grid */}
-                  <div className="grid grid-cols-7 gap-1 mb-3">
-                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                      <div key={day} className="text-center text-xs font-medium text-gray-600">{day}</div>
-                    ))}
-                    {Array.from({ length: 31 }, (_, i) => (
-                      <div
-                        key={i}
-                        className={`aspect-square rounded-full flex items-center justify-center text-xs ${
-                          i % 5 === 0 ? 'bg-green-200' : 
-                          i % 3 === 0 ? 'bg-pink-300' : 
-                          i % 2 === 0 ? 'bg-red-300' : 'bg-gray-100'
-                        }`}
-                      >
-                        {i + 1}
-                      </div>
-                    ))}
-                  </div>
-                  {/* Legend */}
-                  <div className="flex gap-3 text-xs">
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 rounded-full bg-green-200" />
-                      <span className="text-gray-600">Regulated</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 rounded-full bg-pink-300" />
-                      <span className="text-gray-600">Mild Stress</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 rounded-full bg-red-300" />
-                      <span className="text-gray-600">High Stress</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Tools Section */}
+    <div className="min-h-screen pb-12" style={{ backgroundColor: 'rgb(250, 248, 255)' }}>
+      <div className="max-w-5xl mx-auto px-6 py-12">
+        {/* ZONE 1: ORIENTATION - Daily Anchor */}
+        {/* Your Daily ALIVE Snapshot - Hero */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.0 }}
-          className="mt-8"
+          transition={{ duration: 0.6 }}
+          className="mb-16"
         >
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <div className="flex items-center gap-2 text-sm text-gray-700">
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                <Edit3 className="w-4 h-4 text-white" />
+          <div className="bg-gradient-to-br from-purple-50/40 to-indigo-50/30 rounded-3xl p-10 max-w-4xl mx-auto shadow-sm">
+            {isGeneratingSnapshot ? (
+              <div className="flex flex-col items-center justify-center py-20">
+                <div className="animate-spin w-8 h-8 border-2 border-purple-300/30 border-t-purple-400 rounded-full mb-4" />
+                <p className="text-gray-500 font-light">Understanding your state today...</p>
               </div>
-              <span className="font-medium">Reflect</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-700">
-              <div className="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center">
-                <Heart className="w-4 h-4 text-white" />
+            ) : snapshotData ? (
+              <div className="space-y-8">
+                {/* System Icons - Subtle */}
+                <div className="flex justify-center gap-6 mb-2">
+                  {snapshotData.astrology?.sunSign && (
+                    <button 
+                      onClick={() => setSelectedIcon(selectedIcon === 'astrology' ? null : 'astrology')}
+                      className="text-center hover:scale-105 transition-all"
+                    >
+                      <div className="w-14 h-14 bg-gradient-to-br from-amber-100/50 to-transparent rounded-full flex items-center justify-center mb-2 mx-auto hover:bg-amber-100/70">
+                        <Sparkles className="w-6 h-6 text-amber-500" />
+                      </div>
+                      <p className="text-xs text-gray-500 font-light">{snapshotData.astrology.sunSign}</p>
+                    </button>
+                  )}
+                  <button 
+                    onClick={() => setSelectedIcon(selectedIcon === 'humanDesign' ? null : 'humanDesign')}
+                    className="text-center hover:scale-105 transition-all"
+                  >
+                    <div className="w-14 h-14 bg-gradient-to-br from-purple-100/50 to-transparent rounded-full flex items-center justify-center mb-2 mx-auto hover:bg-purple-100/70">
+                      <Target className="w-6 h-6 text-purple-500" />
+                    </div>
+                    <p className="text-xs text-gray-500 font-light">{snapshotData.humanDesign?.type || "Projector"}</p>
+                  </button>
+                  <button 
+                    onClick={() => setSelectedIcon(selectedIcon === 'cycle' ? null : 'cycle')}
+                    className="text-center hover:scale-105 transition-all"
+                  >
+                    <div className="w-14 h-14 bg-gradient-to-br from-indigo-100/50 to-transparent rounded-full flex items-center justify-center mb-2 mx-auto hover:bg-indigo-100/70">
+                      <Moon className="w-6 h-6 text-indigo-500" />
+                    </div>
+                    <p className="text-xs text-gray-500 font-light">{snapshotData.cyclePhase}</p>
+                  </button>
+                  <button 
+                    onClick={() => setSelectedIcon(selectedIcon === 'nervousSystem' ? null : 'nervousSystem')}
+                    className="text-center hover:scale-105 transition-all"
+                  >
+                    <div className="w-14 h-14 bg-gradient-to-br from-pink-100/50 to-transparent rounded-full flex items-center justify-center mb-2 mx-auto hover:bg-pink-100/70">
+                      <Heart className="w-6 h-6 text-pink-500" />
+                    </div>
+                    <p className="text-xs text-gray-500 font-light">{snapshotData.nervousSystemState}</p>
+                  </button>
+                </div>
+
+                {/* Icon Explanation */}
+                {selectedIcon && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="bg-white/60 rounded-2xl p-5 mb-4"
+                  >
+                    <p className="text-sm text-gray-600 leading-relaxed font-light text-center">
+                      {snapshotData.iconExplanations?.[selectedIcon] || "Understanding this aspect..."}
+                    </p>
+                  </motion.div>
+                )}
+
+                {/* Main Narrative */}
+                <div className="max-w-3xl mx-auto">
+                  <p className="text-gray-700 leading-loose text-center whitespace-pre-line font-light text-lg">
+                    {snapshotData.narrative}
+                  </p>
+                </div>
+
+                {/* Guiding Phrase */}
+                <div className="text-center mt-8">
+                  <p className="text-2xl font-light text-gray-800 tracking-wide">
+                    {snapshotData.guidingPhrase}
+                  </p>
+                </div>
+
+                {/* Ask LaurAI - Softer */}
+                <div className="bg-gradient-to-br from-pink-50/50 to-purple-50/30 rounded-2xl p-6 mt-10">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-purple-400 flex items-center justify-center">
+                      <Sparkles className="w-5 h-5 text-white" />
+                    </div>
+                    <p className="text-sm font-light text-gray-700">You might explore with LaurAI</p>
+                  </div>
+                  
+                  {/* Quick Questions */}
+                  <div className="flex gap-2 flex-wrap mb-4">
+                    <button
+                      onClick={() => handleQuickQuestion("How should I work today?")}
+                      className="bg-white/80 text-gray-600 text-xs px-4 py-2 rounded-full hover:bg-white transition-colors shadow-sm font-light"
+                    >
+                      How should I work today?
+                    </button>
+                    <button
+                      onClick={() => handleQuickQuestion("Why does this feel harder than usual?")}
+                      className="bg-white/80 text-gray-600 text-xs px-4 py-2 rounded-full hover:bg-white transition-colors shadow-sm font-light"
+                    >
+                      Why does this feel harder?
+                    </button>
+                  </div>
+
+                  {/* Custom Question Input */}
+                  <div className="flex gap-2">
+                    <Input
+                      value={lauraiQuestion}
+                      onChange={(e) => setLauraiQuestion(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handleCustomQuestion()}
+                      placeholder="Or ask your own question..."
+                      className="flex-1 bg-white/80 border-0 rounded-full px-5 shadow-sm font-light text-sm"
+                      disabled={isLauraiThinking}
+                    />
+                    <Button 
+                      onClick={handleCustomQuestion}
+                      disabled={isLauraiThinking || !lauraiQuestion.trim()}
+                      className="bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full shadow-sm hover:from-pink-500 hover:to-purple-500"
+                    >
+                      {isLauraiThinking ? (
+                        <div className="animate-spin w-4 h-4 border-2 border-white/20 border-t-white rounded-full" />
+                      ) : (
+                        <ArrowRight className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </div>
+
+                  {/* LaurAI Response */}
+                  {lauraiResponse && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-4 bg-white/80 rounded-2xl p-5"
+                    >
+                      <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed font-light">{lauraiResponse}</p>
+                    </motion.div>
+                  )}
+                </div>
               </div>
-              <span className="font-medium">Regulate</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-700">
-              <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-                <Activity className="w-4 h-4 text-white" />
+            ) : (
+              <div className="text-center py-16">
+                <Button onClick={generateSnapshot} className="bg-purple-400 hover:bg-purple-500 text-white rounded-full px-10 py-6 text-base font-light shadow-sm">
+                  Begin Today&apos;s Check-In
+                </Button>
               </div>
-              <span className="font-medium">Cycle</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-700">
-              <div className="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center">
-                <Moon className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-medium">Sleep</span>
-            </div>
-          </div>
-          <div className="grid grid-cols-4 gap-4 hidden">
-            <Link to={createPageUrl("Journal")} className="block">
-              <Card className="bg-white/95 backdrop-blur-sm border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all cursor-pointer h-full">
-                <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-                    <Edit3 className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="text-center">
-                    <h3 className="font-semibold text-gray-900">Reflect</h3>
-                    <p className="text-xs text-gray-600 mt-1">Journal & insights</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-            <Link to={createPageUrl("CheckIn")} className="block">
-              <Card className="bg-white/95 backdrop-blur-sm border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all cursor-pointer h-full">
-                <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl flex items-center justify-center">
-                    <Heart className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="text-center">
-                    <h3 className="font-semibold text-gray-900">Regulate</h3>
-                    <p className="text-xs text-gray-600 mt-1">Daily check-in</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-            <Card className="bg-white/95 backdrop-blur-sm border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all cursor-pointer h-full">
-              <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
-                  <Activity className="w-6 h-6 text-white" />
-                </div>
-                <div className="text-center">
-                  <h3 className="font-semibold text-gray-900">Cycle</h3>
-                  <p className="text-xs text-gray-600 mt-1">Track your cycle</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white/95 backdrop-blur-sm border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all cursor-pointer h-full">
-              <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center">
-                  <Moon className="w-6 h-6 text-white" />
-                </div>
-                <div className="text-center">
-                  <h3 className="font-semibold text-gray-900">Sleep</h3>
-                  <p className="text-xs text-gray-600 mt-1">Rest insights</p>
-                </div>
-              </CardContent>
-            </Card>
+            )}
           </div>
         </motion.div>
 
+        {/* ZONE 2: SUPPORTING SIGNALS - Today's Signals */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="mb-16"
+        >
+          <h2 className="text-sm uppercase tracking-wider text-gray-400 mb-6 text-center font-light">Today&apos;s Signals</h2>
+          
+          <div className="grid md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            {/* Nervous System */}
+            <button 
+              onClick={() => handleSystemClick('nervous_system')}
+              className="bg-white/40 backdrop-blur-sm rounded-2xl p-5 hover:bg-white/60 transition-all text-left group"
+            >
+              <div className="w-10 h-10 bg-gradient-to-br from-pink-100 to-pink-200 rounded-xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                <Heart className="w-5 h-5 text-pink-600" />
+              </div>
+              <p className="text-xs text-gray-500 mb-1 font-light">Nervous System</p>
+              <p className="text-sm font-medium text-gray-800">{checkIns?.[0]?.nervous_system_state || "Fawn"}</p>
+            </button>
 
+            {/* Human Design */}
+            <Link 
+              to={createPageUrl("MyHumanDesign")}
+              className="block bg-white/40 backdrop-blur-sm rounded-2xl p-5 hover:bg-white/60 transition-all text-left group"
+            >
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                <Target className="w-5 h-5 text-purple-600" />
+              </div>
+              <p className="text-xs text-gray-500 mb-1 font-light">Design</p>
+              <p className="text-sm font-medium text-gray-800">{diagnosticSession?.humanDesignProfile?.type || "Projector"}</p>
+            </Link>
+
+            {/* Cycle */}
+            <Link 
+              to={createPageUrl("MyCycle")}
+              className="block bg-white/40 backdrop-blur-sm rounded-2xl p-5 hover:bg-white/60 transition-all text-left group"
+            >
+              <div className="w-10 h-10 bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                <Moon className="w-5 h-5 text-indigo-600" />
+              </div>
+              <p className="text-xs text-gray-500 mb-1 font-light">Cycle</p>
+              <p className="text-sm font-medium text-gray-800">{checkIns?.[0]?.cycle_phase || "Luteal"}</p>
+            </Link>
+
+            {/* Astrology */}
+            <Link 
+              to={createPageUrl("MyAstrology")}
+              className="block bg-white/40 backdrop-blur-sm rounded-2xl p-5 hover:bg-white/60 transition-all text-left group"
+            >
+              <div className="w-10 h-10 bg-gradient-to-br from-amber-100 to-amber-200 rounded-xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                <Sparkles className="w-5 h-5 text-amber-600" />
+              </div>
+              <p className="text-xs text-gray-500 mb-1 font-light">Astrology</p>
+              <p className="text-sm font-medium text-gray-800">{diagnosticSession?.astrologyProfile?.sunSign || "Sagittarius"}</p>
+            </Link>
+          </div>
+        </motion.div>
+
+        {/* ZONE 3: OPTIONAL DEPTH - Progressive Disclosure */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.6 }}
+          className="space-y-12"
+        >
+          {/* Support Available */}
+          <div>
+            <h2 className="text-sm uppercase tracking-wider text-gray-400 mb-6 text-center font-light">Support Available</h2>
+            <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+              {recommendedModules.slice(0, 2).map((module, idx) => (
+                <div key={idx} className="bg-white/40 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/60 transition-all group">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-pink-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                      <Play className="w-5 h-5 text-purple-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-medium text-gray-900 mb-1">{module.title}</h3>
+                      <p className="text-xs text-gray-500 font-light">{module.summary}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 text-xs text-gray-500 mb-4">
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {module.duration} min
+                    </span>
+                  </div>
+                  <Button className="w-full bg-gradient-to-r from-purple-400 to-pink-400 text-white rounded-full font-light hover:from-purple-500 hover:to-pink-500">
+                    Begin when ready
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Optional: Patterns & Insights (Collapsed by Default) */}
+          <details className="group max-w-3xl mx-auto">
+            <summary className="flex items-center justify-center gap-2 cursor-pointer text-sm text-gray-500 hover:text-gray-700 font-light list-none">
+              <span>View patterns & insights</span>
+              <ChevronDown className="w-4 h-4 group-open:rotate-180 transition-transform" />
+            </summary>
+            <div className="mt-8 space-y-6">
+              {/* Body Patterns */}
+              <div className="bg-white/40 backdrop-blur-sm rounded-2xl p-6">
+                <h3 className="text-sm font-medium text-gray-700 mb-4">Your Body Patterns</h3>
+                <div className="h-32 bg-gradient-to-br from-purple-50/50 to-pink-50/50 rounded-xl flex items-center justify-center">
+                  <svg className="w-full h-full" viewBox="0 0 200 80">
+                    <path
+                      d="M 0 40 Q 25 20, 50 40 T 100 40 T 150 40 T 200 40"
+                      stroke="#C67793"
+                      strokeWidth="2"
+                      fill="none"
+                    />
+                    <path
+                      d="M 0 50 Q 25 30, 50 50 T 100 50 T 150 50 T 200 50"
+                      stroke="#9333EA"
+                      strokeWidth="2"
+                      fill="none"
+                    />
+                  </svg>
+                </div>
+                <div className="flex justify-center gap-3 mt-4 text-xs text-gray-500">
+                  <span className="flex items-center gap-1">
+                    <div className="w-2 h-2 rounded-full bg-[#C67793]" />
+                    Energy
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <div className="w-2 h-2 rounded-full bg-[#9333EA]" />
+                    Capacity
+                  </span>
+                </div>
+              </div>
+
+              {/* Cycle & Capacity */}
+              <div className="bg-white/40 backdrop-blur-sm rounded-2xl p-6">
+                <h3 className="text-sm font-medium text-gray-700 mb-4">Cycle & Capacity</h3>
+                <div className="bg-gradient-to-br from-pink-100/50 to-rose-100/50 rounded-xl p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm text-gray-600 font-light">Current Phase</span>
+                    <span className="text-2xl font-light text-gray-800">{diagnosticSession?.capacityScore || 5.5}</span>
+                  </div>
+                  <Progress value={(diagnosticSession?.capacityScore || 5.5) * 10} className="h-2 bg-white/60 mb-3" />
+                  <p className="text-xs text-gray-600 font-light">Gentle movement & warm foods</p>
+                </div>
+              </div>
+            </div>
+          </details>
+        </motion.div>
+
+        {/* Quick Tools - Minimal */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9 }}
+          className="mt-16"
+        >
+          <div className="flex items-center justify-center gap-6">
+            <Link to={createPageUrl("Journal")} className="flex flex-col items-center gap-2 group">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Edit3 className="w-5 h-5 text-blue-600" />
+              </div>
+              <span className="text-xs text-gray-500 font-light">Reflect</span>
+            </Link>
+            <Link to={createPageUrl("CheckIn")} className="flex flex-col items-center gap-2 group">
+              <div className="w-12 h-12 bg-gradient-to-br from-pink-100 to-pink-200 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Heart className="w-5 h-5 text-pink-600" />
+              </div>
+              <span className="text-xs text-gray-500 font-light">Regulate</span>
+            </Link>
+            <Link to={createPageUrl("MyCycle")} className="flex flex-col items-center gap-2 group">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Activity className="w-5 h-5 text-purple-600" />
+              </div>
+              <span className="text-xs text-gray-500 font-light">Cycle</span>
+            </Link>
+          </div>
+        </motion.div>
+
+        {/* Timeframe Toggle - Moved to Bottom */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="mt-16 max-w-md mx-auto"
+        >
+          <Tabs value={snapshotView} onValueChange={setSnapshotView} className="w-full">
+            <TabsList className="w-full bg-white/60 backdrop-blur-sm border-0 h-11 p-1 rounded-full">
+              <TabsTrigger value={SNAPSHOT_VIEWS.DAILY} className="flex-1 data-[state=active]:bg-purple-400 data-[state=active]:text-white rounded-full font-light">
+                Daily
+              </TabsTrigger>
+              <TabsTrigger value={SNAPSHOT_VIEWS.WEEKLY} className="flex-1 data-[state=active]:bg-purple-400 data-[state=active]:text-white rounded-full font-light">
+                Weekly
+              </TabsTrigger>
+              <TabsTrigger value={SNAPSHOT_VIEWS.MONTHLY} className="flex-1 data-[state=active]:bg-purple-400 data-[state=active]:text-white rounded-full font-light">
+                Monthly
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </motion.div>
       </div>
 
       {/* System Detail Drawer */}
