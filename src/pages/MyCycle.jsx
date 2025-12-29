@@ -716,6 +716,89 @@ This should feel RELIEVING, not demanding.`;
           </Card>
         </motion.div>
 
+        {/* Recipes for This Phase */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+        >
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Activity className="w-5 h-5 text-indigo-500" />
+                Recipes for {phaseInfo.name} Phase
+              </CardTitle>
+              <p className="text-sm text-gray-600">Nourish your body with what it needs now</p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all">
+                  <div className="aspect-video relative">
+                    <img 
+                      src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop" 
+                      alt="Nourishing bowl"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-white font-semibold mb-1">Warming Root Bowl</h3>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3 h-3 text-white/80" />
+                        <span className="text-xs text-white/80">15 min</span>
+                      </div>
+                    </div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-indigo-600 border-b-[6px] border-b-transparent ml-1" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all">
+                  <div className="aspect-video relative">
+                    <img 
+                      src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400&h=300&fit=crop" 
+                      alt="Woman cooking"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-white font-semibold mb-1">Hormone Balancing Tea</h3>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3 h-3 text-white/80" />
+                        <span className="text-xs text-white/80">5 min</span>
+                      </div>
+                    </div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-indigo-600 border-b-[6px] border-b-transparent ml-1" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all">
+                  <div className="aspect-video relative">
+                    <img 
+                      src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop" 
+                      alt="Healthy salad"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-white font-semibold mb-1">Anti-Inflammatory Bowl</h3>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3 h-3 text-white/80" />
+                        <span className="text-xs text-white/80">20 min</span>
+                      </div>
+                    </div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-indigo-600 border-b-[6px] border-b-transparent ml-1" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
         {/* Recommended For You */}
         {recommendedCourses.length > 0 && (
           <motion.div
