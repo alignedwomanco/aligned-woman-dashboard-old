@@ -978,11 +978,12 @@ This should feel RELIEVING, not demanding.`;
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.41 }}
         >
-          <div className="text-center mb-8">
-            <h2 className="text-4xl font-bold text-gray-900 mb-2">Tools</h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 mb-6">
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="text-2xl">Tools</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-3 gap-6">
             {/* Ovulation Calculator */}
             <div className="group cursor-pointer">
               <div className="bg-gradient-to-br from-purple-200 to-purple-300 rounded-2xl p-6 aspect-square flex items-center justify-center mb-3 hover:shadow-lg transition-all">
@@ -1055,6 +1056,8 @@ This should feel RELIEVING, not demanding.`;
               <h3 className="font-semibold text-gray-900 text-sm">Hormone pattern tracker: See your body's wisdom</h3>
             </div>
           </div>
+            </CardContent>
+          </Card>
         </motion.div>
 
         {/* Recommended For You */}
