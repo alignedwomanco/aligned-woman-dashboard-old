@@ -20,6 +20,7 @@ import ModulePlayer from './pages/ModulePlayer';
 import MyALIVEJourney from './pages/MyALIVEJourney';
 import MyAstrology from './pages/MyAstrology';
 import MyCycle from './pages/MyCycle';
+import MyHumanDesign from './pages/MyHumanDesign';
 import MyMetrics from './pages/MyMetrics';
 import MyPathway from './pages/MyPathway';
 import OnboardingForm from './pages/OnboardingForm';
@@ -29,7 +30,6 @@ import Progress from './pages/Progress';
 import Settings from './pages/Settings';
 import Support from './pages/Support';
 import ToolsHub from './pages/ToolsHub';
-import MyHumanDesign from './pages/MyHumanDesign';
 import __Layout from './Layout.jsx';
 
 
@@ -56,6 +56,7 @@ export const PAGES = {
     "MyALIVEJourney": MyALIVEJourney,
     "MyAstrology": MyAstrology,
     "MyCycle": MyCycle,
+    "MyHumanDesign": MyHumanDesign,
     "MyMetrics": MyMetrics,
     "MyPathway": MyPathway,
     "OnboardingForm": OnboardingForm,
@@ -65,7 +66,6 @@ export const PAGES = {
     "Settings": Settings,
     "Support": Support,
     "ToolsHub": ToolsHub,
-    "MyHumanDesign": MyHumanDesign,
 }
 
 export const pagesConfig = {
