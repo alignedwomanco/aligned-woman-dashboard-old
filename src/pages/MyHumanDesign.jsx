@@ -520,13 +520,14 @@ This should feel embodied and personal.`;
               </div>
             </CardHeader>
             <CardContent>
-              <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl p-8 flex items-center justify-center">
-                <img 
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695154cb868ee011bb627195/210034b82_image.png"
-                  alt="Human Design Bodygraph"
-                  className="max-w-full h-auto"
-                  style={{ maxHeight: "600px" }}
-                />
+              <div className="bg-gradient-to-br from-purple-100 to-indigo-100 rounded-xl p-8 flex items-center justify-center min-h-[400px]">
+              <div className="text-center">
+              <Target className="w-16 h-16 text-purple-400 mx-auto mb-4" />
+              <p className="text-gray-600">Bodygraph visualization</p>
+              <p className="text-sm text-gray-500 mt-2">
+                {humanDesign?.type || "Projector"} • {humanDesign?.authority || "Emotional"} Authority
+              </p>
+              </div>
               </div>
             </CardContent>
           </Card>
