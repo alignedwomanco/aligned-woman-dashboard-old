@@ -799,6 +799,89 @@ This should feel RELIEVING, not demanding.`;
           </Card>
         </motion.div>
 
+        {/* Movement for This Phase */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.37 }}
+        >
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Heart className="w-5 h-5 text-pink-500" />
+                Movement for {phaseInfo.name} Phase
+              </CardTitle>
+              <p className="text-sm text-gray-600">Move in ways that support your body today</p>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all">
+                  <div className="aspect-video relative">
+                    <img 
+                      src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop" 
+                      alt="Gentle yoga"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-white font-semibold mb-1">Restorative Flow</h3>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3 h-3 text-white/80" />
+                        <span className="text-xs text-white/80">20 min</span>
+                      </div>
+                    </div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-pink-600 border-b-[6px] border-b-transparent ml-1" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all">
+                  <div className="aspect-video relative">
+                    <img 
+                      src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=300&fit=crop" 
+                      alt="Woman stretching"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-white font-semibold mb-1">Gentle Stretching</h3>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3 h-3 text-white/80" />
+                        <span className="text-xs text-white/80">10 min</span>
+                      </div>
+                    </div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-pink-600 border-b-[6px] border-b-transparent ml-1" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all">
+                  <div className="aspect-video relative">
+                    <img 
+                      src="https://images.unsplash.com/photo-1540206395-68808572332f?w=400&h=300&fit=crop" 
+                      alt="Walking in nature"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-white font-semibold mb-1">Mindful Walking</h3>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3 h-3 text-white/80" />
+                        <span className="text-xs text-white/80">30 min</span>
+                      </div>
+                    </div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-pink-600 border-b-[6px] border-b-transparent ml-1" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
         {/* Recommended For You */}
         {recommendedCourses.length > 0 && (
           <motion.div
