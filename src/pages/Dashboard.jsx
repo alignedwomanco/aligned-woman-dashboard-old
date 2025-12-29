@@ -30,6 +30,7 @@ import {
   Play,
   ChevronRight,
   ChevronLeft,
+  X,
 } from "lucide-react";
 
 export default function Dashboard() {
