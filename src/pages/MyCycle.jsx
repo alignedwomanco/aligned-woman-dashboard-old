@@ -980,82 +980,111 @@ This should feel RELIEVING, not demanding.`;
         >
           <Card className="mb-6">
             <CardHeader>
-              <CardTitle className="text-2xl">Tools</CardTitle>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Target className="w-5 h-5 text-purple-500" />
+                    Tools
+                  </CardTitle>
+                  <p className="text-sm text-gray-600 mt-1">Calculators and trackers to support your cycle awareness</p>
+                </div>
+                <Button variant="ghost" className="text-indigo-600 text-sm">
+                  View all <ChevronRight className="w-4 h-4 ml-1" />
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="grid md:grid-cols-3 gap-6">
-            {/* Ovulation Calculator */}
-            <div className="group cursor-pointer">
-              <div className="bg-gradient-to-br from-purple-200 to-purple-300 rounded-2xl p-6 aspect-square flex items-center justify-center mb-3 hover:shadow-lg transition-all">
-                <img 
-                  src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop" 
-                  alt="Ovulation calculator"
-                  className="w-full h-full object-cover rounded-xl"
-                />
-              </div>
-              <h3 className="font-semibold text-gray-900 text-sm">Ovulation calculator: Figure out your most fertile days</h3>
-            </div>
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all">
+                  <div className="aspect-video relative">
+                    <img 
+                      src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=300&fit=crop" 
+                      alt="Ovulation calculator"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-white font-semibold mb-1">Ovulation Calculator</h3>
+                      <p className="text-xs text-white/80">Figure out your most fertile days</p>
+                    </div>
+                  </div>
+                </div>
 
-            {/* Period Calculator */}
-            <div className="group cursor-pointer">
-              <div className="bg-gradient-to-br from-purple-200 to-purple-300 rounded-2xl p-6 aspect-square flex items-center justify-center mb-3 hover:shadow-lg transition-all">
-                <img 
-                  src="https://images.unsplash.com/photo-1616443023859-c0c3e2c0a5d3?w=400&h=400&fit=crop" 
-                  alt="Period calculator"
-                  className="w-full h-full object-cover rounded-xl"
-                />
-              </div>
-              <h3 className="font-semibold text-gray-900 text-sm">Period calculator: Predict when your next period will arrive</h3>
-            </div>
+                <div className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all">
+                  <div className="aspect-video relative">
+                    <img 
+                      src="https://images.unsplash.com/photo-1616443023859-c0c3e2c0a5d3?w=400&h=300&fit=crop" 
+                      alt="Period calculator"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-white font-semibold mb-1">Period Calculator</h3>
+                      <p className="text-xs text-white/80">Predict when your next period will arrive</p>
+                    </div>
+                  </div>
+                </div>
 
-            {/* Cycle Length Tracker */}
-            <div className="group cursor-pointer">
-              <div className="bg-gradient-to-br from-purple-200 to-purple-300 rounded-2xl p-6 aspect-square flex items-center justify-center mb-3 hover:shadow-lg transition-all">
-                <img 
-                  src="https://images.unsplash.com/photo-1611432579699-484f7990b127?w=400&h=400&fit=crop" 
-                  alt="Cycle tracker"
-                  className="w-full h-full object-cover rounded-xl"
-                />
-              </div>
-              <h3 className="font-semibold text-gray-900 text-sm">Cycle length tracker: Understand your unique rhythm</h3>
-            </div>
+                <div className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all">
+                  <div className="aspect-video relative">
+                    <img 
+                      src="https://images.unsplash.com/photo-1611432579699-484f7990b127?w=400&h=300&fit=crop" 
+                      alt="Cycle tracker"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-white font-semibold mb-1">Cycle Length Tracker</h3>
+                      <p className="text-xs text-white/80">Understand your unique rhythm</p>
+                    </div>
+                  </div>
+                </div>
 
-            {/* Menstrual Cycle Calculator */}
-            <div className="group cursor-pointer">
-              <div className="bg-gradient-to-br from-purple-200 to-purple-300 rounded-2xl p-6 aspect-square flex items-center justify-center mb-3 hover:shadow-lg transition-all">
-                <img 
-                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop" 
-                  alt="Menstrual cycle calculator"
-                  className="w-full h-full object-cover rounded-xl"
-                />
-              </div>
-              <h3 className="font-semibold text-gray-900 text-sm">Menstrual cycle calculator: Track your full cycle</h3>
-            </div>
+                <div className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all">
+                  <div className="aspect-video relative">
+                    <img 
+                      src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=300&fit=crop" 
+                      alt="Menstrual cycle calculator"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-white font-semibold mb-1">Menstrual Cycle Calculator</h3>
+                      <p className="text-xs text-white/80">Track your full cycle</p>
+                    </div>
+                  </div>
+                </div>
 
-            {/* Fertility Window */}
-            <div className="group cursor-pointer">
-              <div className="bg-gradient-to-br from-purple-200 to-purple-300 rounded-2xl p-6 aspect-square flex items-center justify-center mb-3 hover:shadow-lg transition-all">
-                <img 
-                  src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400&h=400&fit=crop" 
-                  alt="Fertility window"
-                  className="w-full h-full object-cover rounded-xl"
-                />
-              </div>
-              <h3 className="font-semibold text-gray-900 text-sm">Fertility window: Identify your peak conception days</h3>
-            </div>
+                <div className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all">
+                  <div className="aspect-video relative">
+                    <img 
+                      src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400&h=400&fit=crop" 
+                      alt="Fertility window"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-white font-semibold mb-1">Fertility Window</h3>
+                      <p className="text-xs text-white/80">Identify your peak conception days</p>
+                    </div>
+                  </div>
+                </div>
 
-            {/* Hormone Pattern Tracker */}
-            <div className="group cursor-pointer">
-              <div className="bg-gradient-to-br from-purple-200 to-purple-300 rounded-2xl p-6 aspect-square flex items-center justify-center mb-3 hover:shadow-lg transition-all">
-                <img 
-                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop" 
-                  alt="Hormone tracker"
-                  className="w-full h-full object-cover rounded-xl"
-                />
+                <div className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all">
+                  <div className="aspect-video relative">
+                    <img 
+                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop" 
+                      alt="Hormone tracker"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-white font-semibold mb-1">Hormone Pattern Tracker</h3>
+                      <p className="text-xs text-white/80">See your body's wisdom</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <h3 className="font-semibold text-gray-900 text-sm">Hormone pattern tracker: See your body's wisdom</h3>
-            </div>
-          </div>
             </CardContent>
           </Card>
         </motion.div>
