@@ -653,59 +653,61 @@ RESPONSE REQUIREMENTS:
 
                     {/* Ask LaurAI - Integrated */}
                     <div className="border-t border-white/10 pt-8 mt-8">
-                      <div className="text-center mb-6">
-                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-400/20 to-purple-500/20 backdrop-blur-md flex items-center justify-center mx-auto mb-4 shadow-lg border border-white/10">
-                          <Sparkles className="w-6 h-6 text-white/90" strokeWidth={1.5} />
+                      <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+                        <div className="text-center mb-6">
+                          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-400/90 to-purple-500/90 flex items-center justify-center mx-auto mb-4 shadow-lg">
+                            <Sparkles className="w-6 h-6 text-white" strokeWidth={1.5} />
+                          </div>
+                          <h3 className="text-lg font-light text-gray-900 mb-2 tracking-tight">Ask LaurAI</h3>
+                          <p className="text-xs text-gray-500 font-light">Design-aware guidance just for you</p>
                         </div>
-                        <h3 className="text-lg font-light text-white mb-2 tracking-tight">Ask LaurAI</h3>
-                        <p className="text-xs text-white/60 font-light">Design-aware guidance just for you</p>
-                      </div>
 
-                      <div className="flex flex-wrap justify-center gap-3 mb-6">
-                        {getFocusPrompts().map((prompt, idx) => (
-                          <button
-                            key={idx}
-                            onClick={() => handleQuickQuestion(prompt)}
-                            className="text-xs text-white/70 hover:text-white font-light transition-colors"
+                        <div className="flex flex-wrap justify-center gap-3 mb-6">
+                          {getFocusPrompts().map((prompt, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => handleQuickQuestion(prompt)}
+                              className="text-xs text-gray-600 hover:text-gray-900 font-light transition-colors"
+                            >
+                              {prompt}
+                            </button>
+                          ))}
+                        </div>
+
+                        <div className="flex gap-2 max-w-2xl mx-auto">
+                          <Input
+                            value={lauraiQuestion}
+                            onChange={(e) => setLauraiQuestion(e.target.value)}
+                            onKeyPress={(e) => e.key === 'Enter' && handleCustomQuestion()}
+                            placeholder="Or ask your own question..."
+                            className="flex-1 bg-gray-50/80 backdrop-blur-sm border-gray-200/50 text-gray-900 placeholder:text-gray-400 rounded-full px-5 h-12 font-light focus:ring-purple-400/20"
+                            disabled={isLauraiThinking}
+                          />
+                          <Button
+                            onClick={handleCustomQuestion}
+                            disabled={isLauraiThinking || !lauraiQuestion.trim()}
+                            className="bg-gradient-to-r from-purple-400 to-indigo-500 hover:from-purple-500 hover:to-indigo-600 text-white rounded-full h-12 w-12 p-0 shadow-md"
                           >
-                            {prompt}
-                          </button>
-                        ))}
-                      </div>
+                            {isLauraiThinking ? (
+                              <div className="animate-spin w-4 h-4 border border-white/20 border-t-white rounded-full" />
+                            ) : (
+                              <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
+                            )}
+                          </Button>
+                        </div>
 
-                      <div className="flex gap-2 max-w-2xl mx-auto">
-                        <Input
-                          value={lauraiQuestion}
-                          onChange={(e) => setLauraiQuestion(e.target.value)}
-                          onKeyPress={(e) => e.key === 'Enter' && handleCustomQuestion()}
-                          placeholder="Or ask your own question..."
-                          className="flex-1 bg-white/10 backdrop-blur-md border-0 text-white placeholder:text-white/40 rounded-full px-5 h-12 font-light"
-                          disabled={isLauraiThinking}
-                        />
-                        <Button
-                          onClick={handleCustomQuestion}
-                          disabled={isLauraiThinking || !lauraiQuestion.trim()}
-                          className="bg-white/20 hover:bg-white/30 text-white rounded-full h-12 w-12 p-0 shadow-md"
-                        >
-                          {isLauraiThinking ? (
-                            <div className="animate-spin w-4 h-4 border border-white/20 border-t-white rounded-full" />
-                          ) : (
-                            <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
-                          )}
-                        </Button>
+                        {lauraiResponse && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mt-6 bg-gray-50/60 backdrop-blur-sm rounded-2xl p-5 shadow-sm max-w-2xl mx-auto border border-gray-100/50"
+                          >
+                            <p className="text-sm text-gray-700 whitespace-pre-line leading-relaxed font-light">
+                              {lauraiResponse}
+                            </p>
+                          </motion.div>
+                        )}
                       </div>
-
-                      {lauraiResponse && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="mt-6 bg-white/15 backdrop-blur-md rounded-2xl p-5 shadow-lg max-w-2xl mx-auto"
-                        >
-                          <p className="text-sm text-white/90 whitespace-pre-line leading-relaxed font-light">
-                            {lauraiResponse}
-                          </p>
-                        </motion.div>
-                      )}
                     </div>
                   </div>
                 ) : (
