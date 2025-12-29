@@ -905,46 +905,7 @@ RESPONSE REQUIREMENTS:
 
 
 
-            {/* Body Patterns */}
-            <Card className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-sm font-medium text-gray-600 tracking-wide uppercase">Body Patterns</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="h-28 bg-gradient-to-br from-purple-50/50 to-pink-50/50 rounded-xl flex items-center justify-center mb-4">
-                  <svg className="w-full h-full px-3" viewBox="0 0 200 80">
-                    <path
-                      d="M 0 40 Q 25 20, 50 40 T 100 40 T 150 40 T 200 40"
-                      stroke="#C67793"
-                      strokeWidth="1.5"
-                      fill="none"
-                      opacity="0.8"
-                    />
-                    <path
-                      d="M 0 50 Q 25 30, 50 50 T 100 50 T 150 50 T 200 50"
-                      stroke="#9333EA"
-                      strokeWidth="1.5"
-                      fill="none"
-                      opacity="0.8"
-                    />
-                  </svg>
-                </div>
-                <div className="flex justify-center gap-2">
-                  <Button variant="outline" size="sm" className="text-xs h-8 px-3 rounded-full border-gray-200/50 hover:bg-gray-50/50 font-light">
-                    Daily
-                  </Button>
-                  <Button variant="outline" size="sm" className="text-xs h-8 px-3 rounded-full border-gray-200/50 hover:bg-gray-50/50 font-light">
-                    Weekly
-                  </Button>
-                  <Button size="sm" className="text-xs h-8 px-3 bg-pink-500/90 hover:bg-pink-500 rounded-full font-light shadow-sm">
-                    Monthly
-                  </Button>
-                  <Button variant="outline" size="sm" className="text-xs h-8 px-3 rounded-full border-gray-200/50 hover:bg-gray-50/50 font-light">
-                    Jul
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+
 
             {/* Stress & Energy Patterns */}
             <Card className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl">
