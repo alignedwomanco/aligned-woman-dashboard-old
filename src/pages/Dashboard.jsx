@@ -646,11 +646,6 @@ RESPONSE REQUIREMENTS:
                       </div>
                     )}
 
-                    {/* CTA Button */}
-                    <div className="bg-gradient-to-r from-pink-500/90 to-rose-500/90 rounded-full py-3 px-8 text-center backdrop-blur-sm shadow-lg">
-                      <p className="text-white font-light text-sm tracking-wide">Less effort. More alignment.</p>
-                    </div>
-
                     {/* Ask LaurAI - Integrated */}
                     <div className="border-t border-white/10 pt-8 mt-8">
                       <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
