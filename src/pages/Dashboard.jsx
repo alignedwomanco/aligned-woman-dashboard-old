@@ -781,23 +781,38 @@ RESPONSE REQUIREMENTS:
 
           {/* Right Sidebar */}
           <div className="lg:col-span-3 space-y-4">
-            {/* Cycle & Capacity */}
-            <Card className="bg-gradient-to-br from-pink-400/95 via-pink-500/95 to-rose-500/95 text-white border-0 shadow-[0_12px_40px_rgba(236,72,153,0.25)] backdrop-blur-xl rounded-3xl overflow-hidden">
+            {/* Community */}
+            <Card className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl">
               <CardHeader className="pb-4 pt-6">
-                <CardTitle className="text-sm flex items-center gap-2 font-light tracking-tight">
-                  <Moon className="w-4 h-4" strokeWidth={1.5} />
-                  Cycle & Capacity
+                <CardTitle className="text-sm font-medium text-gray-600 tracking-wide uppercase flex items-center gap-2">
+                  <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  Community
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0 pb-6">
-                <div className="text-center mb-4">
-                  <p className="text-white/80 text-sm mb-2 font-light">{checkIns?.[0]?.cycle_phase || "Luteal"}</p>
-                  <p className="text-5xl font-extralight tracking-tight">{diagnosticSession?.capacityScore || 5.5}</p>
+                <p className="text-sm text-gray-600 mb-5 font-light leading-relaxed">
+                  You don't have to navigate this alone
+                </p>
+
+                <div className="space-y-2 mb-6">
+                  <div className="bg-gradient-to-br from-purple-50/50 to-transparent rounded-xl px-3 py-2 border border-purple-100/50">
+                    <p className="text-xs text-gray-700 font-light">Navigating a breakup</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-pink-50/50 to-transparent rounded-xl px-3 py-2 border border-pink-100/50">
+                    <p className="text-xs text-gray-700 font-light">Building without burnout</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-indigo-50/50 to-transparent rounded-xl px-3 py-2 border border-indigo-100/50">
+                    <p className="text-xs text-gray-700 font-light">Cycle-aware work & life</p>
+                  </div>
                 </div>
-                <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4">
-                  <Progress value={(diagnosticSession?.capacityScore || 5.5) * 10} className="h-1.5 bg-white/20 mb-3" />
-                  <p className="text-white/90 text-xs font-light">Gentle movement & warm foods</p>
-                </div>
+
+                <Link to={createPageUrl("Community")}>
+                  <Button className="w-full bg-gradient-to-r from-purple-400/90 to-indigo-400/90 hover:from-purple-400 hover:to-indigo-400 text-white text-sm h-10 rounded-full font-light shadow-sm">
+                    Find your people
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
 
