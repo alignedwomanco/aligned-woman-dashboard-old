@@ -533,7 +533,7 @@ This should feel embodied and personal.`;
                       <p className="text-xs uppercase tracking-wider text-purple-600 mb-2 font-medium">Your Type</p>
                       <p className="text-2xl font-light text-gray-900 mb-3">{humanDesign?.type || "Projector"}</p>
                       <p className="text-sm text-gray-600 font-light leading-relaxed">
-                        {expandedCard === 'type' ? 'Tap to close' : 'Your energy signature and how you're meant to interact'}
+                        {expandedCard === 'type' ? 'Tap to close' : 'Your energy signature and how you\'re meant to interact'}
                       </p>
                     </div>
                     <div className="flex-shrink-0">
