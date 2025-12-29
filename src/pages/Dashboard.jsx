@@ -656,31 +656,34 @@ Format: JSON with keys: summary, guidance, helps (array), avoid (array)`;
             >
               <Card className="bg-white/95 backdrop-blur-sm border-0 rounded-2xl shadow-lg">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                    <div className="w-6 h-6 bg-pink-500 rounded-lg flex items-center justify-center">
-                      <Target className="w-4 h-4 text-white" />
-                    </div>
-                    Your Life Domains
-                  </CardTitle>
+                  <CardTitle className="text-base font-semibold text-gray-900">Your Life Domains</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {/* Business & Career */}
                   <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
-                    <h3 className="font-semibold text-sm text-blue-900 mb-2">Business + Career</h3>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <Target className="w-4 h-4 text-white" />
+                      </div>
+                      <h3 className="font-semibold text-sm text-blue-900">Business + Career</h3>
+                    </div>
                     <p className="text-xs text-gray-600 mb-1">
                       <span className="font-medium">Current theme:</span> Clarity before momentum
                     </p>
-                    <button className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1">
-                      View work guidance/guidance →
-                    </button>
                   </div>
 
                   {/* Finance */}
                   <div className="bg-green-50 rounded-lg p-3 border border-green-200">
-                    <h3 className="font-semibold text-sm text-green-900 mb-2">Finance <Badge className="bg-purple-200 text-purple-900 text-xs ml-2">Intention</Badge></h3>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                        <TrendingUp className="w-4 h-4 text-white" />
+                      </div>
+                      <h3 className="font-semibold text-sm text-green-900">Finance</h3>
+                    </div>
                     <p className="text-xs text-gray-600 mb-1">
                       <span className="font-medium">Focus today:</span> Conscious spending habits
                     </p>
+                    <Badge className="bg-purple-200 text-purple-900 text-xs">Intention</Badge>
                   </div>
                 </CardContent>
               </Card>
