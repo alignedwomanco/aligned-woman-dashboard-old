@@ -23,6 +23,8 @@ import {
   ChevronDown,
   ChevronUp
 } from "lucide-react";
+import NatalChartWheel from "@/components/astrology/NatalChartWheel";
+import ChartInsightsPanel from "@/components/astrology/ChartInsightsPanel";
 
 const BIG_SIX = [
   { key: "sun", label: "Sun", icon: Sun, color: "from-yellow-400 to-orange-500", desc: "Your core identity & life force" },
@@ -44,6 +46,7 @@ export default function MyAstrology() {
   const [expandedPlanet, setExpandedPlanet] = useState(null);
   const [expandedTheme, setExpandedTheme] = useState(null);
   const [currentThemes, setCurrentThemes] = useState([]);
+  const [chartInsights, setChartInsights] = useState([]);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -134,6 +137,69 @@ REQUIREMENTS:
     }
   };
 
+  // Generate Chart Insights
+  const generateChartInsights = async () => {
+    if (!diagnosticSession || !currentUser) return;
+    
+    try {
+      const prompt = `Generate 4-5 structured chart insights for ${currentUser.full_name}.
+
+NATAL CHART:
+- Sun: ${diagnosticSession.astrologyProfile?.sunSign || "Sagittarius"}
+- Moon: ${diagnosticSession.astrologyProfile?.moonSign || "Unknown"}
+- Rising: ${diagnosticSession.astrologyProfile?.risingSign || "Unknown"}
+- Current concerns: ${diagnosticSession.concerns?.join(", ")}
+- Current goals: ${diagnosticSession.values?.join(", ")}
+- ALIVE Phase: ${diagnosticSession.primaryPhase}
+
+Generate insights about:
+- Core personality patterns (Sun/Moon/Rising combination)
+- Communication style (Mercury)
+- Relationship patterns (Venus)
+- Action & desire patterns (Mars)
+- Current life lessons (based on transits)
+
+For each insight:
+- title (clear, e.g., "Your Emotional Foundation")
+- badge (optional, e.g., "Core Pattern", "Current Focus")
+- summary (1-2 lines)
+- description (2-3 paragraphs, grounded and personal)
+- strengths (2-3 bullet points)
+- challenges (2-3 bullet points)
+- actionSteps (2-3 practical steps)
+
+Return as array of insight objects.`;
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            insights: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  title: { type: "string" },
+                  badge: { type: "string" },
+                  summary: { type: "string" },
+                  description: { type: "string" },
+                  strengths: { type: "array", items: { type: "string" } },
+                  challenges: { type: "array", items: { type: "string" } },
+                  actionSteps: { type: "array", items: { type: "string" } }
+                }
+              }
+            }
+          }
+        }
+      });
+      
+      setChartInsights(result.insights || []);
+    } catch (error) {
+      console.error("Failed to generate insights:", error);
+    }
+  };
+
   // Generate Current Themes
   const generateCurrentThemes = async () => {
     if (!diagnosticSession || !currentUser) return;
@@ -197,6 +263,7 @@ Return as array of theme objects.`;
     if (diagnosticSession && currentUser && !todaysState) {
       generateTodaysState();
       generateCurrentThemes();
+      generateChartInsights();
     }
   }, [diagnosticSession, currentUser]);
 
@@ -357,6 +424,25 @@ GENERATE:
           </Button>
         </motion.div>
 
+        {/* Natal Chart Wheel */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+        >
+          <Card className="mb-6 bg-gradient-to-br from-amber-50 to-white">
+            <CardHeader>
+              <CardTitle className="text-center">Your Natal Chart</CardTitle>
+              <p className="text-sm text-gray-600 text-center">
+                Birth data: {diagnosticSession.dob || "Not provided"} • {diagnosticSession.pob || "Location not provided"}
+              </p>
+            </CardHeader>
+            <CardContent className="py-8">
+              <NatalChartWheel placements={diagnosticSession.astrologyProfile || {}} />
+            </CardContent>
+          </Card>
+        </motion.div>
+
         {/* Today's State */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -482,11 +568,29 @@ GENERATE:
           </Card>
         </motion.div>
 
+        {/* Chart Insights */}
+        {chartInsights.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+          >
+            <ChartInsightsPanel 
+              insights={chartInsights}
+              onInsightClick={(insight) => {
+                // Optional: can trigger additional actions when insight is clicked
+                console.log("Insight clicked:", insight);
+              }}
+            />
+          </motion.div>
+        )}
+
         {/* Your Astrological Blueprint - Big 6 */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
+          className="mt-6"
         >
           <Card className="mb-6">
             <CardHeader>
