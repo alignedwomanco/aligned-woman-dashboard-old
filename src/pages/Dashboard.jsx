@@ -426,9 +426,13 @@ RESPONSE REQUIREMENTS:
                 <Link to={createPageUrl("CheckIn")} className="block group">
                   <div className="bg-white/80 backdrop-blur-md rounded-xl p-4 hover:bg-white/90 transition-all duration-300 border-0 shadow-[0_2px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_4px_30px_rgba(0,0,0,0.08)]">
                     <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-pink-400/90 to-rose-400/90 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <motion.div 
+                        className="w-10 h-10 bg-gradient-to-br from-pink-400/90 to-rose-400/90 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
+                        animate={{ scale: [1, 1.05, 1] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                      >
                         <Heart className="w-4 h-4 text-white" strokeWidth={1.5} />
-                      </div>
+                      </motion.div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-medium text-gray-900 mb-1 text-sm tracking-tight">My Nervous System</h3>
                         <p className="text-xs text-gray-500 mb-1">
@@ -447,9 +451,13 @@ RESPONSE REQUIREMENTS:
                 <Link to={createPageUrl("MyHumanDesign")} className="block group">
                   <div className="bg-white/80 backdrop-blur-md rounded-xl p-4 hover:bg-white/90 transition-all duration-300 border-0 shadow-[0_2px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_4px_30px_rgba(0,0,0,0.08)]">
                     <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-purple-400/90 to-indigo-400/90 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <motion.div 
+                        className="w-10 h-10 bg-gradient-to-br from-purple-400/90 to-indigo-400/90 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
+                        animate={{ rotate: [0, 360] }}
+                        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                      >
                         <Target className="w-4 h-4 text-white" strokeWidth={1.5} />
-                      </div>
+                      </motion.div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-medium text-gray-900 mb-1 text-sm tracking-tight">My Human Design</h3>
                         <p className="text-xs text-gray-500 mb-0.5">
@@ -471,9 +479,13 @@ RESPONSE REQUIREMENTS:
                 <Link to={createPageUrl("MyCycle")} className="block group">
                   <div className="bg-white/80 backdrop-blur-md rounded-xl p-4 hover:bg-white/90 transition-all duration-300 border-0 shadow-[0_2px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_4px_30px_rgba(0,0,0,0.08)]">
                     <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-indigo-400/90 to-blue-400/90 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <motion.div 
+                        className="w-10 h-10 bg-gradient-to-br from-indigo-400/90 to-blue-400/90 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
+                        animate={{ y: [0, -3, 0] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                      >
                         <Moon className="w-4 h-4 text-white" strokeWidth={1.5} />
-                      </div>
+                      </motion.div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-medium text-gray-900 mb-1 text-sm tracking-tight">My Cycle</h3>
                         <p className="text-xs text-gray-500 mb-1">
