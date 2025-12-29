@@ -20,7 +20,8 @@ import {
   Activity,
   Clock,
   BookOpen,
-  Edit3
+  Edit3,
+  Target
 } from "lucide-react";
 
 const CYCLE_PHASES = {
