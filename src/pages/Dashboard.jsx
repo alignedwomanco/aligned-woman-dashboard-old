@@ -43,6 +43,7 @@ export default function Dashboard() {
   const [isLauraiThinking, setIsLauraiThinking] = useState(false);
   const [selectedFocus, setSelectedFocus] = useState("General");
   const [showFullInsight, setShowFullInsight] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(null);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -944,25 +945,45 @@ RESPONSE REQUIREMENTS:
               </CardContent>
             </Card>
 
-            {/* Stress & Energy Patterns Placeholder */}
+            {/* Stress & Energy Patterns */}
             <Card className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl">
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-sm font-medium text-gray-600 tracking-wide uppercase">Your Stress & Energy Patterns</CardTitle>
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full hover:bg-gray-100/50">
-                      <ChevronLeft className="w-3.5 h-3.5" strokeWidth={1.5} />
-                    </Button>
-                    <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full hover:bg-gray-100/50">
-                      <ChevronRight className="w-3.5 h-3.5" strokeWidth={1.5} />
-                    </Button>
-                  </div>
-                </div>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600 tracking-wide uppercase">Your Stress & Energy Patterns</CardTitle>
+                <p className="text-xs text-gray-400 mt-1 font-light">Noteworthy moments and emotional rhythms over time</p>
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="text-center mb-4">
-                  <p className="text-sm font-medium text-gray-700">May 2024</p>
-                  <div className="flex justify-between text-xs text-gray-400 mt-3 mb-2 font-light">
+                <div className="flex items-center justify-between mb-4">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-8 w-8 rounded-full hover:bg-gray-100/50"
+                    onClick={() => {
+                      const newDate = new Date(selectedMonth);
+                      newDate.setMonth(newDate.getMonth() - 1);
+                      setSelectedMonth(newDate);
+                    }}
+                  >
+                    <ChevronLeft className="w-4 h-4 text-gray-600" strokeWidth={1.5} />
+                  </Button>
+                  <p className="text-sm font-medium text-gray-700">
+                    {selectedMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                  </p>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-8 w-8 rounded-full hover:bg-gray-100/50"
+                    onClick={() => {
+                      const newDate = new Date(selectedMonth);
+                      newDate.setMonth(newDate.getMonth() + 1);
+                      setSelectedMonth(newDate);
+                    }}
+                  >
+                    <ChevronRight className="w-4 h-4 text-gray-600" strokeWidth={1.5} />
+                  </Button>
+                </div>
+
+                <div className="mb-4">
+                  <div className="grid grid-cols-7 gap-1 text-xs text-gray-400 mb-2 font-light text-center">
                     <span>Sun</span>
                     <span>Mon</span>
                     <span>Tue</span>
@@ -972,11 +993,63 @@ RESPONSE REQUIREMENTS:
                     <span>Sat</span>
                   </div>
                   <div className="grid grid-cols-7 gap-1.5">
-                    {Array.from({ length: 31 }).map((_, i) => (
-                      <div key={i} className="aspect-square rounded-full bg-pink-200/40" />
-                    ))}
+                    {(() => {
+                      const year = selectedMonth.getFullYear();
+                      const month = selectedMonth.getMonth();
+                      const firstDay = new Date(year, month, 1).getDay();
+                      const daysInMonth = new Date(year, month + 1, 0).getDate();
+                      const days = [];
+
+                      // Empty cells before first day
+                      for (let i = 0; i < firstDay; i++) {
+                        days.push(<div key={`empty-${i}`} className="aspect-square" />);
+                      }
+
+                      // Calendar days
+                      for (let day = 1; day <= daysInMonth; day++) {
+                        const dayDate = new Date(year, month, day);
+                        const dayCheckIn = checkIns?.find(c => {
+                          const checkInDate = new Date(c.created_date);
+                          return checkInDate.getDate() === day && 
+                                 checkInDate.getMonth() === month && 
+                                 checkInDate.getFullYear() === year;
+                        });
+
+                        let bgColor = 'bg-pink-100/40';
+                        if (dayCheckIn) {
+                          if (dayCheckIn.stress >= 7 || dayCheckIn.capacity <= 3) {
+                            bgColor = 'bg-red-200/60';
+                          } else if (dayCheckIn.stress >= 5 || dayCheckIn.capacity <= 5) {
+                            bgColor = 'bg-pink-200/60';
+                          } else if (dayCheckIn.energy >= 7 && dayCheckIn.stress <= 4) {
+                            bgColor = 'bg-green-200/60';
+                          }
+                        }
+
+                        const hasEvent = dayCheckIn && (dayCheckIn.stress >= 6 || dayCheckIn.capacity <= 4);
+
+                        days.push(
+                          <button
+                            key={day}
+                            onClick={() => {
+                              if (dayCheckIn) {
+                                setSelectedDay({ date: dayDate, checkIn: dayCheckIn });
+                              }
+                            }}
+                            className={`aspect-square rounded-full ${bgColor} hover:ring-2 hover:ring-purple-300/50 transition-all relative ${dayCheckIn ? 'cursor-pointer' : 'cursor-default'}`}
+                          >
+                            {hasEvent && (
+                              <div className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-purple-500" />
+                            )}
+                          </button>
+                        );
+                      }
+
+                      return days;
+                    })()}
                   </div>
                 </div>
+
                 <div className="flex justify-center gap-4 text-xs">
                   <div className="flex items-center gap-1.5">
                     <div className="w-2 h-2 rounded-full bg-green-400/90" />
@@ -988,11 +1061,127 @@ RESPONSE REQUIREMENTS:
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className="w-2 h-2 rounded-full bg-red-400/90" />
-                    <span className="text-gray-500 font-light">High S</span>
+                    <span className="text-gray-500 font-light">High</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
+
+            {/* Day Detail Panel */}
+            {selectedDay && (
+              <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-end" onClick={() => setSelectedDay(null)}>
+                <motion.div
+                  initial={{ x: 400, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: 400, opacity: 0 }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="bg-white h-full w-full max-w-md shadow-2xl overflow-y-auto"
+                >
+                  <div className="sticky top-0 bg-white border-b border-gray-100 p-6 flex items-center justify-between z-10">
+                    <div>
+                      <h2 className="text-lg font-medium text-gray-900">What showed up this day</h2>
+                      <p className="text-sm text-gray-500 mt-1">
+                        {selectedDay.date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                      </p>
+                    </div>
+                    <Button variant="ghost" size="icon" onClick={() => setSelectedDay(null)} className="rounded-full">
+                      <X className="w-5 h-5 text-gray-400" />
+                    </Button>
+                  </div>
+
+                  <div className="p-6 space-y-6">
+                    {/* AI Snapshot Summary */}
+                    <div className="bg-gradient-to-br from-purple-50/50 to-pink-50/30 rounded-2xl p-5">
+                      <p className="text-sm text-gray-700 leading-relaxed font-light">
+                        This day showed {selectedDay.checkIn.stress >= 7 ? 'heightened stress' : 'moderate tension'} and {selectedDay.checkIn.capacity <= 3 ? 'low capacity' : 'reduced energy'}. 
+                        {selectedDay.checkIn.nervous_system_state && ` Your nervous system was in ${selectedDay.checkIn.nervous_system_state} mode.`}
+                        {selectedDay.checkIn.cycle_phase && ` This coincided with your ${selectedDay.checkIn.cycle_phase} phase.`}
+                      </p>
+                    </div>
+
+                    {/* Context Tags */}
+                    <div>
+                      <p className="text-xs uppercase tracking-wider text-gray-500 mb-3 font-medium">Context</p>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedDay.checkIn.cycle_phase && (
+                          <Badge variant="secondary" className="bg-purple-100/80 text-purple-700 border-0 font-light">
+                            {selectedDay.checkIn.cycle_phase} phase
+                          </Badge>
+                        )}
+                        {selectedDay.checkIn.stress >= 7 && (
+                          <Badge variant="secondary" className="bg-red-100/80 text-red-700 border-0 font-light">
+                            High stress
+                          </Badge>
+                        )}
+                        {selectedDay.checkIn.capacity <= 3 && (
+                          <Badge variant="secondary" className="bg-amber-100/80 text-amber-700 border-0 font-light">
+                            Low capacity
+                          </Badge>
+                        )}
+                        {selectedDay.checkIn.nervous_system_state && (
+                          <Badge variant="secondary" className="bg-indigo-100/80 text-indigo-700 border-0 font-light">
+                            Nervous system: {selectedDay.checkIn.nervous_system_state}
+                          </Badge>
+                        )}
+                        {selectedDay.checkIn.energy <= 4 && (
+                          <Badge variant="secondary" className="bg-gray-100/80 text-gray-700 border-0 font-light">
+                            Low energy
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Pattern Callout */}
+                    {selectedDay.checkIn.stress >= 6 && (
+                      <div className="bg-gradient-to-br from-amber-50/50 to-orange-50/30 rounded-2xl p-5 border border-amber-100/50">
+                        <p className="text-xs uppercase tracking-wider text-amber-700 mb-2 font-medium">Pattern we're noticing</p>
+                        <p className="text-sm text-gray-700 leading-relaxed font-light">
+                          Similar stress responses have appeared multiple times this month, often coinciding with {selectedDay.checkIn.cycle_phase || 'luteal'} phase.
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Metrics */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-white/80 rounded-xl p-4 border border-gray-100/50">
+                        <p className="text-xs text-gray-500 mb-1 font-light">Energy</p>
+                        <p className="text-2xl font-light text-gray-900">{selectedDay.checkIn.energy}/10</p>
+                      </div>
+                      <div className="bg-white/80 rounded-xl p-4 border border-gray-100/50">
+                        <p className="text-xs text-gray-500 mb-1 font-light">Stress</p>
+                        <p className="text-2xl font-light text-gray-900">{selectedDay.checkIn.stress}/10</p>
+                      </div>
+                      <div className="bg-white/80 rounded-xl p-4 border border-gray-100/50">
+                        <p className="text-xs text-gray-500 mb-1 font-light">Capacity</p>
+                        <p className="text-2xl font-light text-gray-900">{selectedDay.checkIn.capacity}/10</p>
+                      </div>
+                      <div className="bg-white/80 rounded-xl p-4 border border-gray-100/50">
+                        <p className="text-xs text-gray-500 mb-1 font-light">Mood</p>
+                        <p className="text-2xl font-light text-gray-900">{selectedDay.checkIn.mood}/10</p>
+                      </div>
+                    </div>
+
+                    {/* Notes */}
+                    {selectedDay.checkIn.notes && (
+                      <div>
+                        <p className="text-xs uppercase tracking-wider text-gray-500 mb-3 font-medium">Your notes</p>
+                        <div className="bg-white/80 rounded-xl p-4 border border-gray-100/50">
+                          <p className="text-sm text-gray-700 leading-relaxed font-light">{selectedDay.checkIn.notes}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Source Reference */}
+                    <div className="pt-4 border-t border-gray-100">
+                      <button className="text-xs text-purple-600 hover:text-purple-700 font-light flex items-center gap-1">
+                        <span>From today's check-in</span>
+                        <ChevronRight className="w-3 h-3" strokeWidth={1.5} />
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            )}
 
             {/* Quick Action Buttons */}
             <div className="flex flex-wrap gap-2">
