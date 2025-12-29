@@ -39,6 +39,12 @@ export default function Dashboard() {
   const [currentUser, setCurrentUser] = useState(null);
   const [snapshotView, setSnapshotView] = useState(SNAPSHOT_VIEWS.DAILY);
   const [selectedMonth, setSelectedMonth] = useState(new Date());
+  const [snapshotData, setSnapshotData] = useState(null);
+  const [isGeneratingSnapshot, setIsGeneratingSnapshot] = useState(false);
+  const [lauraiQuestion, setLauraiQuestion] = useState("");
+  const [lauraiResponse, setLauraiResponse] = useState("");
+  const [isLauraiThinking, setIsLauraiThinking] = useState(false);
+  const [selectedIcon, setSelectedIcon] = useState(null);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -162,6 +168,155 @@ export default function Dashboard() {
     if (!diagnosticSession?.lastCheckInDate) return true;
     return !isSameDay(diagnosticSession.lastCheckInDate, new Date());
   }, [diagnosticSession]);
+
+  // Generate dynamic snapshot
+  const generateSnapshot = async () => {
+    if (!diagnosticSession || !currentUser) return;
+    
+    setIsGeneratingSnapshot(true);
+    
+    try {
+      const latestCheckIn = checkIns?.[0];
+      const cyclePhase = diagnosticSession?.cycleProfile?.cycleStage === "Cycling" 
+        ? (latestCheckIn?.cycle_phase || "Luteal")
+        : diagnosticSession?.cycleProfile?.cycleStage || "Not tracking";
+      
+      const nervousSystemState = latestCheckIn?.nervous_system_state || "Fawn";
+      const capacityScore = latestCheckIn?.capacity || diagnosticSession?.capacityScore || 5.5;
+      const energyLevel = latestCheckIn?.energy || 5;
+      const stressLevel = latestCheckIn?.stress || 5;
+      
+      const prompt = `You are generating a personalized Daily ALIVE Snapshot for ${currentUser.full_name}.
+
+USER CONTEXT:
+- Human Design: Type: ${diagnosticSession.humanDesignProfile?.type || "Projector"}, Authority: ${diagnosticSession.humanDesignProfile?.authority || "Emotional"}
+- Cycle Phase: ${cyclePhase}
+- Nervous System State: ${nervousSystemState}
+- ALIVE Phase: Primary - ${diagnosticSession.primaryPhase || "Intention"}, Secondary - ${diagnosticSession.secondaryPhase || "Liberation"}
+- Capacity Score: ${capacityScore}/10
+- Energy Level: ${energyLevel}/10
+- Stress Level: ${stressLevel}/10
+- Recent Context: ${diagnosticSession.userContextText || "No recent context"}
+- Core Values: ${diagnosticSession.values?.join(", ") || "Not specified"}
+- Current Concerns: ${diagnosticSession.concerns?.join(", ") || "General wellbeing"}
+
+GENERATE:
+1. A scrollable 3-4 paragraph narrative that weaves together:
+   - How their cycle phase affects capacity today
+   - What their nervous system state means for their decisions
+   - How their Human Design suggests they respond (not push)
+   - What their ALIVE phase indicates about their growth journey
+   - Normalize low capacity - it's biological, not failure
+
+2. A short guiding phrase (5-8 words) based on their state
+
+3. Icon explanations for: Cycle, Nervous System, Human Design, ALIVE Phase
+
+The tone must be:
+- Warm, not clinical
+- Normalizing, not diagnosing
+- Systemic (connecting patterns), not isolated advice
+
+NO TWO SNAPSHOTS SHOULD BE IDENTICAL. Reference today's date, energy patterns, and make it feel personalized.`;
+
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            narrative: { type: "string" },
+            guidingPhrase: { type: "string" },
+            iconExplanations: {
+              type: "object",
+              properties: {
+                cycle: { type: "string" },
+                nervousSystem: { type: "string" },
+                humanDesign: { type: "string" },
+                alivePhase: { type: "string" }
+              }
+            }
+          }
+        }
+      });
+      
+      setSnapshotData({
+        ...result,
+        cyclePhase,
+        nervousSystemState,
+        capacityScore,
+        humanDesign: diagnosticSession.humanDesignProfile,
+        alivePhase: diagnosticSession.primaryPhase || "Intention",
+        astrology: diagnosticSession.astrologyProfile
+      });
+    } catch (error) {
+      console.error("Failed to generate snapshot:", error);
+    } finally {
+      setIsGeneratingSnapshot(false);
+    }
+  };
+
+  // Generate snapshot on load or when view changes
+  useEffect(() => {
+    if (diagnosticSession && currentUser && !snapshotData) {
+      generateSnapshot();
+    }
+  }, [diagnosticSession, currentUser, snapshotView]);
+
+  // Handle LaurAI questions
+  const askLaurAI = async (question) => {
+    if (!question.trim() || !snapshotData) return;
+    
+    setIsLauraiThinking(true);
+    setLauraiResponse("");
+    
+    try {
+      const contextPrompt = `You are LaurAI, a personalized wellness assistant integrated with The Aligned Woman Blueprint.
+
+CRITICAL CONTEXT (Must reference in every response):
+- User: ${currentUser.full_name}
+- Today's Date: ${new Date().toLocaleDateString()}
+- Cycle Phase: ${snapshotData.cyclePhase}
+- Nervous System State: ${snapshotData.nervousSystemState}
+- Capacity: ${snapshotData.capacityScore}/10
+- Human Design Type: ${snapshotData.humanDesign?.type || "Projector"}
+- Human Design Authority: ${snapshotData.humanDesign?.authority || "Emotional"}
+- ALIVE Phase: ${snapshotData.alivePhase}
+- Recent Concerns: ${diagnosticSession.concerns?.join(", ") || "General wellbeing"}
+
+TODAY'S SNAPSHOT SUMMARY:
+${snapshotData.narrative}
+
+USER QUESTION: "${question}"
+
+RESPONSE REQUIREMENTS:
+- Reference their current cycle, nervous system, or capacity
+- Normalize reduced capacity - it's biological
+- Connect to their ALIVE phase
+- Never contradict today's snapshot
+- Keep responses warm, grounded, and brief (2-3 paragraphs max)
+- Make it feel like you understand TODAY specifically, not generic advice`;
+
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: contextPrompt
+      });
+      
+      setLauraiResponse(response);
+    } catch (error) {
+      console.error("LaurAI error:", error);
+      setLauraiResponse("I'm having trouble connecting right now. Please try again.");
+    } finally {
+      setIsLauraiThinking(false);
+    }
+  };
+
+  const handleQuickQuestion = (question) => {
+    setLauraiQuestion(question);
+    askLaurAI(question);
+  };
+
+  const handleCustomQuestion = () => {
+    askLaurAI(lauraiQuestion);
+  };
 
   // Get greeting based on time of day
   const getGreeting = () => {
@@ -427,73 +582,165 @@ export default function Dashboard() {
                 <CardContent className="p-8">
                   <h2 className="text-2xl font-bold mb-8 text-center">Your Daily ALIVE Snapshot</h2>
                   
-                  {/* System Icons */}
-                  <div className="flex justify-center gap-4 mb-8">
-                    {diagnosticSession?.astrologyProfile?.sunSign && (
+                  {isGeneratingSnapshot ? (
+                    <div className="flex items-center justify-center py-12">
                       <div className="text-center">
-                        <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 mx-auto">
-                          <Sparkles className="w-8 h-8 text-yellow-300" />
+                        <div className="animate-spin w-12 h-12 border-4 border-white/20 border-t-white rounded-full mx-auto mb-4" />
+                        <p className="text-white/70">Generating your personalized snapshot...</p>
+                      </div>
+                    </div>
+                  ) : snapshotData ? (
+                    <>
+                      {/* System Icons - Now Clickable */}
+                      <div className="flex justify-center gap-4 mb-8">
+                        {snapshotData.astrology?.sunSign && (
+                          <button 
+                            onClick={() => setSelectedIcon(selectedIcon === 'astrology' ? null : 'astrology')}
+                            className="text-center hover:scale-110 transition-transform cursor-pointer"
+                          >
+                            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 mx-auto hover:bg-white/30">
+                              <Sparkles className="w-8 h-8 text-yellow-300" />
+                            </div>
+                            <p className="text-xs font-medium">{snapshotData.astrology.sunSign}</p>
+                          </button>
+                        )}
+                        <button 
+                          onClick={() => setSelectedIcon(selectedIcon === 'humanDesign' ? null : 'humanDesign')}
+                          className="text-center hover:scale-110 transition-transform cursor-pointer"
+                        >
+                          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 mx-auto hover:bg-white/30">
+                            <Target className="w-8 h-8 text-purple-300" />
+                          </div>
+                          <p className="text-xs font-medium">{snapshotData.humanDesign?.type || "Projector"}</p>
+                        </button>
+                        <button 
+                          onClick={() => setSelectedIcon(selectedIcon === 'cycle' ? null : 'cycle')}
+                          className="text-center hover:scale-110 transition-transform cursor-pointer"
+                        >
+                          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 mx-auto hover:bg-white/30">
+                            <Moon className="w-8 h-8 text-blue-300" />
+                          </div>
+                          <p className="text-xs font-medium">{snapshotData.cyclePhase}</p>
+                        </button>
+                        <button 
+                          onClick={() => setSelectedIcon(selectedIcon === 'nervousSystem' ? null : 'nervousSystem')}
+                          className="text-center hover:scale-110 transition-transform cursor-pointer"
+                        >
+                          <div className="w-16 h-16 bg-pink-500 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 mx-auto hover:bg-pink-600">
+                            <Heart className="w-8 h-8 text-white" />
+                          </div>
+                          <p className="text-xs font-medium">{snapshotData.nervousSystemState}</p>
+                        </button>
+                        <button 
+                          onClick={() => setSelectedIcon(selectedIcon === 'alive' ? null : 'alive')}
+                          className="text-center hover:scale-110 transition-transform cursor-pointer"
+                        >
+                          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 mx-auto hover:bg-white/30">
+                            <Waves className="w-8 h-8 text-indigo-300" />
+                          </div>
+                          <p className="text-xs font-medium">{snapshotData.alivePhase}</p>
+                        </button>
+                      </div>
+
+                      {/* Icon Explanation (appears when clicked) */}
+                      {selectedIcon && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="bg-white/10 rounded-xl p-4 mb-6"
+                        >
+                          <p className="text-sm text-white/90">
+                            {snapshotData.iconExplanations?.[selectedIcon] || "Understanding this aspect of your system..."}
+                          </p>
+                        </motion.div>
+                      )}
+
+                      {/* Main Narrative - Now Scrollable */}
+                      <div className="mb-6 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
+                        <p className="text-white/90 leading-relaxed whitespace-pre-line">
+                          {snapshotData.narrative}
+                        </p>
+                      </div>
+
+                      {/* Guiding Phrase */}
+                      <div className="bg-gradient-to-r from-pink-500 to-purple-500 rounded-xl p-4 mb-6 text-center">
+                        <p className="font-bold text-lg">{snapshotData.guidingPhrase}</p>
+                      </div>
+
+                      {/* Ask LaurAI */}
+                      <div className="bg-pink-100 rounded-xl p-4">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center flex-shrink-0">
+                            <Sparkles className="w-5 h-5 text-white" />
+                          </div>
+                          <p className="text-sm font-semibold text-gray-900">Ask LaurAI about today</p>
                         </div>
-                        <p className="text-xs font-medium">{diagnosticSession.astrologyProfile.sunSign}</p>
-                      </div>
-                    )}
-                    {diagnosticSession?.humanDesignProfile && (
-                      <div className="text-center">
-                        <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 mx-auto">
-                          <Target className="w-8 h-8 text-purple-300" />
+                        
+                        {/* Quick Questions */}
+                        <div className="flex gap-2 flex-wrap mb-3">
+                          <button
+                            onClick={() => handleQuickQuestion("How should I work today?")}
+                            className="bg-white text-gray-700 text-xs border-0 shadow-sm px-3 py-1.5 rounded-full hover:bg-gray-50 transition-colors"
+                          >
+                            How should I work today?
+                          </button>
+                          <button
+                            onClick={() => handleQuickQuestion("Why does this feel harder than usual?")}
+                            className="bg-white text-gray-700 text-xs border-0 shadow-sm px-3 py-1.5 rounded-full hover:bg-gray-50 transition-colors"
+                          >
+                            Why does this feel harder than usual?
+                          </button>
+                          <button
+                            onClick={() => handleQuickQuestion("What should I focus on this week?")}
+                            className="bg-white text-gray-700 text-xs border-0 shadow-sm px-3 py-1.5 rounded-full hover:bg-gray-50 transition-colors"
+                          >
+                            What should I focus on this week?
+                          </button>
                         </div>
-                        <p className="text-xs font-medium">{diagnosticSession.humanDesignProfile.type}</p>
-                      </div>
-                    )}
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 mx-auto">
-                        <Moon className="w-8 h-8 text-blue-300" />
-                      </div>
-                      <p className="text-xs font-medium">Luteal</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-pink-500 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 mx-auto">
-                        <Heart className="w-8 h-8 text-white" />
-                      </div>
-                      <p className="text-xs font-medium">Fawn</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-2 mx-auto">
-                        <Waves className="w-8 h-8 text-indigo-300" />
-                      </div>
-                      <p className="text-xs font-medium">{diagnosticSession?.primaryPhase || "Intention"}</p>
-                    </div>
-                  </div>
 
-                  {/* Main Narrative */}
-                  <div className="mb-6">
-                    <p className="text-white/90 leading-relaxed mb-4">
-                      {diagnosticSession?.aliveNarrative || "Today is about responding, not pushing. Sagittarius energy is activating your long-term vision but your Moon in Virgo asks for refinement, not expansion."}
-                    </p>
-                  </div>
+                        {/* Custom Question Input */}
+                        <div className="flex gap-2">
+                          <Input
+                            value={lauraiQuestion}
+                            onChange={(e) => setLauraiQuestion(e.target.value)}
+                            onKeyPress={(e) => e.key === 'Enter' && handleCustomQuestion()}
+                            placeholder="Ask your own question..."
+                            className="flex-1 bg-white text-gray-900 border-0"
+                            disabled={isLauraiThinking}
+                          />
+                          <Button 
+                            onClick={handleCustomQuestion}
+                            disabled={isLauraiThinking || !lauraiQuestion.trim()}
+                            className="bg-pink-500 hover:bg-pink-600 text-white"
+                          >
+                            {isLauraiThinking ? (
+                              <div className="animate-spin w-4 h-4 border-2 border-white/20 border-t-white rounded-full" />
+                            ) : (
+                              <Heart className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </div>
 
-                  {/* Guiding Phrase */}
-                  <div className="bg-gradient-to-r from-pink-500 to-purple-500 rounded-xl p-4 mb-6 text-center">
-                    <p className="font-bold text-lg">Less effort. More alignment.</p>
-                  </div>
-
-                  {/* Ask LaurAI */}
-                  <div className="bg-pink-100 rounded-xl p-4 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center flex-shrink-0">
-                      <Sparkles className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold text-gray-900 mb-2">Ask LaurAI about today</p>
-                      <div className="flex gap-2 flex-wrap">
-                        <Badge className="bg-white text-gray-700 text-xs border-0 shadow-sm">How should I work today?</Badge>
-                        <Badge className="bg-white text-gray-700 text-xs border-0 shadow-sm">Why does this feel harder than usual?</Badge>
-                        <Badge className="bg-white text-gray-700 text-xs border-0 shadow-sm">What should I focus on this...</Badge>
+                        {/* LaurAI Response */}
+                        {lauraiResponse && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mt-4 bg-white rounded-lg p-4"
+                          >
+                            <p className="text-sm text-gray-900 whitespace-pre-line">{lauraiResponse}</p>
+                          </motion.div>
+                        )}
                       </div>
+                    </>
+                  ) : (
+                    <div className="text-center py-8">
+                      <Button onClick={generateSnapshot} className="bg-pink-500 hover:bg-pink-600">
+                        Generate Today's Snapshot
+                      </Button>
                     </div>
-                    <Button size="sm" className="bg-pink-500 hover:bg-pink-600 text-white rounded-full h-10 w-10 p-0 flex items-center justify-center">
-                      <Heart className="w-5 h-5" />
-                    </Button>
-                  </div>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
