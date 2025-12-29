@@ -360,32 +360,32 @@ RESPONSE REQUIREMENTS:
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50/30 via-pink-50/20 to-indigo-50/30 p-8">
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-12 gap-6">
           {/* Left Sidebar - Your Inner Systems */}
-          <div className="lg:col-span-3 space-y-6">
+          <div className="lg:col-span-3 space-y-4">
             {/* Your Inner Systems */}
-            <Card className="bg-gradient-to-br from-purple-100/50 to-indigo-100/50 border-purple-200">
-              <CardHeader>
-                <CardTitle className="text-lg">Your Inner Systems</CardTitle>
+            <Card className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl">
+              <CardHeader className="pb-5">
+                <CardTitle className="text-sm font-medium text-gray-600 tracking-wide uppercase">Your Inner Systems</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-3 pt-0">
                 {/* Nervous System */}
-                <Link to={createPageUrl("CheckIn")} className="block">
-                  <div className="bg-white/60 backdrop-blur-sm rounded-xl p-4 hover:bg-white/80 transition-all border border-pink-200">
+                <Link to={createPageUrl("CheckIn")} className="block group">
+                  <div className="bg-white/80 backdrop-blur-md rounded-xl p-4 hover:bg-white/90 transition-all duration-300 border-0 shadow-[0_2px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_4px_30px_rgba(0,0,0,0.08)]">
                     <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-pink-400 to-pink-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Heart className="w-5 h-5 text-white" />
+                      <div className="w-10 h-10 bg-gradient-to-br from-pink-400/90 to-rose-400/90 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+                        <Heart className="w-4 h-4 text-white" strokeWidth={1.5} />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 mb-1">My Nervous System</h3>
-                        <p className="text-sm text-gray-600 mb-2">
-                          <span className="font-medium">Current State:</span> {checkIns?.[0]?.nervous_system_state || "Fawn"}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-gray-900 mb-1 text-sm tracking-tight">My Nervous System</h3>
+                        <p className="text-xs text-gray-500 mb-1">
+                          <span className="font-medium text-gray-700">Current State:</span> {checkIns?.[0]?.nervous_system_state || "Fawn"}
                         </p>
-                        <p className="text-xs text-gray-500">Your system is prioritizing safety today</p>
-                        <Button variant="link" className="text-xs text-purple-600 p-0 h-auto mt-2">
-                          View current system guidance →
+                        <p className="text-xs text-gray-400 leading-relaxed">Your system is prioritizing safety today</p>
+                        <Button variant="link" className="text-xs text-purple-500 p-0 h-auto mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          View guidance →
                         </Button>
                       </div>
                     </div>
@@ -393,23 +393,23 @@ RESPONSE REQUIREMENTS:
                 </Link>
 
                 {/* Human Design */}
-                <Link to={createPageUrl("MyHumanDesign")} className="block">
-                  <div className="bg-white/60 backdrop-blur-sm rounded-xl p-4 hover:bg-white/80 transition-all border border-purple-200">
+                <Link to={createPageUrl("MyHumanDesign")} className="block group">
+                  <div className="bg-white/80 backdrop-blur-md rounded-xl p-4 hover:bg-white/90 transition-all duration-300 border-0 shadow-[0_2px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_4px_30px_rgba(0,0,0,0.08)]">
                     <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Target className="w-5 h-5 text-white" />
+                      <div className="w-10 h-10 bg-gradient-to-br from-purple-400/90 to-indigo-400/90 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+                        <Target className="w-4 h-4 text-white" strokeWidth={1.5} />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 mb-1">My Human Design</h3>
-                        <p className="text-sm text-gray-600 mb-2">
-                          <span className="font-medium">Type:</span> {diagnosticSession?.humanDesignProfile?.type || "Projector"}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-gray-900 mb-1 text-sm tracking-tight">My Human Design</h3>
+                        <p className="text-xs text-gray-500 mb-0.5">
+                          <span className="font-medium text-gray-700">Type:</span> {diagnosticSession?.humanDesignProfile?.type || "Projector"}
                         </p>
-                        <p className="text-xs text-gray-500 mb-2">
-                          <span className="font-medium">Authority:</span> {diagnosticSession?.humanDesignProfile?.authority || "Emotional"}
+                        <p className="text-xs text-gray-500 mb-1">
+                          <span className="font-medium text-gray-700">Authority:</span> {diagnosticSession?.humanDesignProfile?.authority || "Emotional"}
                         </p>
-                        <p className="text-xs text-gray-500">Discernment beats effort today</p>
-                        <Button variant="link" className="text-xs text-purple-600 p-0 h-auto mt-2">
-                          View cycle guidance →
+                        <p className="text-xs text-gray-400 leading-relaxed">Discernment beats effort today</p>
+                        <Button variant="link" className="text-xs text-purple-500 p-0 h-auto mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          View guidance →
                         </Button>
                       </div>
                     </div>
