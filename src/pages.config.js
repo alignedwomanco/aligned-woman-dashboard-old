@@ -7,6 +7,7 @@ import Classroom from './pages/Classroom';
 import Community from './pages/Community';
 import Contact from './pages/Contact';
 import DailyCheckIn from './pages/DailyCheckIn';
+import Dashboard from './pages/Dashboard';
 import DefineMyPurpose from './pages/DefineMyPurpose';
 import Experts from './pages/Experts';
 import ExpertsDirectory from './pages/ExpertsDirectory';
@@ -17,6 +18,8 @@ import Messages from './pages/Messages';
 import ModuleFrameworkBuilder from './pages/ModuleFrameworkBuilder';
 import ModulePlayer from './pages/ModulePlayer';
 import MyALIVEJourney from './pages/MyALIVEJourney';
+import MyAstrology from './pages/MyAstrology';
+import MyCycle from './pages/MyCycle';
 import MyMetrics from './pages/MyMetrics';
 import MyPathway from './pages/MyPathway';
 import OnboardingForm from './pages/OnboardingForm';
@@ -26,9 +29,6 @@ import Progress from './pages/Progress';
 import Settings from './pages/Settings';
 import Support from './pages/Support';
 import ToolsHub from './pages/ToolsHub';
-import Dashboard from './pages/Dashboard';
-import MyAstrology from './pages/MyAstrology';
-import MyCycle from './pages/MyCycle';
 import MyHumanDesign from './pages/MyHumanDesign';
 import __Layout from './Layout.jsx';
 
@@ -43,6 +43,7 @@ export const PAGES = {
     "Community": Community,
     "Contact": Contact,
     "DailyCheckIn": DailyCheckIn,
+    "Dashboard": Dashboard,
     "DefineMyPurpose": DefineMyPurpose,
     "Experts": Experts,
     "ExpertsDirectory": ExpertsDirectory,
@@ -53,6 +54,8 @@ export const PAGES = {
     "ModuleFrameworkBuilder": ModuleFrameworkBuilder,
     "ModulePlayer": ModulePlayer,
     "MyALIVEJourney": MyALIVEJourney,
+    "MyAstrology": MyAstrology,
+    "MyCycle": MyCycle,
     "MyMetrics": MyMetrics,
     "MyPathway": MyPathway,
     "OnboardingForm": OnboardingForm,
@@ -62,9 +65,6 @@ export const PAGES = {
     "Settings": Settings,
     "Support": Support,
     "ToolsHub": ToolsHub,
-    "Dashboard": Dashboard,
-    "MyAstrology": MyAstrology,
-    "MyCycle": MyCycle,
     "MyHumanDesign": MyHumanDesign,
 }
 
