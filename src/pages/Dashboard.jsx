@@ -16,6 +16,7 @@ import DailySnapshotCard from "@/components/dashboard/DailySnapshotCard";
 import WeeklySnapshotCard from "@/components/dashboard/WeeklySnapshotCard";
 import MonthlySnapshotCard from "@/components/dashboard/MonthlySnapshotCard";
 import { DASHBOARD_CONSTANTS, ALIVE_PHASES, SNAPSHOT_VIEWS } from "@/components/dashboard/constants";
+import SystemDetailDrawer from "@/components/dashboard/SystemDetailDrawer";
 import {
   Sparkles,
   Target,
@@ -46,6 +47,8 @@ export default function Dashboard() {
   const [lauraiResponse, setLauraiResponse] = useState("");
   const [isLauraiThinking, setIsLauraiThinking] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState(null);
+  const [selectedSystem, setSelectedSystem] = useState(null);
+  const [systemData, setSystemData] = useState({});
 
   useEffect(() => {
     const loadUser = async () => {
@@ -319,6 +322,107 @@ RESPONSE REQUIREMENTS:
     askLaurAI(lauraiQuestion);
   };
 
+  // Generate dynamic system data
+  const generateSystemData = async (system) => {
+    if (!diagnosticSession || !currentUser) return;
+    
+    const latestCheckIn = checkIns?.[0];
+    const cyclePhase = diagnosticSession?.cycleProfile?.cycleStage === "Cycling" 
+      ? (latestCheckIn?.cycle_phase || "Luteal")
+      : diagnosticSession?.cycleProfile?.cycleStage || "Not tracking";
+    
+    const nervousSystemState = latestCheckIn?.nervous_system_state || "Fawn";
+    const capacityScore = latestCheckIn?.capacity || diagnosticSession?.capacityScore || 5.5;
+    
+    const systemPrompts = {
+      nervous_system: `Generate guidance for Nervous System state: ${nervousSystemState}, Capacity: ${capacityScore}/10, Recent stress: ${latestCheckIn?.stress || 5}/10`,
+      human_design: `Generate guidance for Human Design Type: ${diagnosticSession.humanDesignProfile?.type || "Projector"}, Authority: ${diagnosticSession.humanDesignProfile?.authority || "Emotional"}, ALIVE Phase: ${diagnosticSession.primaryPhase}`,
+      cycle: `Generate guidance for Cycle Phase: ${cyclePhase}, Capacity: ${capacityScore}/10, Energy: ${latestCheckIn?.energy || 5}/10`,
+      astrology: `Generate guidance for Astrology: Sun ${diagnosticSession.astrologyProfile?.sunSign || "Sagittarius"}, Moon ${diagnosticSession.astrologyProfile?.moonSign || "Unknown"}, Current transits`
+    };
+
+    const prompt = `You are generating system-specific guidance for ${currentUser.full_name}.
+
+SYSTEM: ${system.replace('_', ' ').toUpperCase()}
+${systemPrompts[system]}
+
+GENERATE:
+1. A 2-3 sentence summary of their current state in this system
+2. Today's guidance (one clear statement)
+3. 3-5 things that help today (short phrases)
+4. 2-4 things to avoid today (short phrases)
+
+Format: JSON with keys: summary, guidance, helps (array), avoid (array)`;
+
+    try {
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            summary: { type: "string" },
+            guidance: { type: "string" },
+            helps: { type: "array", items: { type: "string" } },
+            avoid: { type: "array", items: { type: "string" } }
+          }
+        }
+      });
+
+      const systemSpecificData = {
+        nervous_system: {
+          state: nervousSystemState,
+          recentPattern: checkIns?.length > 3 ? "Variable stress patterns" : "Stable",
+          actions: [
+            { label: "Log how you feel", onClick: () => window.location.href = createPageUrl("CheckIn") },
+            { label: "3-min reset", onClick: () => {} }
+          ]
+        },
+        human_design: {
+          type: diagnosticSession.humanDesignProfile?.type || "Projector",
+          authority: diagnosticSession.humanDesignProfile?.authority || "Emotional",
+          strategy: diagnosticSession.humanDesignProfile?.strategy || "Wait for invitation"
+        },
+        cycle: {
+          phase: cyclePhase,
+          dayOfCycle: latestCheckIn?.cycle_day || "Unknown",
+          capacityGuidance: capacityScore < 5 ? "Lower capacity phase" : "Higher capacity phase",
+          actions: [
+            { label: "Log symptoms", onClick: () => {} },
+            { label: "Plan by phase", onClick: () => {} }
+          ]
+        },
+        astrology: {
+          currentSign: diagnosticSession.astrologyProfile?.sunSign || "Sagittarius",
+          theme: "Vision and expansion",
+          emotionalTone: "Optimistic with need for refinement"
+        }
+      };
+
+      setSystemData({
+        ...result,
+        ...systemSpecificData[system]
+      });
+    } catch (error) {
+      console.error("Failed to generate system data:", error);
+    }
+  };
+
+  const handleSystemClick = async (system) => {
+    setSelectedSystem(system);
+    await generateSystemData(system);
+  };
+
+  const { data: relevantCourses = [] } = useQuery({
+    queryKey: ["relevantCourses", selectedSystem],
+    queryFn: async () => {
+      if (!selectedSystem) return [];
+      const courses = await base44.entities.Course.list();
+      // Filter based on system - simplified logic
+      return courses.slice(0, 3);
+    },
+    enabled: !!selectedSystem
+  });
+
   // Get greeting based on time of day
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -442,94 +546,106 @@ RESPONSE REQUIREMENTS:
             </motion.div>
             {/* Your Inner Systems */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
             >
-              <Card className="bg-white/95 backdrop-blur-sm border-0 rounded-2xl shadow-lg">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base font-semibold text-gray-900">Your Inner Systems</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {/* My Nervous System */}
-                  <div className="bg-pink-50 rounded-lg p-4 border border-pink-200">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center">
-                        <Heart className="w-4 h-4 text-white" />
-                      </div>
-                      <h3 className="font-semibold text-sm text-pink-900">My Nervous System</h3>
-                    </div>
-                    <p className="text-xs text-gray-600 mb-1">
-                      <span className="font-medium">Current State:</span> Fawn
-                    </p>
-                    <p className="text-xs text-gray-600 mb-2">
-                      Your system is prioritizing safety today
-                    </p>
-                    <button className="text-xs text-pink-600 hover:text-pink-700 font-medium flex items-center gap-1">
-                      View nervous system guidance →
-                    </button>
+            <Card className="bg-white/95 backdrop-blur-sm border-0 rounded-2xl shadow-lg">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base font-semibold text-gray-900">Your Inner Systems</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* My Nervous System */}
+              <button 
+                onClick={() => handleSystemClick('nervous_system')}
+                className="w-full bg-pink-50 rounded-lg p-4 border border-pink-200 hover:shadow-md transition-shadow text-left"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center">
+                    <Heart className="w-4 h-4 text-white" />
                   </div>
+                  <h3 className="font-semibold text-sm text-pink-900">My Nervous System</h3>
+                </div>
+                <p className="text-xs text-gray-600 mb-1">
+                  <span className="font-medium">Current State:</span> {checkIns?.[0]?.nervous_system_state || "Fawn"}
+                </p>
+                <p className="text-xs text-gray-600 mb-2">
+                  Your system is prioritizing safety today
+                </p>
+                <span className="text-xs text-pink-600 hover:text-pink-700 font-medium flex items-center gap-1">
+                  View nervous system guidance →
+                </span>
+              </button>
 
-                  {/* My Human Design */}
-                  <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
-                        <Sparkles className="w-4 h-4 text-white" />
-                      </div>
-                      <h3 className="font-semibold text-sm text-purple-900">My Human Design</h3>
-                    </div>
-                    <p className="text-xs text-gray-600 mb-1">
-                      <span className="font-medium">Type:</span> {diagnosticSession?.humanDesignProfile?.type || "Projector"}
-                    </p>
-                    <p className="text-xs text-gray-600 mb-1">
-                      <span className="font-medium">Authority:</span> {diagnosticSession?.humanDesignProfile?.authority || "Emotional"}
-                    </p>
-                    <p className="text-xs text-gray-500 mb-2">
-                      Discernment beats effort today
-                    </p>
-                    <button className="text-xs text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1">
-                      View cycle guidance →
-                    </button>
+              {/* My Human Design */}
+              <button 
+                onClick={() => handleSystemClick('human_design')}
+                className="w-full bg-purple-50 rounded-lg p-4 border border-purple-200 hover:shadow-md transition-shadow text-left"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                    <Target className="w-4 h-4 text-white" />
                   </div>
+                  <h3 className="font-semibold text-sm text-purple-900">My Human Design</h3>
+                </div>
+                <p className="text-xs text-gray-600 mb-1">
+                  <span className="font-medium">Type:</span> {diagnosticSession?.humanDesignProfile?.type || "Projector"}
+                </p>
+                <p className="text-xs text-gray-600 mb-1">
+                  <span className="font-medium">Authority:</span> {diagnosticSession?.humanDesignProfile?.authority || "Emotional"}
+                </p>
+                <p className="text-xs text-gray-500 mb-2">
+                  Discernment beats effort today
+                </p>
+                <span className="text-xs text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1">
+                  View design guidance →
+                </span>
+              </button>
 
-                  {/* My Cycle */}
-                  <div className="bg-indigo-50 rounded-lg p-4 border border-indigo-200">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
-                        <Moon className="w-4 h-4 text-white" />
-                      </div>
-                      <h3 className="font-semibold text-sm text-indigo-900">My Cycle</h3>
-                    </div>
-                    <p className="text-xs text-gray-600 mb-1">
-                      <span className="font-medium">Phase:</span> Luteal
-                    </p>
-                    <p className="text-xs text-gray-500 mb-2">
-                      Lower energy is natural in this phase. Adapt, don't push.
-                    </p>
-                    <button className="text-xs text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-1">
-                      View cycle guidance →
-                    </button>
+              {/* My Cycle */}
+              <button 
+                onClick={() => handleSystemClick('cycle')}
+                className="w-full bg-indigo-50 rounded-lg p-4 border border-indigo-200 hover:shadow-md transition-shadow text-left"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
+                    <Moon className="w-4 h-4 text-white" />
                   </div>
+                  <h3 className="font-semibold text-sm text-indigo-900">My Cycle</h3>
+                </div>
+                <p className="text-xs text-gray-600 mb-1">
+                  <span className="font-medium">Phase:</span> {checkIns?.[0]?.cycle_phase || diagnosticSession?.cycleProfile?.cycleStage || "Luteal"}
+                </p>
+                <p className="text-xs text-gray-500 mb-2">
+                  Lower energy is natural in this phase. Adapt, don't push.
+                </p>
+                <span className="text-xs text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-1">
+                  View cycle guidance →
+                </span>
+              </button>
 
-                  {/* My Astrology */}
-                  <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center">
-                        <Sparkles className="w-4 h-4 text-white" />
-                      </div>
-                      <h3 className="font-semibold text-sm text-amber-900">My Astrology</h3>
-                    </div>
-                    <div className="flex gap-2 mb-2">
-                      <Badge className="bg-amber-200 text-amber-900 text-xs">
-                        ☉ {diagnosticSession?.astrologyProfile?.sunSign || "Sagittarius"}
-                      </Badge>
-                    </div>
-                    <p className="text-xs text-gray-500 mb-2">
-                      {diagnosticSession?.astrologyProfile?.currentTransitSummary?.slice(0, 80) || "Current transits support vision and refinement"}...
-                    </p>
+              {/* My Astrology */}
+              <button 
+                onClick={() => handleSystemClick('astrology')}
+                className="w-full bg-amber-50 rounded-lg p-4 border border-amber-200 hover:shadow-md transition-shadow text-left"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-white" />
                   </div>
-                </CardContent>
-              </Card>
+                  <h3 className="font-semibold text-sm text-amber-900">My Astrology</h3>
+                </div>
+                <div className="flex gap-2 mb-2">
+                  <Badge className="bg-amber-200 text-amber-900 text-xs">
+                    ☉ {diagnosticSession?.astrologyProfile?.sunSign || "Sagittarius"}
+                  </Badge>
+                </div>
+                <p className="text-xs text-gray-500 mb-2">
+                  {diagnosticSession?.astrologyProfile?.currentTransitSummary?.slice(0, 80) || "Current transits support vision and refinement"}...
+                </p>
+              </button>
+            </CardContent>
+            </Card>
             </motion.div>
 
             {/* Your Life Domains */}
@@ -1064,6 +1180,19 @@ RESPONSE REQUIREMENTS:
 
 
       </div>
+
+      {/* System Detail Drawer */}
+      {selectedSystem && snapshotData && (
+        <SystemDetailDrawer
+          isOpen={!!selectedSystem}
+          onClose={() => setSelectedSystem(null)}
+          system={selectedSystem}
+          systemData={systemData}
+          snapshotContext={snapshotData}
+          currentUser={currentUser}
+          courses={relevantCourses}
+        />
+      )}
     </div>
   );
 }
