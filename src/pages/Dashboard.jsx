@@ -803,16 +803,94 @@ RESPONSE REQUIREMENTS:
                 </p>
               </CardHeader>
               <CardContent className="pt-2 pb-7 px-6">
-                <div className="flex flex-wrap gap-2 mb-6">
-                  <button className="group bg-gradient-to-br from-purple-100/80 via-purple-50/60 to-transparent backdrop-blur-sm rounded-full px-4 py-2.5 border border-purple-200/40 hover:border-purple-300/60 transition-all duration-300 hover:shadow-md hover:scale-105">
-                    <p className="text-xs text-purple-700 font-medium">Navigating a breakup</p>
-                  </button>
-                  <button className="group bg-gradient-to-br from-pink-100/80 via-pink-50/60 to-transparent backdrop-blur-sm rounded-full px-4 py-2.5 border border-pink-200/40 hover:border-pink-300/60 transition-all duration-300 hover:shadow-md hover:scale-105">
-                    <p className="text-xs text-pink-700 font-medium">Building without burnout</p>
-                  </button>
-                  <button className="group bg-gradient-to-br from-indigo-100/80 via-indigo-50/60 to-transparent backdrop-blur-sm rounded-full px-4 py-2.5 border border-indigo-200/40 hover:border-indigo-300/60 transition-all duration-300 hover:shadow-md hover:scale-105">
-                    <p className="text-xs text-indigo-700 font-medium">Cycle-aware work & life</p>
-                  </button>
+                {/* Active Members */}
+                <div className="flex items-center gap-3 mb-6 overflow-x-auto pb-2 scrollbar-hide">
+                  <div className="flex-shrink-0 text-center">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-pink-200 to-rose-200 flex items-center justify-center mb-1 relative">
+                      <span className="text-xl">👩🏻</span>
+                      <div className="absolute bottom-0 right-0 w-5 h-5 bg-gradient-to-br from-purple-400 to-indigo-400 rounded-full flex items-center justify-center border-2 border-white">
+                        <span className="text-white text-xs">+</span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-600 font-light">Sarah J</p>
+                  </div>
+                  <div className="flex-shrink-0 text-center">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-200 to-indigo-200 flex items-center justify-center mb-1 relative">
+                      <span className="text-xl">👩🏼</span>
+                      <div className="absolute bottom-0 right-0 w-5 h-5 bg-gradient-to-br from-purple-400 to-indigo-400 rounded-full flex items-center justify-center border-2 border-white">
+                        <span className="text-white text-xs">+</span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-600 font-light">Emma R</p>
+                  </div>
+                  <div className="flex-shrink-0 text-center">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-200 to-pink-200 flex items-center justify-center mb-1 relative">
+                      <span className="text-xl">👩🏾</span>
+                      <div className="absolute bottom-0 right-0 w-5 h-5 bg-gradient-to-br from-purple-400 to-indigo-400 rounded-full flex items-center justify-center border-2 border-white">
+                        <span className="text-white text-xs">+</span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-600 font-light">Maya K</p>
+                  </div>
+                  <div className="flex-shrink-0 text-center">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-rose-200 to-pink-200 flex items-center justify-center mb-1 relative">
+                      <span className="text-xl">👩🏻</span>
+                      <div className="absolute bottom-0 right-0 w-5 h-5 bg-gradient-to-br from-purple-400 to-indigo-400 rounded-full flex items-center justify-center border-2 border-white">
+                        <span className="text-white text-xs">+</span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-600 font-light">Lisa M</p>
+                  </div>
+                </div>
+
+                {/* Upcoming Today */}
+                <div className="mb-5">
+                  <h3 className="text-sm font-medium text-gray-900 mb-3">Upcoming Today</h3>
+                  <div className="bg-gradient-to-br from-amber-50/80 via-orange-50/60 to-transparent rounded-2xl p-4 border border-amber-100/50">
+                    <p className="text-xs text-amber-600 font-medium mb-1">4:30 PM</p>
+                    <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">COMMUNITY CIRCLE</p>
+                    <p className="text-sm text-gray-900 font-light">Navigating career transitions with grace</p>
+                  </div>
+                </div>
+
+                {/* Ongoing */}
+                <div className="mb-6">
+                  <h3 className="text-sm font-medium text-gray-900 mb-3">Ongoing</h3>
+                  <div className="space-y-2">
+                    <button className="w-full group bg-gradient-to-br from-purple-100/80 via-purple-50/60 to-transparent backdrop-blur-sm rounded-2xl px-4 py-3 border border-purple-200/40 hover:border-purple-300/60 transition-all duration-300 hover:shadow-md text-left">
+                      <p className="text-xs text-purple-700 font-medium mb-1">Navigating a breakup</p>
+                      <div className="flex items-center gap-1">
+                        <div className="flex -space-x-2">
+                          <div className="w-5 h-5 rounded-full bg-pink-300 border-2 border-white" />
+                          <div className="w-5 h-5 rounded-full bg-purple-300 border-2 border-white" />
+                          <div className="w-5 h-5 rounded-full bg-indigo-300 border-2 border-white" />
+                        </div>
+                        <span className="text-xs text-gray-500 font-light ml-1">24 members</span>
+                      </div>
+                    </button>
+                    <button className="w-full group bg-gradient-to-br from-pink-100/80 via-pink-50/60 to-transparent backdrop-blur-sm rounded-2xl px-4 py-3 border border-pink-200/40 hover:border-pink-300/60 transition-all duration-300 hover:shadow-md text-left">
+                      <p className="text-xs text-pink-700 font-medium mb-1">Building without burnout</p>
+                      <div className="flex items-center gap-1">
+                        <div className="flex -space-x-2">
+                          <div className="w-5 h-5 rounded-full bg-rose-300 border-2 border-white" />
+                          <div className="w-5 h-5 rounded-full bg-pink-300 border-2 border-white" />
+                          <div className="w-5 h-5 rounded-full bg-fuchsia-300 border-2 border-white" />
+                        </div>
+                        <span className="text-xs text-gray-500 font-light ml-1">32 members</span>
+                      </div>
+                    </button>
+                    <button className="w-full group bg-gradient-to-br from-indigo-100/80 via-indigo-50/60 to-transparent backdrop-blur-sm rounded-2xl px-4 py-3 border border-indigo-200/40 hover:border-indigo-300/60 transition-all duration-300 hover:shadow-md text-left">
+                      <p className="text-xs text-indigo-700 font-medium mb-1">Cycle-aware work & life</p>
+                      <div className="flex items-center gap-1">
+                        <div className="flex -space-x-2">
+                          <div className="w-5 h-5 rounded-full bg-indigo-300 border-2 border-white" />
+                          <div className="w-5 h-5 rounded-full bg-blue-300 border-2 border-white" />
+                          <div className="w-5 h-5 rounded-full bg-violet-300 border-2 border-white" />
+                        </div>
+                        <span className="text-xs text-gray-500 font-light ml-1">18 members</span>
+                      </div>
+                    </button>
+                  </div>
                 </div>
 
                 <Link to={createPageUrl("Community")}>
