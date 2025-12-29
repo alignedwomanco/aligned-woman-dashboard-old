@@ -7,6 +7,7 @@ import Classroom from './pages/Classroom';
 import Community from './pages/Community';
 import Contact from './pages/Contact';
 import DailyCheckIn from './pages/DailyCheckIn';
+import Dashboard from './pages/Dashboard';
 import DefineMyPurpose from './pages/DefineMyPurpose';
 import Experts from './pages/Experts';
 import ExpertsDirectory from './pages/ExpertsDirectory';
@@ -29,7 +30,6 @@ import Progress from './pages/Progress';
 import Settings from './pages/Settings';
 import Support from './pages/Support';
 import ToolsHub from './pages/ToolsHub';
-import Dashboard from './pages/Dashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -43,6 +43,7 @@ export const PAGES = {
     "Community": Community,
     "Contact": Contact,
     "DailyCheckIn": DailyCheckIn,
+    "Dashboard": Dashboard,
     "DefineMyPurpose": DefineMyPurpose,
     "Experts": Experts,
     "ExpertsDirectory": ExpertsDirectory,
@@ -65,7 +66,6 @@ export const PAGES = {
     "Settings": Settings,
     "Support": Support,
     "ToolsHub": ToolsHub,
-    "Dashboard": Dashboard,
 }
 
 export const pagesConfig = {

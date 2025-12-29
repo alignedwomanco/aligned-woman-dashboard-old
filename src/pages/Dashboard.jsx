@@ -417,20 +417,20 @@ RESPONSE REQUIREMENTS:
                 </Link>
 
                 {/* My Cycle */}
-                <Link to={createPageUrl("MyCycle")} className="block">
-                  <div className="bg-white/70 backdrop-blur-sm rounded-lg p-3 hover:bg-white/90 transition-all border border-indigo-200/50">
-                    <div className="flex items-start gap-2.5">
-                      <div className="w-8 h-8 bg-gradient-to-br from-indigo-400 to-indigo-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Moon className="w-4 h-4 text-white" />
+                <Link to={createPageUrl("MyCycle")} className="block group">
+                  <div className="bg-white/80 backdrop-blur-md rounded-xl p-4 hover:bg-white/90 transition-all duration-300 border-0 shadow-[0_2px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_4px_30px_rgba(0,0,0,0.08)]">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-indigo-400/90 to-blue-400/90 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+                        <Moon className="w-4 h-4 text-white" strokeWidth={1.5} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-900 mb-0.5 text-sm">My Cycle</h3>
-                        <p className="text-xs text-gray-600 mb-1">
-                          <span className="font-medium">Phase:</span> {checkIns?.[0]?.cycle_phase || "Luteal"}
+                        <h3 className="font-medium text-gray-900 mb-1 text-sm tracking-tight">My Cycle</h3>
+                        <p className="text-xs text-gray-500 mb-1">
+                          <span className="font-medium text-gray-700">Phase:</span> {checkIns?.[0]?.cycle_phase || "Luteal"}
                         </p>
-                        <p className="text-xs text-gray-500 leading-snug">Turning inward, discernment, and expression.</p>
-                        <Button variant="link" className="text-xs text-purple-600 p-0 h-auto mt-1.5">
-                          View cycle guidance →
+                        <p className="text-xs text-gray-400 leading-relaxed">Turning inward, discernment, and expression.</p>
+                        <Button variant="link" className="text-xs text-purple-500 p-0 h-auto mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          View guidance →
                         </Button>
                       </div>
                     </div>
@@ -440,114 +440,114 @@ RESPONSE REQUIREMENTS:
             </Card>
 
             {/* Your Life Domains */}
-            <Card className="bg-gradient-to-br from-purple-100/60 to-indigo-100/60 border-purple-200/50 shadow-sm">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-base font-semibold flex items-center gap-2">
-                  <Target className="w-4 h-4 text-purple-600" />
+            <Card className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl">
+              <CardHeader className="pb-5">
+                <CardTitle className="text-sm font-medium text-gray-600 tracking-wide uppercase flex items-center gap-2">
+                  <Target className="w-3.5 h-3.5 text-gray-400" strokeWidth={1.5} />
                   Your Life Domains
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 pt-0">
-                <div className="bg-white/70 backdrop-blur-sm rounded-lg p-3 border border-gray-200/50">
-                  <h3 className="font-semibold text-gray-900 mb-1.5 text-sm">Business • Career</h3>
-                  <p className="text-xs text-gray-600 mb-1">Current theme:</p>
-                  <p className="text-sm text-gray-700">Clarity before momentum</p>
-                  <Button variant="link" className="text-xs text-purple-600 p-0 h-auto mt-1.5">
-                    View work guidance guidance →
+                <div className="bg-white/80 backdrop-blur-md rounded-xl p-4 border-0 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
+                  <h3 className="font-medium text-gray-900 mb-2 text-sm tracking-tight">Business • Career</h3>
+                  <p className="text-xs text-gray-500 mb-1">Current theme:</p>
+                  <p className="text-sm text-gray-700 font-light">Clarity before momentum</p>
+                  <Button variant="link" className="text-xs text-purple-500 p-0 h-auto mt-2">
+                    View guidance →
                   </Button>
                 </div>
-                <div className="bg-white/70 backdrop-blur-sm rounded-lg p-3 border border-gray-200/50">
-                  <h3 className="font-semibold text-gray-900 mb-1.5 text-sm flex items-center gap-2">
+                <div className="bg-white/80 backdrop-blur-md rounded-xl p-4 border-0 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
+                  <h3 className="font-medium text-gray-900 mb-2 text-sm flex items-center gap-2 tracking-tight">
                     Finance
-                    <Badge variant="secondary" className="text-xs">Intention</Badge>
+                    <Badge variant="secondary" className="text-xs bg-purple-100/80 text-purple-700 border-0 font-normal">Intention</Badge>
                   </h3>
-                  <p className="text-xs text-gray-600 mb-2">Resources & visibility progress</p>
-                  <Progress value={45} className="h-2 mb-2" />
+                  <p className="text-xs text-gray-500 mb-3">Resources & visibility progress</p>
+                  <Progress value={45} className="h-1.5 mb-2" />
                 </div>
               </CardContent>
             </Card>
           </div>
 
           {/* Main Content - Center */}
-          <div className="lg:col-span-6 space-y-5">
+          <div className="lg:col-span-6 space-y-6">
             {/* Daily ALIVE Snapshot */}
-            <Card className="bg-gradient-to-br from-[#3B224E] to-[#4A2B5E] text-white border-0 shadow-xl">
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-center mb-4">
+            <Card className="bg-gradient-to-br from-[#2A1A3C]/95 via-[#3B224E]/95 to-[#4A2B5E]/95 text-white border-0 shadow-[0_20px_60px_rgba(0,0,0,0.12)] backdrop-blur-xl rounded-3xl overflow-hidden">
+              <CardHeader className="pb-6 pt-7">
+                <div className="flex items-center justify-center mb-6">
                   <Tabs value={snapshotView} onValueChange={setSnapshotView} className="w-auto">
-                    <TabsList className="bg-white/10 border-0">
-                      <TabsTrigger value={SNAPSHOT_VIEWS.DAILY} className="data-[state=active]:bg-white/20 data-[state=active]:text-white text-sm">
+                    <TabsList className="bg-white/10 backdrop-blur-md border-0 rounded-full p-1">
+                      <TabsTrigger value={SNAPSHOT_VIEWS.DAILY} className="data-[state=active]:bg-white/20 data-[state=active]:text-white text-white/70 text-sm rounded-full px-4">
                         Daily
                       </TabsTrigger>
-                      <TabsTrigger value={SNAPSHOT_VIEWS.WEEKLY} className="data-[state=active]:bg-white/20 data-[state=active]:text-white text-sm">
+                      <TabsTrigger value={SNAPSHOT_VIEWS.WEEKLY} className="data-[state=active]:bg-white/20 data-[state=active]:text-white text-white/70 text-sm rounded-full px-4">
                         Weekly
                       </TabsTrigger>
-                      <TabsTrigger value={SNAPSHOT_VIEWS.MONTHLY} className="data-[state=active]:bg-white/20 data-[state=active]:text-white text-sm">
+                      <TabsTrigger value={SNAPSHOT_VIEWS.MONTHLY} className="data-[state=active]:bg-white/20 data-[state=active]:text-white text-white/70 text-sm rounded-full px-4">
                         Monthly
                       </TabsTrigger>
                     </TabsList>
                   </Tabs>
                 </div>
-                <CardTitle className="text-xl text-center">Your Daily ALIVE Snapshot</CardTitle>
+                <CardTitle className="text-xl text-center font-light tracking-tight">Your Daily ALIVE Snapshot</CardTitle>
               </CardHeader>
-              <CardContent className="pt-0">
+              <CardContent className="pt-0 pb-8">
                 {isGeneratingSnapshot ? (
-                  <div className="flex flex-col items-center justify-center py-8">
-                    <div className="animate-spin w-8 h-8 border-2 border-white/20 border-t-white rounded-full mb-4" />
-                    <p className="text-white/80 text-sm">Understanding your state today...</p>
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <div className="animate-spin w-8 h-8 border border-white/20 border-t-white rounded-full mb-4" />
+                    <p className="text-white/70 text-sm font-light">Understanding your state today...</p>
                   </div>
                 ) : snapshotData ? (
-                  <div className="space-y-5">
+                  <div className="space-y-8">
                     {/* System Icons */}
-                    <div className="flex justify-center items-center gap-3 mb-5">
+                    <div className="flex justify-center items-center gap-4 mb-6">
                       {snapshotData.astrology?.sunSign && (
                         <div className="text-center">
-                          <div className="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-full flex flex-col items-center justify-center mb-1.5">
-                            <Sparkles className="w-5 h-5 text-amber-300" />
+                          <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-2 shadow-lg">
+                            <Sparkles className="w-5 h-5 text-amber-300/90" strokeWidth={1.5} />
                           </div>
-                          <p className="text-xs text-white/80">{snapshotData.astrology.sunSign}</p>
+                          <p className="text-xs text-white/70 font-light">{snapshotData.astrology.sunSign}</p>
                         </div>
                       )}
                       <div className="text-center">
-                        <div className="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-full flex flex-col items-center justify-center mb-1.5">
-                          <Target className="w-5 h-5 text-purple-300" />
+                        <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-2 shadow-lg">
+                          <Target className="w-5 h-5 text-purple-300/90" strokeWidth={1.5} />
                         </div>
-                        <p className="text-xs text-white/80">{snapshotData.humanDesign?.type || "Projector"}</p>
+                        <p className="text-xs text-white/70 font-light">{snapshotData.humanDesign?.type || "Projector"}</p>
                       </div>
                       <div className="text-center">
-                        <div className="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-full flex flex-col items-center justify-center mb-1.5">
-                          <Moon className="w-5 h-5 text-indigo-300" />
+                        <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-2 shadow-lg">
+                          <Moon className="w-5 h-5 text-indigo-300/90" strokeWidth={1.5} />
                         </div>
-                        <p className="text-xs text-white/80">{snapshotData.cyclePhase}</p>
+                        <p className="text-xs text-white/70 font-light">{snapshotData.cyclePhase}</p>
                       </div>
                       <div className="text-center">
-                        <div className="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-full flex flex-col items-center justify-center mb-1.5">
-                          <Heart className="w-5 h-5 text-pink-300" />
+                        <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-2 shadow-lg">
+                          <Heart className="w-5 h-5 text-pink-300/90" strokeWidth={1.5} />
                         </div>
-                        <p className="text-xs text-white/80">{snapshotData.nervousSystemState}</p>
+                        <p className="text-xs text-white/70 font-light">{snapshotData.nervousSystemState}</p>
                       </div>
                       <div className="text-center">
-                        <div className="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-full flex flex-col items-center justify-center mb-1.5">
-                          <TrendingUp className="w-5 h-5 text-purple-300" />
+                        <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-2 shadow-lg">
+                          <TrendingUp className="w-5 h-5 text-purple-300/90" strokeWidth={1.5} />
                         </div>
-                        <p className="text-xs text-white/80">{snapshotData.alivePhase}</p>
+                        <p className="text-xs text-white/70 font-light">{snapshotData.alivePhase}</p>
                       </div>
                     </div>
 
                     {/* Main Narrative */}
-                    <div className="text-center mb-5">
-                      <h3 className="text-lg font-semibold mb-3">{snapshotData.guidingPhrase}</h3>
-                      <p className="text-white/90 leading-relaxed whitespace-pre-line text-sm">{snapshotData.narrative}</p>
+                    <div className="text-center mb-6 px-4">
+                      <h3 className="text-xl font-light mb-6 tracking-tight leading-relaxed">{snapshotData.guidingPhrase}</h3>
+                      <p className="text-white/80 leading-relaxed whitespace-pre-line text-sm font-light max-w-2xl mx-auto">{snapshotData.narrative}</p>
                     </div>
 
                     {/* CTA Button */}
-                    <div className="bg-gradient-to-r from-pink-500 to-rose-500 rounded-full py-2.5 px-6 text-center">
-                      <p className="text-white font-medium text-sm">Less effort. More alignment.</p>
+                    <div className="bg-gradient-to-r from-pink-500/90 to-rose-500/90 rounded-full py-3 px-8 text-center backdrop-blur-sm shadow-lg">
+                      <p className="text-white font-light text-sm tracking-wide">Less effort. More alignment.</p>
                     </div>
                   </div>
                 ) : (
-                  <div className="text-center py-8">
-                    <Button onClick={generateSnapshot} className="bg-white/20 hover:bg-white/30 text-white text-sm">
+                  <div className="text-center py-12">
+                    <Button onClick={generateSnapshot} className="bg-white/20 hover:bg-white/30 text-white text-sm font-light rounded-full px-8 py-6 backdrop-blur-sm">
                       Generate Today&apos;s Snapshot
                     </Button>
                   </div>
@@ -556,23 +556,23 @@ RESPONSE REQUIREMENTS:
             </Card>
 
             {/* Ask LaurAI */}
-            <Card className="bg-gradient-to-br from-pink-50 to-purple-50 border-pink-200/50 shadow-sm">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center flex-shrink-0">
-                    <Sparkles className="w-5 h-5 text-white" />
+            <Card className="bg-white/70 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-400/90 to-purple-500/90 flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <Sparkles className="w-5 h-5 text-white" strokeWidth={1.5} />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 text-sm">Ask LaurAI about today</h3>
+                    <h3 className="font-medium text-gray-900 text-sm tracking-tight">Ask LaurAI about today</h3>
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-1.5 mb-3">
+                <div className="flex flex-wrap gap-2 mb-4">
                   <Button
                     onClick={() => handleQuickQuestion("How should I work today?")}
                     variant="outline"
                     size="sm"
-                    className="text-xs h-7 px-2.5"
+                    className="text-xs h-8 px-4 rounded-full border-gray-200/50 hover:bg-gray-50/50 font-light"
                   >
                     How should I work today?
                   </Button>
@@ -580,7 +580,7 @@ RESPONSE REQUIREMENTS:
                     onClick={() => handleQuickQuestion("Why does this feel harder than usual?")}
                     variant="outline"
                     size="sm"
-                    className="text-xs h-7 px-2.5"
+                    className="text-xs h-8 px-4 rounded-full border-gray-200/50 hover:bg-gray-50/50 font-light"
                   >
                     Why does this feel harder than usual?
                   </Button>
@@ -588,7 +588,7 @@ RESPONSE REQUIREMENTS:
                     onClick={() => handleQuickQuestion("What should I focus on this week?")}
                     variant="outline"
                     size="sm"
-                    className="text-xs h-7 px-2.5"
+                    className="text-xs h-8 px-4 rounded-full border-gray-200/50 hover:bg-gray-50/50 font-light"
                   >
                     What should I focus on this week?
                   </Button>
@@ -598,9 +598,9 @@ RESPONSE REQUIREMENTS:
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-3 bg-white rounded-lg p-3"
+                    className="mb-4 bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-sm"
                   >
-                    <p className="text-xs text-gray-700 whitespace-pre-line leading-relaxed">
+                    <p className="text-xs text-gray-700 whitespace-pre-line leading-relaxed font-light">
                       {lauraiResponse}
                     </p>
                   </motion.div>
@@ -609,28 +609,28 @@ RESPONSE REQUIREMENTS:
             </Card>
 
             {/* Recommended For You */}
-            <Card className="bg-gradient-to-br from-[#3B224E] to-[#4A2B5E] text-white border-0 shadow-md">
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <Sparkles className="w-4 h-4" />
+            <Card className="bg-gradient-to-br from-[#2A1A3C]/95 via-[#3B224E]/95 to-[#4A2B5E]/95 text-white border-0 shadow-[0_20px_60px_rgba(0,0,0,0.12)] backdrop-blur-xl rounded-3xl overflow-hidden">
+              <CardHeader className="pb-5 pt-6">
+                <CardTitle className="flex items-center gap-2 text-base font-light tracking-tight">
+                  <Sparkles className="w-4 h-4" strokeWidth={1.5} />
                   Recommended For You Right Now
                 </CardTitle>
               </CardHeader>
-              <CardContent className="pt-0">
-                <div className="grid md:grid-cols-2 gap-3">
+              <CardContent className="pt-0 pb-6">
+                <div className="grid md:grid-cols-2 gap-4">
                   {recommendedModules.slice(0, 2).map((module, idx) => (
-                    <div key={idx} className="bg-gradient-to-br from-purple-400/20 to-pink-400/20 backdrop-blur-sm rounded-lg p-4 border border-white/10">
-                      <h3 className="font-semibold text-white mb-2 text-sm">{module.title}</h3>
-                      <p className="text-xs text-white/80 mb-3 line-clamp-2">{module.summary}</p>
-                      <div className="flex items-center gap-2 text-xs text-white/70 mb-3">
-                        <Clock className="w-3 h-3" />
-                        <span>{module.duration} min • Video</span>
+                    <div key={idx} className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border-0 shadow-lg hover:bg-white/15 transition-all duration-300">
+                      <h3 className="font-medium text-white mb-3 text-sm tracking-tight leading-snug">{module.title}</h3>
+                      <p className="text-xs text-white/70 mb-4 line-clamp-2 font-light leading-relaxed">{module.summary}</p>
+                      <div className="flex items-center gap-2 text-xs text-white/60 mb-4">
+                        <Clock className="w-3 h-3" strokeWidth={1.5} />
+                        <span className="font-light">{module.duration} min • Video</span>
                       </div>
-                      <div className="flex flex-wrap gap-1.5 mb-3">
-                        <Badge variant="secondary" className="text-xs bg-white/20 text-white border-0 h-5">Lowest lift</Badge>
-                        <Badge variant="secondary" className="text-xs bg-white/20 text-white border-0 h-5">Manifestation today</Badge>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <Badge variant="secondary" className="text-xs bg-white/15 text-white/90 border-0 h-6 rounded-full font-light">Lowest lift</Badge>
+                        <Badge variant="secondary" className="text-xs bg-white/15 text-white/90 border-0 h-6 rounded-full font-light">Manifestation today</Badge>
                       </div>
-                      <Button className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white text-sm h-8">
+                      <Button className="w-full bg-gradient-to-r from-pink-500/90 to-rose-500/90 hover:from-pink-500 hover:to-rose-500 text-white text-sm h-9 rounded-full font-light shadow-lg">
                         Start
                       </Button>
                     </div>
@@ -641,107 +641,109 @@ RESPONSE REQUIREMENTS:
           </div>
 
           {/* Right Sidebar */}
-          <div className="lg:col-span-3 space-y-5">
+          <div className="lg:col-span-3 space-y-4">
             {/* Cycle & Capacity */}
-            <Card className="bg-gradient-to-br from-pink-400 to-rose-500 text-white border-0 shadow-md">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Moon className="w-4 h-4" />
+            <Card className="bg-gradient-to-br from-pink-400/95 via-pink-500/95 to-rose-500/95 text-white border-0 shadow-[0_12px_40px_rgba(236,72,153,0.25)] backdrop-blur-xl rounded-3xl overflow-hidden">
+              <CardHeader className="pb-4 pt-6">
+                <CardTitle className="text-sm flex items-center gap-2 font-light tracking-tight">
+                  <Moon className="w-4 h-4" strokeWidth={1.5} />
                   Cycle & Capacity
                 </CardTitle>
               </CardHeader>
-              <CardContent className="pt-0">
-                <div className="text-center mb-3">
-                  <p className="text-white/80 text-sm mb-1">{checkIns?.[0]?.cycle_phase || "Luteal"}</p>
-                  <p className="text-4xl font-bold">{diagnosticSession?.capacityScore || 5.5}</p>
+              <CardContent className="pt-0 pb-6">
+                <div className="text-center mb-4">
+                  <p className="text-white/80 text-sm mb-2 font-light">{checkIns?.[0]?.cycle_phase || "Luteal"}</p>
+                  <p className="text-5xl font-extralight tracking-tight">{diagnosticSession?.capacityScore || 5.5}</p>
                 </div>
-                <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
-                  <Progress value={(diagnosticSession?.capacityScore || 5.5) * 10} className="h-2 bg-white/30 mb-2" />
-                  <p className="text-white/90 text-xs">Gentle movement & warm foods</p>
+                <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4">
+                  <Progress value={(diagnosticSession?.capacityScore || 5.5) * 10} className="h-1.5 bg-white/20 mb-3" />
+                  <p className="text-white/90 text-xs font-light">Gentle movement & warm foods</p>
                 </div>
               </CardContent>
             </Card>
 
             {/* Recent Activity */}
-            <Card className="bg-purple-100/60 border-purple-200/50 shadow-sm">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base">Recent Activity</CardTitle>
+            <Card className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-sm font-medium text-gray-600 tracking-wide uppercase">Recent Activity</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-                    <span className="text-gray-600">Thu</span>
+                <div className="space-y-2.5">
+                  <div className="flex items-center gap-2.5 text-xs">
+                    <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                    <span className="text-gray-500 font-light">Thu</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-                    <span className="text-gray-600">Feb</span>
+                  <div className="flex items-center gap-2.5 text-xs">
+                    <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                    <span className="text-gray-500 font-light">Feb</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-                    <span className="text-gray-600">Mar</span>
+                  <div className="flex items-center gap-2.5 text-xs">
+                    <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                    <span className="text-gray-500 font-light">Mar</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-                    <span className="text-gray-600">Apr</span>
+                  <div className="flex items-center gap-2.5 text-xs">
+                    <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                    <span className="text-gray-500 font-light">Apr</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-                    <span className="text-gray-600">May</span>
+                  <div className="flex items-center gap-2.5 text-xs">
+                    <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                    <span className="text-gray-500 font-light">May</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-                    <span className="text-gray-600">Jun</span>
+                  <div className="flex items-center gap-2.5 text-xs">
+                    <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                    <span className="text-gray-500 font-light">Jun</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-                    <span className="text-gray-600">Jul</span>
+                  <div className="flex items-center gap-2.5 text-xs">
+                    <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                    <span className="text-gray-500 font-light">Jul</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-                    <span className="text-gray-600">Jul</span>
+                  <div className="flex items-center gap-2.5 text-xs">
+                    <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                    <span className="text-gray-500 font-light">Jul</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs">
-                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-                    <span className="text-gray-600">Jul</span>
+                  <div className="flex items-center gap-2.5 text-xs">
+                    <div className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                    <span className="text-gray-500 font-light">Jul</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             {/* Body Patterns */}
-            <Card className="bg-purple-100/60 border-purple-200/50 shadow-sm">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base">Body Patterns</CardTitle>
+            <Card className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-sm font-medium text-gray-600 tracking-wide uppercase">Body Patterns</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="h-24 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg flex items-center justify-center mb-3">
-                  <svg className="w-full h-full px-2" viewBox="0 0 200 80">
+                <div className="h-28 bg-gradient-to-br from-purple-50/50 to-pink-50/50 rounded-xl flex items-center justify-center mb-4">
+                  <svg className="w-full h-full px-3" viewBox="0 0 200 80">
                     <path
                       d="M 0 40 Q 25 20, 50 40 T 100 40 T 150 40 T 200 40"
                       stroke="#C67793"
-                      strokeWidth="2"
+                      strokeWidth="1.5"
                       fill="none"
+                      opacity="0.8"
                     />
                     <path
                       d="M 0 50 Q 25 30, 50 50 T 100 50 T 150 50 T 200 50"
                       stroke="#9333EA"
-                      strokeWidth="2"
+                      strokeWidth="1.5"
                       fill="none"
+                      opacity="0.8"
                     />
                   </svg>
                 </div>
                 <div className="flex justify-center gap-2">
-                  <Button variant="outline" size="sm" className="text-xs h-7 px-2.5">
+                  <Button variant="outline" size="sm" className="text-xs h-8 px-3 rounded-full border-gray-200/50 hover:bg-gray-50/50 font-light">
                     Daily
                   </Button>
-                  <Button variant="outline" size="sm" className="text-xs h-7 px-2.5">
+                  <Button variant="outline" size="sm" className="text-xs h-8 px-3 rounded-full border-gray-200/50 hover:bg-gray-50/50 font-light">
                     Weekly
                   </Button>
-                  <Button size="sm" className="text-xs h-7 px-2.5 bg-pink-500 hover:bg-pink-600">
+                  <Button size="sm" className="text-xs h-8 px-3 bg-pink-500/90 hover:bg-pink-500 rounded-full font-light shadow-sm">
                     Monthly
                   </Button>
-                  <Button variant="outline" size="sm" className="text-xs h-7 px-2.5">
+                  <Button variant="outline" size="sm" className="text-xs h-8 px-3 rounded-full border-gray-200/50 hover:bg-gray-50/50 font-light">
                     Jul
                   </Button>
                 </div>
@@ -749,24 +751,24 @@ RESPONSE REQUIREMENTS:
             </Card>
 
             {/* Stress & Energy Patterns Placeholder */}
-            <Card className="bg-purple-100/60 border-purple-200/50 shadow-sm">
-              <CardHeader className="pb-3">
+            <Card className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl">
+              <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-base">Your Stress & Energy Patterns</CardTitle>
+                  <CardTitle className="text-sm font-medium text-gray-600 tracking-wide uppercase">Your Stress & Energy Patterns</CardTitle>
                   <div className="flex gap-1">
-                    <Button variant="ghost" size="icon" className="h-6 w-6">
-                      <ChevronLeft className="w-3 h-3" />
+                    <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full hover:bg-gray-100/50">
+                      <ChevronLeft className="w-3.5 h-3.5" strokeWidth={1.5} />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-6 w-6">
-                      <ChevronRight className="w-3 h-3" />
+                    <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full hover:bg-gray-100/50">
+                      <ChevronRight className="w-3.5 h-3.5" strokeWidth={1.5} />
                     </Button>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="text-center mb-3">
-                  <p className="text-sm font-semibold">May 2024</p>
-                  <div className="flex justify-between text-xs text-gray-600 mt-2 mb-1">
+                <div className="text-center mb-4">
+                  <p className="text-sm font-medium text-gray-700">May 2024</p>
+                  <div className="flex justify-between text-xs text-gray-400 mt-3 mb-2 font-light">
                     <span>Sun</span>
                     <span>Mon</span>
                     <span>Tue</span>
@@ -775,45 +777,45 @@ RESPONSE REQUIREMENTS:
                     <span>Fri</span>
                     <span>Sat</span>
                   </div>
-                  <div className="grid grid-cols-7 gap-1">
+                  <div className="grid grid-cols-7 gap-1.5">
                     {Array.from({ length: 31 }).map((_, i) => (
-                      <div key={i} className="aspect-square rounded-full bg-pink-200/50" />
+                      <div key={i} className="aspect-square rounded-full bg-pink-200/40" />
                     ))}
                   </div>
                 </div>
-                <div className="flex justify-center gap-3 text-xs mb-3">
-                  <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 rounded-full bg-green-400" />
-                    <span>Regulated</span>
+                <div className="flex justify-center gap-4 text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-green-400/90" />
+                    <span className="text-gray-500 font-light">Regulated</span>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 rounded-full bg-pink-400" />
-                    <span>Mild Stress</span>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-pink-400/90" />
+                    <span className="text-gray-500 font-light">Mild Stress</span>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 rounded-full bg-red-400" />
-                    <span>High S</span>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-red-400/90" />
+                    <span className="text-gray-500 font-light">High S</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             {/* Quick Action Buttons */}
-            <div className="flex flex-wrap gap-1.5">
-              <Button variant="outline" size="sm" className="flex items-center gap-1.5 text-xs h-7 px-2.5">
-                <Edit3 className="w-3 h-3" />
+            <div className="flex flex-wrap gap-2">
+              <Button variant="outline" size="sm" className="flex items-center gap-2 text-xs h-9 px-4 rounded-full border-gray-200/50 hover:bg-gray-50/50 font-light">
+                <Edit3 className="w-3.5 h-3.5" strokeWidth={1.5} />
                 Reflect
               </Button>
-              <Button variant="outline" size="sm" className="flex items-center gap-1.5 text-xs h-7 px-2.5">
-                <Activity className="w-3 h-3" />
+              <Button variant="outline" size="sm" className="flex items-center gap-2 text-xs h-9 px-4 rounded-full border-gray-200/50 hover:bg-gray-50/50 font-light">
+                <Activity className="w-3.5 h-3.5" strokeWidth={1.5} />
                 Regulate
               </Button>
-              <Button variant="outline" size="sm" className="flex items-center gap-1.5 text-xs h-7 px-2.5">
-                <Moon className="w-3 h-3" />
+              <Button variant="outline" size="sm" className="flex items-center gap-2 text-xs h-9 px-4 rounded-full border-gray-200/50 hover:bg-gray-50/50 font-light">
+                <Moon className="w-3.5 h-3.5" strokeWidth={1.5} />
                 Cycle
               </Button>
-              <Button variant="outline" size="sm" className="flex items-center gap-1.5 text-xs h-7 px-2.5">
-                <Moon className="w-3 h-3" />
+              <Button variant="outline" size="sm" className="flex items-center gap-2 text-xs h-9 px-4 rounded-full border-gray-200/50 hover:bg-gray-50/50 font-light">
+                <Moon className="w-3.5 h-3.5" strokeWidth={1.5} />
                 Sleep
               </Button>
             </div>
