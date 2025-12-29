@@ -882,6 +882,96 @@ This should feel RELIEVING, not demanding.`;
           </Card>
         </motion.div>
 
+        {/* Meditations for Luteal Phase */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.39 }}
+        >
+          <Card className="mb-6">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-purple-500" />
+                    Meditations for {phaseInfo.name} Phase
+                  </CardTitle>
+                  <p className="text-sm text-gray-600 mt-1">Calm your nervous system and find your center</p>
+                </div>
+                <Button variant="ghost" className="text-indigo-600 text-sm">
+                  View all <ChevronRight className="w-4 h-4 ml-1" />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all">
+                  <div className="aspect-video relative">
+                    <img 
+                      src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=300&fit=crop" 
+                      alt="Woman meditating"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-white font-semibold mb-1">Letting Go Meditation</h3>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3 h-3 text-white/80" />
+                        <span className="text-xs text-white/80">15 min</span>
+                      </div>
+                    </div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-purple-600 border-b-[6px] border-b-transparent ml-1" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all">
+                  <div className="aspect-video relative">
+                    <img 
+                      src="https://images.unsplash.com/photo-1593811167562-9cef47bfc4a7?w=400&h=300&fit=crop" 
+                      alt="Peaceful meditation"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-white font-semibold mb-1">Body Scan for Rest</h3>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3 h-3 text-white/80" />
+                        <span className="text-xs text-white/80">10 min</span>
+                      </div>
+                    </div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-purple-600 border-b-[6px] border-b-transparent ml-1" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="group relative rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition-all">
+                  <div className="aspect-video relative">
+                    <img 
+                      src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=400&h=300&fit=crop" 
+                      alt="Evening meditation"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-white font-semibold mb-1">Inner Wisdom Practice</h3>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3 h-3 text-white/80" />
+                        <span className="text-xs text-white/80">12 min</span>
+                      </div>
+                    </div>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="w-0 h-0 border-t-[6px] border-t-transparent border-l-[10px] border-l-purple-600 border-b-[6px] border-b-transparent ml-1" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
         {/* Recommended For You */}
         {recommendedCourses.length > 0 && (
           <motion.div
