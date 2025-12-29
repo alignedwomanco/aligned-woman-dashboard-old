@@ -587,7 +587,7 @@ This should feel embodied and personal.`;
                       <p className="text-xs uppercase tracking-wider text-pink-600 mb-2 font-medium">Your Authority</p>
                       <p className="text-2xl font-light text-gray-900 mb-3">{humanDesign?.authority || "Emotional"}</p>
                       <p className="text-sm text-gray-600 font-light leading-relaxed">
-                        {expandedCard === 'authority' ? 'Tap to close' : 'How you're designed to make decisions'}
+                        {expandedCard === 'authority' ? 'Tap to close' : 'How you\'re designed to make decisions'}
                       </p>
                     </div>
                     <div className="flex-shrink-0">
