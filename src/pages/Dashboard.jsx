@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
 import PersonalizedLearningPath from "@/components/dashboard/PersonalizedLearningPath";
 import DailySnapshotCard from "@/components/dashboard/DailySnapshotCard";
 import WeeklySnapshotCard from "@/components/dashboard/WeeklySnapshotCard";
