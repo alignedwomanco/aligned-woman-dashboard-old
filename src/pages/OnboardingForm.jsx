@@ -210,11 +210,79 @@ export default function OnboardingForm() {
       ...answers,
       ...result,
       isComplete: true,
+      lastCheckInDate: new Date().toISOString(),
     });
+
+    // Generate demo check-ins for December 2025 to populate the dashboard calendar
+    const demoCheckIns = generateDemoCheckIns();
+    for (const checkIn of demoCheckIns) {
+      await base44.entities.CheckIn.create(checkIn);
+    }
 
     setTimeout(() => {
       navigate(createPageUrl("Dashboard"));
     }, 2000);
+  };
+
+  const generateDemoCheckIns = () => {
+    const checkIns = [];
+    const today = new Date();
+    const year = 2025;
+    const month = 11; // December (0-indexed)
+    
+    // Generate 15 demo check-ins throughout December
+    for (let day = 1; day <= 15; day++) {
+      const date = new Date(year, month, day);
+      if (date > today) break; // Don't create future check-ins
+      
+      // Vary the patterns to show different stress/energy levels
+      let energy, stress, capacity, mood, nervous_system_state, cycle_phase;
+      
+      if (day % 7 === 0 || day % 11 === 0) {
+        // High stress days
+        energy = Math.floor(Math.random() * 3) + 2; // 2-4
+        stress = Math.floor(Math.random() * 3) + 7; // 7-9
+        capacity = Math.floor(Math.random() * 3) + 2; // 2-4
+        mood = Math.floor(Math.random() * 3) + 3; // 3-5
+        nervous_system_state = ["Fawn", "Flight"][Math.floor(Math.random() * 2)];
+      } else if (day % 5 === 0) {
+        // Moderate stress days
+        energy = Math.floor(Math.random() * 3) + 4; // 4-6
+        stress = Math.floor(Math.random() * 3) + 5; // 5-7
+        capacity = Math.floor(Math.random() * 3) + 4; // 4-6
+        mood = Math.floor(Math.random() * 3) + 5; // 5-7
+        nervous_system_state = ["Fawn", "Freeze"][Math.floor(Math.random() * 2)];
+      } else {
+        // Good days
+        energy = Math.floor(Math.random() * 3) + 6; // 6-8
+        stress = Math.floor(Math.random() * 3) + 2; // 2-4
+        capacity = Math.floor(Math.random() * 3) + 6; // 6-8
+        mood = Math.floor(Math.random() * 3) + 7; // 7-9
+        nervous_system_state = ["Safe & Social", "Rest & Digest"][Math.floor(Math.random() * 2)];
+      }
+      
+      // Assign cycle phase based on day of month (if cycling)
+      if (answers.cycleProfile?.cycleStage === "Cycling") {
+        if (day <= 6) cycle_phase = "Menstrual";
+        else if (day <= 12) cycle_phase = "Follicular";
+        else if (day <= 16) cycle_phase = "Ovulatory";
+        else cycle_phase = "Luteal";
+      }
+      
+      checkIns.push({
+        energy,
+        stress,
+        capacity,
+        mood,
+        nervous_system_state,
+        cycle_phase,
+        created_date: date.toISOString(),
+        notes: day % 7 === 0 ? "Particularly challenging day with multiple deadlines" : 
+               day % 5 === 0 ? "Feeling the pressure but managing" : "",
+      });
+    }
+    
+    return checkIns;
   };
 
   const getCyclePhase = (lastPeriodDate, cycleLength) => {
