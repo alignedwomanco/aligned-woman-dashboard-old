@@ -6,7 +6,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 
 export default function FinalCTASection() {
   return (
-    <section className="py-24 lg:py-32 bg-gradient-to-b from-pink-50 to-white">
+    <section className="py-24 lg:py-32 bg-transparent">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -20,17 +20,17 @@ export default function FinalCTASection() {
             <span className="text-[#6B1B3D] text-sm font-medium">Begin Your Journey</span>
           </div>
 
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#4A1228] tracking-tight">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-light text-gray-900 tracking-tight">
             Your Pathway Is Waiting
           </h2>
 
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed font-light">
             You do not need another app.
             <br />
             <span className="font-semibold text-[#6B1B3D]">You need one system that actually works.</span>
           </p>
 
-          <p className="text-lg text-gray-500">
+          <p className="text-lg text-gray-500 font-light">
             Create your free account, complete the onboarding, and receive your personalised ALIVE Pathway.
           </p>
 

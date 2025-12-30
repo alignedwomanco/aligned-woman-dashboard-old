@@ -29,7 +29,7 @@ const topics = [
 
 export default function TopicsSection() {
   return (
-    <section className="py-24 lg:py-32 bg-pink-50">
+    <section className="py-24 lg:py-32 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -42,12 +42,12 @@ export default function TopicsSection() {
             <Sparkles className="w-4 h-4 text-[#6B1B3D]" />
             <span className="text-[#6B1B3D] text-sm font-medium">Comprehensive Curriculum</span>
           </div>
-          <h2 className="text-4xl sm:text-5xl font-extrabold text-[#4A1228] tracking-tight mb-4">
+          <h2 className="text-4xl sm:text-5xl font-light text-gray-900 tracking-tight mb-4">
             Comprehensive Education
             <br />
             <span className="text-[#C67793]">For the Whole Woman</span>
           </h2>
-          <p className="text-lg text-gray-500 font-medium">
+          <p className="text-lg text-gray-500 font-light">
             Evidence-led. Integrated. Built for real lives.
           </p>
         </motion.div>
@@ -60,12 +60,12 @@ export default function TopicsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: index * 0.05 }}
-              className="bg-white rounded-2xl p-6 flex items-start gap-4 hover:shadow-lg transition-shadow duration-300 border border-pink-100"
+              className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 flex items-start gap-4 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-shadow duration-300 border-0 shadow-[0_4px_20px_rgba(0,0,0,0.03)]"
             >
               <div className="w-12 h-12 bg-gradient-to-br from-[#6B1B3D] to-[#8B2E4D] rounded-xl flex items-center justify-center flex-shrink-0">
                 <topic.icon className="w-6 h-6 text-white" />
               </div>
-              <p className="text-gray-700 font-medium leading-snug pt-2">
+              <p className="text-gray-700 font-light leading-snug pt-2">
                 {topic.label}
               </p>
             </motion.div>
@@ -77,7 +77,7 @@ export default function TopicsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-center mt-12 text-lg font-medium text-[#6B1B3D]"
+          className="text-center mt-12 text-lg font-light text-gray-700"
         >
           This is not inspiration. This is foundational education.
         </motion.p>

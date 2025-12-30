@@ -15,7 +15,7 @@ const fragmentedApps = [
 
 export default function ProblemSection() {
   return (
-    <section className="py-24 lg:py-32 bg-white">
+    <section className="py-24 lg:py-32 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -24,7 +24,7 @@ export default function ProblemSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#3D2250] tracking-tight leading-tight">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-light text-gray-900 tracking-tight leading-tight">
             Women Are Not Broken.
             <br />
             <span style={{ color: '#a861e9' }}>The Systems They're Using Are.</span>
@@ -38,7 +38,7 @@ export default function ProblemSection() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="max-w-3xl mx-auto text-center mb-16"
         >
-          <p className="text-xl text-gray-600 leading-relaxed">
+          <p className="text-xl text-gray-600 leading-relaxed font-light">
             Women make up the largest share of the wellness, education, and self-development market.
             And yet the tools available to them are <span className="font-semibold text-[#3D2250]">fragmented, shallow, and fundamentally misaligned</span> with how women actually live, work, and grow.
           </p>
@@ -62,12 +62,12 @@ export default function ProblemSection() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.05 }}
-                className="bg-gray-50 border border-gray-100 rounded-2xl p-6 text-center hover:shadow-lg hover:border-[#C67793]/30 transition-all duration-300"
+                className="bg-white/60 backdrop-blur-sm border-0 rounded-2xl p-6 text-center hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.03)]"
               >
-                <div className="w-12 h-12 bg-pink-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-100/50 to-pink-100/50 rounded-xl flex items-center justify-center mx-auto mb-3">
                   <app.icon className="w-6 h-6 text-[#3D2250]" />
                 </div>
-                <span className="text-sm font-medium text-gray-700">{app.label}</span>
+                <span className="text-sm font-light text-gray-700">{app.label}</span>
               </motion.div>
             ))}
           </div>
@@ -78,17 +78,17 @@ export default function ProblemSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="bg-gradient-to-br from-pink-50 to-white rounded-3xl p-8 lg:p-12 max-w-3xl mx-auto border border-pink-100"
+          className="bg-white/60 backdrop-blur-xl rounded-3xl p-8 lg:p-12 max-w-3xl mx-auto border-0 shadow-[0_8px_30px_rgba(0,0,0,0.04)]"
         >
-          <p className="text-xl text-gray-700 leading-relaxed text-center">
+          <p className="text-xl text-gray-700 leading-relaxed text-center font-light">
             None of these tools speak to each other.
             <br />
             None of them understand the female nervous system.
             <br />
             None of them integrate body, identity, money, ambition, and leadership.
           </p>
-          <div className="mt-8 pt-8 border-t border-pink-200">
-            <p className="text-lg font-medium text-[#3D2250] text-center">
+          <div className="mt-8 pt-8 border-t border-gray-100">
+            <p className="text-lg font-light text-gray-900 text-center">
               The result is not growth.
               <br />
               <span style={{ color: '#a861e9' }}>It is overwhelm disguised as self-improvement.</span>

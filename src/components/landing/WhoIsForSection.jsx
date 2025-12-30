@@ -14,7 +14,7 @@ const qualifiers = [
 
 export default function WhoIsForSection() {
   return (
-    <section className="py-24 lg:py-32 bg-white">
+    <section className="py-24 lg:py-32 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Image */}
@@ -49,10 +49,10 @@ export default function WhoIsForSection() {
               <Sparkles className="w-4 h-4 text-[#6B1B3D]" />
               <span className="text-[#6B1B3D] text-sm font-medium">Is This For You?</span>
             </div>
-            <h2 className="text-4xl sm:text-5xl font-extrabold text-[#4A1228] tracking-tight mb-6">
+            <h2 className="text-4xl sm:text-5xl font-light text-gray-900 tracking-tight mb-6">
               This Is For You If
             </h2>
-            <p className="text-lg text-gray-600 mb-10">
+            <p className="text-lg text-gray-600 mb-10 font-light">
               The Aligned Woman Blueprint™ is for the woman who knows she is capable of more, 
               but <span className="font-semibold text-[#6B1B3D]">no longer wants to sacrifice herself to get there</span>.
             </p>
@@ -70,7 +70,7 @@ export default function WhoIsForSection() {
                   <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
                     <Check className="w-4 h-4 text-[#6B1B3D]" />
                   </div>
-                  <span className="text-gray-700">{item}</span>
+                  <span className="text-gray-700 font-light">{item}</span>
                 </motion.li>
               ))}
             </ul>
