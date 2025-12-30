@@ -150,6 +150,10 @@ export default function AdminSettings() {
       setInviteEmail("");
       setInviteRole("moderator");
       queryClient.invalidateQueries({ queryKey: ["allUsers"] });
+      alert("Invitation sent successfully!");
+    },
+    onError: (error) => {
+      alert(`Failed to send invitation: ${error.message}`);
     },
   });
 
@@ -384,11 +388,11 @@ export default function AdminSettings() {
                           </div>
                           <Button
                             onClick={() => sendInviteMutation.mutate({ email: inviteEmail, role: inviteRole })}
-                            disabled={!inviteEmail}
+                            disabled={!inviteEmail || sendInviteMutation.isPending}
                             className="w-full text-white"
                             style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)' }}
                           >
-                            Send Invitation
+                            {sendInviteMutation.isPending ? "Sending..." : "Send Invitation"}
                           </Button>
                         </div>
                       </DialogContent>
