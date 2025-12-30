@@ -490,39 +490,39 @@ Give 2-3 specific boundary examples related to their context. Like: "no meetings
 
   if (isProcessing) {
     return (
-      <div className="min-h-screen bg-[#611836] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50/30 via-pink-50/20 to-indigo-50/30 flex items-center justify-center p-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="text-center"
+          className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-12 text-center"
         >
-          <Loader2 className="w-16 h-16 text-[#FECDD4] animate-spin mx-auto mb-6" />
-          <h2 className="text-2xl font-bold text-white mb-2">Building Your Pathway...</h2>
-          <p className="text-white/60">Analyzing your responses to create your personalized journey.</p>
+          <Loader2 className="w-16 h-16 text-purple-500 animate-spin mx-auto mb-6" />
+          <h2 className="text-2xl font-light text-gray-900 mb-2 tracking-tight">Building Your Pathway...</h2>
+          <p className="text-gray-500 font-light">Analyzing your responses to create your personalized journey.</p>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-6" style={{ backgroundColor: 'var(--theme-tertiary, #4B397F)' }}>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50/30 via-pink-50/20 to-indigo-50/30 p-4 md:p-8">
       <div className="max-w-2xl mx-auto w-full">
         {/* Header */}
         <div className="py-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6945438e6f6e0e1d874ba569/6f3c1f132_AWLogoWhite.png"
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695154cb868ee011bb627195/23f49bf5a_AlignedWomanLogoPurple.png"
                 alt="The Aligned Woman"
                 className="w-14 h-14 object-contain"
               />
               <div>
-                <h1 className="text-lg font-bold text-white">Your Pathway</h1>
-                <p className="text-white/50 text-sm">{step + 1} of {totalSteps}</p>
+                <h1 className="text-lg font-medium text-gray-900 tracking-tight">Your Pathway</h1>
+                <p className="text-gray-500 text-sm font-light">{step + 1} of {totalSteps}</p>
               </div>
             </div>
           </div>
-          <Progress value={((step + 1) / totalSteps) * 100} className="h-3 [&>div]:bg-[#FECDD4] [&>div]:bg-[length:30px_30px] [&>div]:animate-[progress_1s_linear_infinite] [&>div]:bg-[repeating-linear-gradient(45deg,#FECDD4,#FECDD4_10px,rgba(255,255,255,.6)_10px,rgba(255,255,255,.6)_20px)]" />
+          <Progress value={((step + 1) / totalSteps) * 100} className="h-2 bg-gray-100 [&>div]:bg-gradient-to-r [&>div]:from-purple-400 [&>div]:to-pink-400" />
         </div>
 
         {/* Question Content */}
@@ -537,15 +537,15 @@ Give 2-3 specific boundary examples related to their context. Like: "no meetings
             >
               {/* Step 0: Welcome */}
               {step === 0 && (
-                <div className="space-y-6 text-center">
-                  <div className="w-20 h-20 bg-[#FECDD4]/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Sparkles className="w-10 h-10 text-[#FECDD4]" />
+                <div className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-12 space-y-6 text-center">
+                  <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Sparkles className="w-10 h-10 text-purple-500" />
                   </div>
-                  <h2 className="text-4xl font-bold text-white mb-4">Welcome</h2>
-                  <p className="text-xl text-white/80 mb-4">
+                  <h2 className="text-4xl font-light text-gray-900 mb-4 tracking-tight">Welcome</h2>
+                  <p className="text-xl text-gray-700 mb-4 font-light">
                     This platform adapts to you.
                   </p>
-                  <p className="text-white/60 max-w-md mx-auto">
+                  <p className="text-gray-500 max-w-md mx-auto font-light leading-relaxed">
                     Answer a few questions so we can personalise your daily guidance. 
                     You can skip anything and update later.
                   </p>
@@ -555,73 +555,73 @@ Give 2-3 specific boundary examples related to their context. Like: "no meetings
               {/* Step 1: Name & Email */}
               {step === 1 && (
                 <div className="space-y-6">
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">
-                      Let's get to <span className="text-[#FECDD4]">know you</span>
+                  <div className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-8">
+                    <h2 className="text-3xl font-light text-gray-900 mb-2 tracking-tight">
+                      Let's get to <span className="text-purple-600">know you</span>
                     </h2>
-                    <p className="text-white/60">Tell us your name and email</p>
+                    <p className="text-gray-500 mb-6 font-light">Tell us your name and email</p>
+                    <div className="space-y-4">
+                      <div>
+                        <Label className="text-gray-700 mb-2 block font-medium">Full Name *</Label>
+                        <Input
+                          value={answers.fullName}
+                          onChange={(e) => updateAnswer("fullName", e.target.value)}
+                          className="bg-white/80 border-gray-200 text-gray-900 placeholder:text-gray-400"
+                          placeholder="Enter your full name"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-gray-700 mb-2 block font-medium">Email *</Label>
+                        <Input
+                          type="email"
+                          value={answers.email}
+                          onChange={(e) => updateAnswer("email", e.target.value)}
+                          className="bg-white/80 border-gray-200 text-gray-900 placeholder:text-gray-400"
+                          placeholder="your@email.com"
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <Card className="bg-white/5 border-white/10 p-6 space-y-4">
-                    <div>
-                      <Label className="text-white mb-2 block">Full Name *</Label>
-                      <Input
-                        value={answers.fullName}
-                        onChange={(e) => updateAnswer("fullName", e.target.value)}
-                        className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
-                        placeholder="Enter your full name"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-white mb-2 block">Email *</Label>
-                      <Input
-                        type="email"
-                        value={answers.email}
-                        onChange={(e) => updateAnswer("email", e.target.value)}
-                        className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
-                        placeholder="your@email.com"
-                      />
-                    </div>
-                  </Card>
                 </div>
               )}
 
               {/* Step 2: Concerns */}
               {step === 2 && (
                 <div className="space-y-6">
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">
-                      What do you need <span className="text-[#FECDD4]">help with</span> this week?
+                  <div className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-8">
+                    <h2 className="text-3xl font-light text-gray-900 mb-2 tracking-tight">
+                      What do you need <span className="text-purple-600">help with</span> this week?
                     </h2>
-                    <p className="text-white/60">Select all that resonate with you</p>
-                  </div>
-                  <div className="space-y-3">
-                    {concernOptions.map((concern) => {
-                      const Icon = concern.icon;
-                      const isSelected = answers.concerns.includes(concern.id);
-                      return (
-                        <button
-                          key={concern.id}
-                          onClick={() => toggleConcern(concern.id)}
-                          className={`w-full flex items-center gap-4 p-4 rounded-2xl border-2 transition-all ${
-                            isSelected
-                              ? "bg-[#FECDD4]/10 border-[#FECDD4]/50"
-                              : "bg-white/5 border-white/10 hover:border-white/20"
-                          }`}
-                        >
-                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                            isSelected ? "bg-[#FECDD4]/20" : "bg-white/10"
-                          }`}>
-                            <Icon className={`w-6 h-6 ${isSelected ? "text-[#FECDD4]" : "text-white/60"}`} />
-                          </div>
-                          <span className="text-white font-medium flex-1 text-left">{concern.label}</span>
-                          <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                            isSelected ? "border-[#FECDD4] bg-[#FECDD4]" : "border-white/30"
-                          }`}>
-                            {isSelected && <CheckCircle className="w-4 h-4 text-white" />}
-                          </div>
-                        </button>
-                      );
-                    })}
+                    <p className="text-gray-500 mb-6 font-light">Select all that resonate with you</p>
+                    <div className="space-y-3">
+                      {concernOptions.map((concern) => {
+                        const Icon = concern.icon;
+                        const isSelected = answers.concerns.includes(concern.id);
+                        return (
+                          <button
+                            key={concern.id}
+                            onClick={() => toggleConcern(concern.id)}
+                            className={`w-full flex items-center gap-4 p-4 rounded-2xl border transition-all ${
+                              isSelected
+                                ? "bg-purple-50 border-purple-200 shadow-sm"
+                                : "bg-white/80 border-gray-200 hover:border-purple-200 hover:bg-purple-50/50"
+                            }`}
+                          >
+                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                              isSelected ? "bg-purple-100" : "bg-gray-100"
+                            }`}>
+                              <Icon className={`w-6 h-6 ${isSelected ? "text-purple-600" : "text-gray-500"}`} />
+                            </div>
+                            <span className={`font-light flex-1 text-left ${isSelected ? "text-gray-900" : "text-gray-700"}`}>{concern.label}</span>
+                            <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                              isSelected ? "border-purple-500 bg-purple-500" : "border-gray-300"
+                            }`}>
+                              {isSelected && <CheckCircle className="w-4 h-4 text-white" />}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               )}
@@ -629,26 +629,26 @@ Give 2-3 specific boundary examples related to their context. Like: "no meetings
               {/* Step 3: Current Feeling */}
               {step === 3 && (
                 <div className="space-y-6">
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">
-                      What feels <span className="text-[#FECDD4]">hardest</span> at the moment?
+                  <div className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-8">
+                    <h2 className="text-3xl font-light text-gray-900 mb-2 tracking-tight">
+                      What feels <span className="text-purple-600">hardest</span> at the moment?
                     </h2>
-                    <p className="text-white/60">Or in the last month</p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    {feelingOptions.map((feeling) => (
-                      <button
-                        key={feeling}
-                        onClick={() => handleSingleSelect("currentFeeling", feeling)}
-                        className={`p-4 rounded-2xl border-2 transition-all text-center ${
-                          answers.currentFeeling === feeling
-                            ? "bg-[#FECDD4]/10 border-[#FECDD4]/50 text-white"
-                            : "bg-white/5 border-white/10 hover:border-white/20 text-white/70"
-                        }`}
-                      >
-                        <span className="font-medium">{feeling}</span>
-                      </button>
-                    ))}
+                    <p className="text-gray-500 mb-6 font-light">Or in the last month</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      {feelingOptions.map((feeling) => (
+                        <button
+                          key={feeling}
+                          onClick={() => handleSingleSelect("currentFeeling", feeling)}
+                          className={`p-4 rounded-2xl border transition-all text-center ${
+                            answers.currentFeeling === feeling
+                              ? "bg-purple-50 border-purple-200 text-gray-900 shadow-sm"
+                              : "bg-white/80 border-gray-200 hover:border-purple-200 text-gray-700 hover:bg-purple-50/50"
+                          }`}
+                        >
+                          <span className="font-light">{feeling}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
@@ -656,27 +656,27 @@ Give 2-3 specific boundary examples related to their context. Like: "no meetings
               {/* Step 4: Time Available */}
               {step === 4 && (
                 <div className="space-y-6">
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">
-                      How much <span className="text-[#FECDD4]">time</span> do you have?
+                  <div className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-8">
+                    <h2 className="text-3xl font-light text-gray-900 mb-2 tracking-tight">
+                      How much <span className="text-purple-600">time</span> do you have?
                     </h2>
-                    <p className="text-white/60">Per day, realistically</p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    {timeOptions.map((time) => (
-                      <button
-                        key={time}
-                        onClick={() => handleSingleSelect("timeAvailable", time)}
-                        className={`p-5 rounded-2xl border-2 transition-all ${
-                          answers.timeAvailable === time
-                            ? "bg-[#FECDD4]/10 border-[#FECDD4]/50 text-white"
-                            : "bg-white/5 border-white/10 hover:border-white/20 text-white/70"
-                        }`}
-                      >
-                        <Clock className="w-6 h-6 mx-auto mb-2" />
-                        <span className="font-medium text-lg">{time}</span>
-                      </button>
-                    ))}
+                    <p className="text-gray-500 mb-6 font-light">Per day, realistically</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      {timeOptions.map((time) => (
+                        <button
+                          key={time}
+                          onClick={() => handleSingleSelect("timeAvailable", time)}
+                          className={`p-5 rounded-2xl border transition-all ${
+                            answers.timeAvailable === time
+                              ? "bg-purple-50 border-purple-200 text-gray-900 shadow-sm"
+                              : "bg-white/80 border-gray-200 hover:border-purple-200 text-gray-700 hover:bg-purple-50/50"
+                          }`}
+                        >
+                          <Clock className={`w-6 h-6 mx-auto mb-2 ${answers.timeAvailable === time ? "text-purple-500" : "text-gray-500"}`} />
+                          <span className="font-light text-lg">{time}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
@@ -684,15 +684,13 @@ Give 2-3 specific boundary examples related to their context. Like: "no meetings
               {/* Step 5: Capacity */}
               {step === 5 && (
                 <div className="space-y-6">
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">
-                      Capacity <span className="text-[#FECDD4]">right now</span>
+                  <div className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-8">
+                    <h2 className="text-3xl font-light text-gray-900 mb-2 tracking-tight">
+                      Capacity <span className="text-purple-600">right now</span>
                     </h2>
-                    <p className="text-white/60">How resourced do you feel at the moment (i.e. last 30 days)?</p>
-                  </div>
-                  <Card className="bg-white/5 border-white/10 p-8">
+                    <p className="text-gray-500 mb-8 font-light">How resourced do you feel at the moment (i.e. last 30 days)?</p>
                     <div className="space-y-6">
-                      <div className="flex justify-between text-sm text-white/50">
+                      <div className="flex justify-between text-sm text-gray-500 font-light">
                         <span>Barely coping</span>
                         <span>Resourced and steady</span>
                       </div>
@@ -702,62 +700,62 @@ Give 2-3 specific boundary examples related to their context. Like: "no meetings
                         max={10}
                         min={1}
                         step={1}
-                        className="py-4 [&>span:first-child]:bg-[#FECDD4] [&>span:first-child]:bg-[length:30px_30px] [&>span:first-child]:animate-[progress_1s_linear_infinite] [&>span:first-child]:bg-[repeating-linear-gradient(45deg,#FECDD4,#FECDD4_10px,rgba(255,255,255,.6)_10px,rgba(255,255,255,.6)_20px)]"
+                        className="py-4"
                       />
                       <div className="text-center">
-                        <span className="text-6xl font-bold text-[#FECDD4]">{answers.capacityScore}</span>
-                        <span className="text-2xl text-white/40">/10</span>
+                        <span className="text-6xl font-light text-purple-600">{answers.capacityScore}</span>
+                        <span className="text-2xl text-gray-400 font-light">/10</span>
                       </div>
                     </div>
-                  </Card>
+                  </div>
                 </div>
               )}
 
               {/* Step 6: Free Text Context */}
               {step === 6 && (
                 <div className="space-y-6">
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">
-                      Tell us what's <span className="text-[#FECDD4]">happening</span> for you
+                  <div className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-8">
+                    <h2 className="text-3xl font-light text-gray-900 mb-2 tracking-tight">
+                      Tell us what's <span className="text-purple-600">happening</span> for you
                     </h2>
-                    <p className="text-white/60">
+                    <p className="text-gray-500 mb-6 font-light">
                       {answers.concerns.length > 0 
                         ? `Tell us more about ${answers.concerns.slice(0, 2).map(c => concernOptions.find(opt => opt.id === c)?.label.toLowerCase()).join(" and ")}`
                         : "Share as much or as little as you'd like"}
                     </p>
-                  </div>
-                  <div className="space-y-3">
-                    <Textarea
-                      value={answers.userContextText}
-                      onChange={(e) => updateAnswer("userContextText", e.target.value)}
-                      placeholder={answers.concerns.length > 0 
-                        ? `What's happening with ${answers.concerns.slice(0, 2).map(c => concernOptions.find(opt => opt.id === c)?.label.toLowerCase()).join(" and ")}...`
-                        : "I've been feeling... I'm working on... I need support with..."}
-                      className="min-h-[200px] bg-white/5 border-white/10 text-white placeholder:text-white/30 rounded-2xl text-lg p-6"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => getLaurAIHelp('context', 'Tell us what\'s happening for you')}
-                      className="text-sm text-white/60 hover:text-white/90 transition-colors flex items-center gap-1"
-                    >
-                      {loadingHelp === 'context' ? (
-                        <>
-                          <div className="animate-spin w-3 h-3 border border-white/20 border-t-white rounded-full" />
-                          <span>Getting help...</span>
-                        </>
-                      ) : (
-                        <>Not sure what to write? Ask LaurAI →</>
-                      )}
-                    </button>
-                    {lauraiHelp.context && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        className="bg-white/10 backdrop-blur-md rounded-xl p-4 text-white/80 text-sm leading-relaxed"
+                    <div className="space-y-3">
+                      <Textarea
+                        value={answers.userContextText}
+                        onChange={(e) => updateAnswer("userContextText", e.target.value)}
+                        placeholder={answers.concerns.length > 0 
+                          ? `What's happening with ${answers.concerns.slice(0, 2).map(c => concernOptions.find(opt => opt.id === c)?.label.toLowerCase()).join(" and ")}...`
+                          : "I've been feeling... I'm working on... I need support with..."}
+                        className="min-h-[200px] bg-white/80 border-gray-200 text-gray-900 placeholder:text-gray-400 rounded-2xl text-lg p-6"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => getLaurAIHelp('context', 'Tell us what\'s happening for you')}
+                        className="text-sm text-purple-600 hover:text-purple-700 transition-colors flex items-center gap-1 font-light"
                       >
-                        {lauraiHelp.context}
-                      </motion.div>
-                    )}
+                        {loadingHelp === 'context' ? (
+                          <>
+                            <div className="animate-spin w-3 h-3 border border-purple-200 border-t-purple-600 rounded-full" />
+                            <span>Getting help...</span>
+                          </>
+                        ) : (
+                          <>Not sure what to write? Ask LaurAI →</>
+                        )}
+                      </button>
+                      {lauraiHelp.context && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          className="bg-purple-50 rounded-xl p-4 text-gray-700 text-sm leading-relaxed font-light"
+                        >
+                          {lauraiHelp.context}
+                        </motion.div>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
@@ -765,318 +763,320 @@ Give 2-3 specific boundary examples related to their context. Like: "no meetings
               {/* Step 7: Cycle Profile */}
               {step === 7 && (
                 <div className="space-y-6">
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">
-                      <span className="text-[#FECDD4]">Cycle</span> / Hormone Support
+                  <div className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-8">
+                    <h2 className="text-3xl font-light text-gray-900 mb-2 tracking-tight">
+                      <span className="text-purple-600">Cycle</span> / Hormone Support
                     </h2>
-                    <p className="text-white/60">Optional - helps personalize energy guidance</p>
-                  </div>
-                  <Card className="bg-white/5 border-white/10 p-6 space-y-4">
-                    <div>
-                      <Label className="text-white mb-2 block">Cycle Stage</Label>
-                      <Select
-                        value={answers.cycleProfile.cycleStage}
-                        onValueChange={(value) => updateCycleProfile("cycleStage", value)}
-                      >
-                        <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                          <SelectValue placeholder="Select..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Cycling">Cycling</SelectItem>
-                          <SelectItem value="Perimenopausal">Perimenopausal</SelectItem>
-                          <SelectItem value="Menopausal">Menopausal</SelectItem>
-                          <SelectItem value="Prefer not to say">Prefer not to say</SelectItem>
-                        </SelectContent>
-                      </Select>
+                    <p className="text-gray-500 mb-6 font-light">Optional - helps personalize energy guidance</p>
+                    <div className="space-y-4">
+                      <div>
+                        <Label className="text-gray-700 mb-2 block font-medium">Cycle Stage</Label>
+                        <Select
+                          value={answers.cycleProfile.cycleStage}
+                          onValueChange={(value) => updateCycleProfile("cycleStage", value)}
+                        >
+                          <SelectTrigger className="bg-white/80 border-gray-200 text-gray-900">
+                            <SelectValue placeholder="Select..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Cycling">Cycling</SelectItem>
+                            <SelectItem value="Perimenopausal">Perimenopausal</SelectItem>
+                            <SelectItem value="Menopausal">Menopausal</SelectItem>
+                            <SelectItem value="Prefer not to say">Prefer not to say</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      {answers.cycleProfile.cycleStage === "Cycling" && (
+                        <>
+                          <div>
+                            <Label className="text-gray-700 mb-2 block font-medium">Cycle Length (days)</Label>
+                            <Input
+                              type="number"
+                              value={answers.cycleProfile.cycleLength}
+                              onChange={(e) => updateCycleProfile("cycleLength", parseInt(e.target.value))}
+                              className="bg-white/80 border-gray-200 text-gray-900"
+                              min="21"
+                              max="45"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-gray-700 mb-2 block font-medium">Last Period Date (optional)</Label>
+                            <Input
+                              type="date"
+                              value={answers.cycleProfile.lastPeriodDate}
+                              onChange={(e) => updateCycleProfile("lastPeriodDate", e.target.value)}
+                              className="bg-white/80 border-gray-200 text-gray-900"
+                            />
+                          </div>
+                        </>
+                      )}
                     </div>
-                    {answers.cycleProfile.cycleStage === "Cycling" && (
-                      <>
-                        <div>
-                          <Label className="text-white mb-2 block">Cycle Length (days)</Label>
-                          <Input
-                            type="number"
-                            value={answers.cycleProfile.cycleLength}
-                            onChange={(e) => updateCycleProfile("cycleLength", parseInt(e.target.value))}
-                            className="bg-white/10 border-white/20 text-white"
-                            min="21"
-                            max="45"
-                          />
-                        </div>
-                        <div>
-                          <Label className="text-white mb-2 block">Last Period Date (optional)</Label>
-                          <Input
-                            type="date"
-                            value={answers.cycleProfile.lastPeriodDate}
-                            onChange={(e) => updateCycleProfile("lastPeriodDate", e.target.value)}
-                            className="bg-white/10 border-white/20 text-white"
-                          />
-                        </div>
-                      </>
-                    )}
-                  </Card>
+                  </div>
                 </div>
               )}
 
               {/* Step 8: Birth Details */}
               {step === 8 && (
                 <div className="space-y-6">
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">
-                      Want <span className="text-[#FECDD4]">deeper personalisation</span>?
+                  <div className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-8">
+                    <h2 className="text-3xl font-light text-gray-900 mb-2 tracking-tight">
+                      Want <span className="text-purple-600">deeper personalisation</span>?
                     </h2>
-                    <p className="text-white/60">Add your birth details for Human Design + Astrology insights. Optional.</p>
-                  </div>
-                  <Card className="bg-white/5 border-white/10 p-6 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-white">Enable Deep Personalisation</Label>
-                      <Switch
-                        checked={answers.enableDeepPersonalisation}
-                        onCheckedChange={(checked) => updateAnswer("enableDeepPersonalisation", checked)}
-                      />
-                    </div>
-                    {answers.enableDeepPersonalisation && (
-                    <>
-                      <div>
-                        <Label className="text-white mb-2 block">Date of Birth *</Label>
-                        <div className="grid grid-cols-3 gap-2">
-                          <div>
-                            <Select
-                              value={answers.dob.split('-')[2] || ""}
-                              onValueChange={(day) => {
-                                const [year, month] = answers.dob.split('-');
-                                updateAnswer("dob", `${year || "1990"}-${month || "01"}-${day.padStart(2, '0')}`);
-                              }}
-                            >
-                              <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                                <SelectValue placeholder="Day" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
-                                  <SelectItem key={day} value={String(day)}>{day}</SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div>
-                            <Select
-                              value={answers.dob.split('-')[1] || ""}
-                              onValueChange={(month) => {
-                                const [year, , day] = answers.dob.split('-');
-                                updateAnswer("dob", `${year || "1990"}-${month.padStart(2, '0')}-${day || "01"}`);
-                              }}
-                            >
-                              <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                                <SelectValue placeholder="Month" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((month, i) => (
-                                  <SelectItem key={i + 1} value={String(i + 1)}>{month}</SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div>
-                            <Select
-                              value={answers.dob.split('-')[0] || ""}
-                              onValueChange={(year) => {
-                                const [, month, day] = answers.dob.split('-');
-                                updateAnswer("dob", `${year}-${month || "01"}-${day || "01"}`);
-                              }}
-                            >
-                              <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                                <SelectValue placeholder="Year" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {Array.from({ length: new Date().getFullYear() - 1920 + 1 }, (_, i) => new Date().getFullYear() - i).map(year => (
-                                  <SelectItem key={year} value={String(year)}>{year}</SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                    <p className="text-gray-500 mb-6 font-light">Add your birth details for Human Design + Astrology insights. Optional.</p>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between p-4 bg-white/80 rounded-xl border border-gray-200">
+                        <Label className="text-gray-700 font-medium">Enable Deep Personalisation</Label>
+                        <Switch
+                          checked={answers.enableDeepPersonalisation}
+                          onCheckedChange={(checked) => updateAnswer("enableDeepPersonalisation", checked)}
+                        />
+                      </div>
+                      {answers.enableDeepPersonalisation && (
+                      <>
+                        <div>
+                          <Label className="text-gray-700 mb-2 block font-medium">Date of Birth *</Label>
+                          <div className="grid grid-cols-3 gap-2">
+                            <div>
+                              <Select
+                                value={answers.dob.split('-')[2] || ""}
+                                onValueChange={(day) => {
+                                  const [year, month] = answers.dob.split('-');
+                                  updateAnswer("dob", `${year || "1990"}-${month || "01"}-${day.padStart(2, '0')}`);
+                                }}
+                              >
+                                <SelectTrigger className="bg-white/80 border-gray-200 text-gray-900">
+                                  <SelectValue placeholder="Day" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
+                                    <SelectItem key={day} value={String(day)}>{day}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div>
+                              <Select
+                                value={answers.dob.split('-')[1] || ""}
+                                onValueChange={(month) => {
+                                  const [year, , day] = answers.dob.split('-');
+                                  updateAnswer("dob", `${year || "1990"}-${month.padStart(2, '0')}-${day || "01"}`);
+                                }}
+                              >
+                                <SelectTrigger className="bg-white/80 border-gray-200 text-gray-900">
+                                  <SelectValue placeholder="Month" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((month, i) => (
+                                    <SelectItem key={i + 1} value={String(i + 1)}>{month}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div>
+                              <Select
+                                value={answers.dob.split('-')[0] || ""}
+                                onValueChange={(year) => {
+                                  const [, month, day] = answers.dob.split('-');
+                                  updateAnswer("dob", `${year}-${month || "01"}-${day || "01"}`);
+                                }}
+                              >
+                                <SelectTrigger className="bg-white/80 border-gray-200 text-gray-900">
+                                  <SelectValue placeholder="Year" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {Array.from({ length: new Date().getFullYear() - 1920 + 1 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                                    <SelectItem key={year} value={String(year)}>{year}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div>
-                        <Label className="text-white mb-2 block">Time of Birth (optional)</Label>
-                        <Input
-                          type="time"
-                          value={answers.tob}
-                          onChange={(e) => updateAnswer("tob", e.target.value)}
-                          className="bg-white/10 border-white/20 text-white"
-                          placeholder="I don't know"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-white mb-2 block">Place of Birth (optional)</Label>
-                        <PlaceAutocomplete
-                          value={answers.pob}
-                          onChange={(value) => updateAnswer("pob", value)}
-                          className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
-                          placeholder="Start typing city name..."
-                        />
-                      </div>
-                    </>
-                    )}
-                  </Card>
+                        <div>
+                          <Label className="text-gray-700 mb-2 block font-medium">Time of Birth (optional)</Label>
+                          <Input
+                            type="time"
+                            value={answers.tob}
+                            onChange={(e) => updateAnswer("tob", e.target.value)}
+                            className="bg-white/80 border-gray-200 text-gray-900"
+                            placeholder="I don't know"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-gray-700 mb-2 block font-medium">Place of Birth (optional)</Label>
+                          <PlaceAutocomplete
+                            value={answers.pob}
+                            onChange={(value) => updateAnswer("pob", value)}
+                            className="bg-white/80 border-gray-200 text-gray-900 placeholder:text-gray-400"
+                            placeholder="Start typing city name..."
+                          />
+                        </div>
+                      </>
+                      )}
+                    </div>
+                  </div>
                 </div>
               )}
 
               {/* Step 9: Values, Identity, Boundaries */}
               {step === 9 && (
                 <div className="space-y-6">
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">
-                      Your <span className="text-[#FECDD4]">Values & Identity</span>
+                  <div className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-8">
+                    <h2 className="text-3xl font-light text-gray-900 mb-8 tracking-tight">
+                      Your <span className="text-purple-600">Values & Identity</span>
                     </h2>
-                  </div>
 
-                  <div>
-                    <Label className="text-white mb-3 block text-lg">Core Values</Label>
-                    <div className="flex flex-wrap gap-2">
-                      {coreValueOptions.map((value) => (
-                        <button
-                          key={value}
-                          onClick={() => toggleValue(value)}
-                          className={`px-4 py-2 rounded-full border-2 transition-all ${
-                            answers.values.includes(value)
-                              ? "bg-[#FECDD4]/20 border-[#FECDD4] text-white"
-                              : "bg-white/5 border-white/20 text-white/70"
-                          }`}
-                        >
-                          {value}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label className="text-white mb-2 block">Letting go (what feels heavy right now)</Label>
-                    <p className="text-white/60 text-sm mb-3">This can be a habit, a belief, a role you're playing, or something that's draining you.</p>
-                    <div className="space-y-3">
-                      <Input
-                        value={answers.releasing}
-                        onChange={(e) => updateAnswer("releasing", e.target.value)}
-                        className="bg-white/10 border-white/20 text-white placeholder:text-white/40"
-                        placeholder="For example: people-pleasing, overworking, self-doubt, a relationship pattern, unrealistic expectations…"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => getLaurAIHelp('releasing', 'What feels heavy right now that you want to let go of?')}
-                        className="text-sm text-white/60 hover:text-white/90 transition-colors flex items-center gap-1"
-                      >
-                        {loadingHelp === 'releasing' ? (
-                          <>
-                            <div className="animate-spin w-3 h-3 border border-white/20 border-t-white rounded-full" />
-                            <span>Getting help...</span>
-                          </>
-                        ) : (
-                          <>Not sure what to write? Ask LaurAI →</>
-                        )}
-                      </button>
-                      {lauraiHelp.releasing && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          className="bg-white/10 backdrop-blur-md rounded-xl p-4 text-white/80 text-sm leading-relaxed"
-                        >
-                          {lauraiHelp.releasing}
-                        </motion.div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label className="text-white mb-2 block">What do you want more of in your life?</Label>
-                    <p className="text-white/60 text-sm mb-1">You don't need a full answer, just a direction.</p>
-                    <p className="text-white/50 text-xs mb-3">Think in feelings or qualities, not labels.</p>
-                    <div className="space-y-3">
-                      <Input
-                        value={answers.becoming}
-                        onChange={(e) => updateAnswer("becoming", e.target.value)}
-                        className="bg-white/10 border-white/20 text-white placeholder:text-white/40"
-                        placeholder="For example: more calm, more confidence, more honesty, more ease, more self-trust…"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => getLaurAIHelp('becoming', 'What do you want more of in your life?')}
-                        className="text-sm text-white/60 hover:text-white/90 transition-colors flex items-center gap-1"
-                      >
-                        {loadingHelp === 'becoming' ? (
-                          <>
-                            <div className="animate-spin w-3 h-3 border border-white/20 border-t-white rounded-full" />
-                            <span>Getting help...</span>
-                          </>
-                        ) : (
-                          <>Not sure what to write? Ask LaurAI →</>
-                        )}
-                      </button>
-                      {lauraiHelp.becoming && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          className="bg-white/10 backdrop-blur-md rounded-xl p-4 text-white/80 text-sm leading-relaxed"
-                        >
-                          {lauraiHelp.becoming}
-                        </motion.div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label className="text-white mb-2 block">Where do you need better boundaries right now?</Label>
-                    <p className="text-white/60 text-sm mb-3">This helps protect your energy while you're growing.</p>
-                    <button
-                      type="button"
-                      onClick={() => getLaurAIHelp('boundaries', 'Where do you need better boundaries?')}
-                      className="text-sm text-white/60 hover:text-white/90 transition-colors flex items-center gap-1 mb-3"
-                    >
-                      {loadingHelp === 'boundaries' ? (
-                        <>
-                          <div className="animate-spin w-3 h-3 border border-white/20 border-t-white rounded-full" />
-                          <span>Getting help...</span>
-                        </>
-                      ) : (
-                        <>Not sure what to write? Ask LaurAI →</>
-                      )}
-                    </button>
-                    {lauraiHelp.boundaries && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        className="bg-white/10 backdrop-blur-md rounded-xl p-4 text-white/80 text-sm leading-relaxed mb-3"
-                      >
-                        {lauraiHelp.boundaries}
-                      </motion.div>
-                    )}
-                    <div className="space-y-2">
-                      {answers.boundaries.map((boundary, index) => (
-                        <div key={index} className="flex gap-2">
-                          <Input
-                            value={boundary}
-                            onChange={(e) => updateBoundary(index, e.target.value)}
-                            className="bg-white/10 border-white/20 text-white placeholder:text-white/40"
-                            placeholder="For example: no work after 7pm, fewer explanations to others, space from certain conversations…"
-                          />
-                          {answers.boundaries.length > 1 && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => removeBoundary(index)}
-                              className="text-white/60 hover:text-white"
+                    <div className="space-y-6">
+                      <div>
+                        <Label className="text-gray-700 mb-3 block text-lg font-medium">Core Values</Label>
+                        <div className="flex flex-wrap gap-2">
+                          {coreValueOptions.map((value) => (
+                            <button
+                              key={value}
+                              onClick={() => toggleValue(value)}
+                              className={`px-4 py-2 rounded-full border transition-all ${
+                                answers.values.includes(value)
+                                  ? "bg-purple-50 border-purple-200 text-gray-900"
+                                  : "bg-white/80 border-gray-200 text-gray-700 hover:border-purple-200 hover:bg-purple-50/50"
+                              }`}
                             >
-                              <X className="w-4 h-4" />
+                              {value}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label className="text-gray-700 mb-2 block font-medium">Letting go (what feels heavy right now)</Label>
+                        <p className="text-gray-500 text-sm mb-3 font-light">This can be a habit, a belief, a role you're playing, or something that's draining you.</p>
+                        <div className="space-y-3">
+                          <Input
+                            value={answers.releasing}
+                            onChange={(e) => updateAnswer("releasing", e.target.value)}
+                            className="bg-white/80 border-gray-200 text-gray-900 placeholder:text-gray-400"
+                            placeholder="For example: people-pleasing, overworking, self-doubt, a relationship pattern, unrealistic expectations…"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => getLaurAIHelp('releasing', 'What feels heavy right now that you want to let go of?')}
+                            className="text-sm text-purple-600 hover:text-purple-700 transition-colors flex items-center gap-1 font-light"
+                          >
+                            {loadingHelp === 'releasing' ? (
+                              <>
+                                <div className="animate-spin w-3 h-3 border border-purple-200 border-t-purple-600 rounded-full" />
+                                <span>Getting help...</span>
+                              </>
+                            ) : (
+                              <>Not sure what to write? Ask LaurAI →</>
+                            )}
+                          </button>
+                          {lauraiHelp.releasing && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              className="bg-purple-50 rounded-xl p-4 text-gray-700 text-sm leading-relaxed font-light"
+                            >
+                              {lauraiHelp.releasing}
+                            </motion.div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label className="text-gray-700 mb-2 block font-medium">What do you want more of in your life?</Label>
+                        <p className="text-gray-500 text-sm mb-1 font-light">You don't need a full answer, just a direction.</p>
+                        <p className="text-gray-400 text-xs mb-3 font-light">Think in feelings or qualities, not labels.</p>
+                        <div className="space-y-3">
+                          <Input
+                            value={answers.becoming}
+                            onChange={(e) => updateAnswer("becoming", e.target.value)}
+                            className="bg-white/80 border-gray-200 text-gray-900 placeholder:text-gray-400"
+                            placeholder="For example: more calm, more confidence, more honesty, more ease, more self-trust…"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => getLaurAIHelp('becoming', 'What do you want more of in your life?')}
+                            className="text-sm text-purple-600 hover:text-purple-700 transition-colors flex items-center gap-1 font-light"
+                          >
+                            {loadingHelp === 'becoming' ? (
+                              <>
+                                <div className="animate-spin w-3 h-3 border border-purple-200 border-t-purple-600 rounded-full" />
+                                <span>Getting help...</span>
+                              </>
+                            ) : (
+                              <>Not sure what to write? Ask LaurAI →</>
+                            )}
+                          </button>
+                          {lauraiHelp.becoming && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              className="bg-purple-50 rounded-xl p-4 text-gray-700 text-sm leading-relaxed font-light"
+                            >
+                              {lauraiHelp.becoming}
+                            </motion.div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label className="text-gray-700 mb-2 block font-medium">Where do you need better boundaries right now?</Label>
+                        <p className="text-gray-500 text-sm mb-3 font-light">This helps protect your energy while you're growing.</p>
+                        <button
+                          type="button"
+                          onClick={() => getLaurAIHelp('boundaries', 'Where do you need better boundaries?')}
+                          className="text-sm text-purple-600 hover:text-purple-700 transition-colors flex items-center gap-1 mb-3 font-light"
+                        >
+                          {loadingHelp === 'boundaries' ? (
+                            <>
+                              <div className="animate-spin w-3 h-3 border border-purple-200 border-t-purple-600 rounded-full" />
+                              <span>Getting help...</span>
+                            </>
+                          ) : (
+                            <>Not sure what to write? Ask LaurAI →</>
+                          )}
+                        </button>
+                        {lauraiHelp.boundaries && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            className="bg-purple-50 rounded-xl p-4 text-gray-700 text-sm leading-relaxed mb-3 font-light"
+                          >
+                            {lauraiHelp.boundaries}
+                          </motion.div>
+                        )}
+                        <div className="space-y-2">
+                          {answers.boundaries.map((boundary, index) => (
+                            <div key={index} className="flex gap-2">
+                              <Input
+                                value={boundary}
+                                onChange={(e) => updateBoundary(index, e.target.value)}
+                                className="bg-white/80 border-gray-200 text-gray-900 placeholder:text-gray-400"
+                                placeholder="For example: no work after 7pm, fewer explanations to others, space from certain conversations…"
+                              />
+                              {answers.boundaries.length > 1 && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => removeBoundary(index)}
+                                  className="text-gray-500 hover:text-gray-700"
+                                >
+                                  <X className="w-4 h-4" />
+                                </Button>
+                              )}
+                            </div>
+                          ))}
+                          {answers.boundaries.length < 5 && (
+                            <Button
+                              variant="outline"
+                              onClick={addBoundary}
+                              className="w-full bg-white/80 border-gray-200 text-gray-700 hover:bg-gray-50"
+                            >
+                              ➕ Add another boundary
                             </Button>
                           )}
                         </div>
-                      ))}
-                      {answers.boundaries.length < 5 && (
-                        <Button
-                          variant="outline"
-                          onClick={addBoundary}
-                          className="w-full bg-white/5 border-white/20 text-white hover:bg-white/10"
-                        >
-                          ➕ Add another boundary
-                        </Button>
-                      )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1085,68 +1085,68 @@ Give 2-3 specific boundary examples related to their context. Like: "no meetings
               {/* Step 10: Snapshot Preferences */}
               {step === 10 && (
                 <div className="space-y-6">
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">
-                      Your <span className="text-[#FECDD4]">Snapshot</span> Preferences
+                  <div className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-8">
+                    <h2 className="text-3xl font-light text-gray-900 mb-2 tracking-tight">
+                      Your <span className="text-purple-600">Snapshot</span> Preferences
                     </h2>
-                    <p className="text-white/60">How often would you like to see your full overview?</p>
-                  </div>
+                    <p className="text-gray-500 mb-6 font-light">How often would you like to see your full overview?</p>
 
-                  <div className="space-y-3">
-                    {[
-                      { value: "daily", label: "Daily snapshot (everything in one view)" },
-                      { value: "weekly", label: "Weekly overview" },
-                      { value: "monthly", label: "Monthly reflection" },
-                      { value: "manual", label: "Only when I check in" },
-                    ].map((option) => (
-                      <button
-                        key={option.value}
-                        onClick={() => updateAnswer("snapshotFrequency", option.value)}
-                        className={`w-full p-4 rounded-2xl border-2 transition-all text-left ${
-                          answers.snapshotFrequency === option.value
-                            ? "bg-[#FECDD4]/10 border-[#FECDD4]/50 text-white"
-                            : "bg-white/5 border-white/10 hover:border-white/20 text-white/70"
-                        }`}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-
-                  <Card className="bg-white/5 border-white/10 p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label className="text-white text-base">Daily Update</Label>
-                        <p className="text-white/60 text-sm mt-1">
-                          Send me a daily update that includes everything (my snapshot)
-                        </p>
-                      </div>
-                      <Switch
-                        checked={answers.dailyUpdateEnabled}
-                        onCheckedChange={(checked) => updateAnswer("dailyUpdateEnabled", checked)}
-                      />
+                    <div className="space-y-3 mb-6">
+                      {[
+                        { value: "daily", label: "Daily snapshot (everything in one view)" },
+                        { value: "weekly", label: "Weekly overview" },
+                        { value: "monthly", label: "Monthly reflection" },
+                        { value: "manual", label: "Only when I check in" },
+                      ].map((option) => (
+                        <button
+                          key={option.value}
+                          onClick={() => updateAnswer("snapshotFrequency", option.value)}
+                          className={`w-full p-4 rounded-2xl border transition-all text-left ${
+                            answers.snapshotFrequency === option.value
+                              ? "bg-purple-50 border-purple-200 text-gray-900 shadow-sm"
+                              : "bg-white/80 border-gray-200 hover:border-purple-200 text-gray-700 hover:bg-purple-50/50"
+                          }`}
+                        >
+                          <span className="font-light">{option.label}</span>
+                        </button>
+                      ))}
                     </div>
-                  </Card>
+
+                    <div className="bg-white/80 border border-gray-200 rounded-2xl p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <Label className="text-gray-700 text-base font-medium">Daily Update</Label>
+                          <p className="text-gray-500 text-sm mt-1 font-light">
+                            Send me a daily update that includes everything (my snapshot)
+                          </p>
+                        </div>
+                        <Switch
+                          checked={answers.dailyUpdateEnabled}
+                          onCheckedChange={(checked) => updateAnswer("dailyUpdateEnabled", checked)}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
 
               {/* Step 11: Summary */}
               {step === 11 && (
                 <div className="space-y-6">
-                  <div className="text-center">
-                    <div className="w-20 h-20 bg-[#FECDD4]/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle className="w-10 h-10 text-[#FECDD4]" />
+                  <div className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-8 text-center">
+                    <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <CheckCircle className="w-10 h-10 text-purple-500" />
                     </div>
-                    <h2 className="text-3xl font-bold text-white mb-2">You're All Set!</h2>
-                    <p className="text-white/60">Here's your personalized pathway summary</p>
+                    <h2 className="text-3xl font-light text-gray-900 mb-2 tracking-tight">You're All Set!</h2>
+                    <p className="text-gray-500 font-light">Here's your personalized pathway summary</p>
                   </div>
 
-                  <Card className="bg-white/5 border-white/10 p-6 space-y-4">
+                  <div className="bg-white/60 backdrop-blur-xl border-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-8 space-y-6">
                     <div>
-                      <Label className="text-[#FECDD4] text-sm">Focus Areas</Label>
+                      <Label className="text-purple-600 text-sm font-medium">Focus Areas</Label>
                       <div className="flex flex-wrap gap-2 mt-2">
                         {answers.concerns.map((concern) => (
-                          <Badge key={concern} className="bg-white/10 text-white border-0">
+                          <Badge key={concern} className="bg-purple-50 text-gray-700 border-0 font-light">
                             {concernOptions.find((c) => c.id === concern)?.label}
                           </Badge>
                         ))}
@@ -1154,25 +1154,25 @@ Give 2-3 specific boundary examples related to their context. Like: "no meetings
                     </div>
 
                     <div>
-                      <Label className="text-[#FECDD4] text-sm">Current State</Label>
-                      <p className="text-white mt-1">{answers.currentFeeling}</p>
+                      <Label className="text-purple-600 text-sm font-medium">Current State</Label>
+                      <p className="text-gray-900 mt-1 font-light">{answers.currentFeeling}</p>
                     </div>
 
                     <div>
-                      <Label className="text-[#FECDD4] text-sm">Daily Time Available</Label>
-                      <p className="text-white mt-1">{answers.timeAvailable}</p>
+                      <Label className="text-purple-600 text-sm font-medium">Daily Time Available</Label>
+                      <p className="text-gray-900 mt-1 font-light">{answers.timeAvailable}</p>
                     </div>
 
                     <div>
-                      <Label className="text-[#FECDD4] text-sm">Capacity Score</Label>
-                      <p className="text-white mt-1">{answers.capacityScore}/10</p>
+                      <Label className="text-purple-600 text-sm font-medium">Capacity Score</Label>
+                      <p className="text-gray-900 mt-1 font-light">{answers.capacityScore}/10</p>
                     </div>
 
                     <div>
-                      <Label className="text-[#FECDD4] text-sm">Snapshot Frequency</Label>
-                      <p className="text-white mt-1 capitalize">{answers.snapshotFrequency}</p>
+                      <Label className="text-purple-600 text-sm font-medium">Snapshot Frequency</Label>
+                      <p className="text-gray-900 mt-1 capitalize font-light">{answers.snapshotFrequency}</p>
                     </div>
-                  </Card>
+                  </div>
                 </div>
               )}
             </motion.div>
@@ -1187,7 +1187,7 @@ Give 2-3 specific boundary examples related to their context. Like: "no meetings
                 onClick={() => setStep(step - 1)}
                 variant="outline"
                 size="lg"
-                className="bg-white/5 border-white/20 text-white hover:bg-white/10 hover:text-white hover:shadow-lg"
+                className="bg-white/80 border-gray-200 text-gray-700 hover:bg-white hover:text-gray-900 hover:shadow-md font-light"
               >
                 Back
               </Button>
@@ -1197,7 +1197,7 @@ Give 2-3 specific boundary examples related to their context. Like: "no meetings
                 onClick={handleNext}
                 disabled={!canProceed()}
                 size="lg"
-                className="flex-1 bg-[#FECDD4] hover:bg-[#FDB8C3] text-[#611836] rounded-2xl py-6 text-lg font-semibold disabled:opacity-40"
+                className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-2xl py-6 text-lg font-light disabled:opacity-40 shadow-lg"
               >
                 {step === 0 ? "Start My Journey" : step < totalSteps - 1 ? "Next →" : "Go to Dashboard"}
               </Button>
