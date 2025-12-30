@@ -143,16 +143,13 @@ export default function AdminSettings() {
 
   const sendInviteMutation = useMutation({
     mutationFn: async ({ email, role }) => {
-      await base44.integrations.Core.SendEmail({
-        to: email,
-        subject: "Invitation to The Aligned Woman Blueprint",
-        body: `You've been invited to join The Aligned Woman Blueprint as ${role.replace("_", " ")}. Please sign up at ${window.location.origin}`,
-      });
+      await base44.users.inviteUser(email, role);
     },
     onSuccess: () => {
       setInviteDialogOpen(false);
       setInviteEmail("");
       setInviteRole("moderator");
+      queryClient.invalidateQueries({ queryKey: ["allUsers"] });
     },
   });
 
