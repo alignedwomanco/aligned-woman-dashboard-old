@@ -58,15 +58,29 @@ export default function ProblemSection() {
             {fragmentedApps.map((app, index) => (
               <motion.div
                 key={app.label}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                className="bg-white/60 backdrop-blur-sm border-0 rounded-2xl p-6 text-center hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.03)]"
+                transition={{ 
+                  duration: 0.5, 
+                  delay: index * 0.08,
+                  type: "spring",
+                  stiffness: 100
+                }}
+                whileHover={{ 
+                  y: -8,
+                  scale: 1.05,
+                  transition: { duration: 0.2 }
+                }}
+                className="bg-white/60 backdrop-blur-sm border-0 rounded-2xl p-6 text-center hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.03)] cursor-pointer"
               >
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-100/50 to-pink-100/50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <motion.div 
+                  className="w-12 h-12 bg-gradient-to-br from-purple-100/50 to-pink-100/50 rounded-xl flex items-center justify-center mx-auto mb-3"
+                  whileHover={{ rotate: 360 }}
+                  transition={{ duration: 0.6 }}
+                >
                   <app.icon className="w-6 h-6 text-[#3D2250]" />
-                </div>
+                </motion.div>
                 <span className="text-sm font-light text-gray-700">{app.label}</span>
               </motion.div>
             ))}
