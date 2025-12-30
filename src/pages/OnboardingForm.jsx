@@ -716,33 +716,62 @@ Be warm, specific, and action-oriented.`;
                     <>
                       <div>
                         <Label className="text-white mb-2 block">Date of Birth *</Label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
-                              className="w-full justify-start text-left font-normal bg-white/10 border-white/20 text-white hover:bg-white/20 hover:text-white"
-                            >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {answers.dob ? format(new Date(answers.dob), "PPP") : "Select your birth date"}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={answers.dob ? new Date(answers.dob) : undefined}
-                              onSelect={(date) => {
-                                if (date) {
-                                  updateAnswer("dob", format(date, "yyyy-MM-dd"));
-                                }
+                        <div className="grid grid-cols-3 gap-2">
+                          <div>
+                            <Select
+                              value={answers.dob.split('-')[2] || ""}
+                              onValueChange={(day) => {
+                                const [year, month] = answers.dob.split('-');
+                                updateAnswer("dob", `${year || "1990"}-${month || "01"}-${day.padStart(2, '0')}`);
                               }}
-                              defaultMonth={new Date(1990, 0)}
-                              captionLayout="dropdown-buttons"
-                              fromYear={1920}
-                              toYear={new Date().getFullYear()}
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
+                            >
+                              <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                                <SelectValue placeholder="Day" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
+                                  <SelectItem key={day} value={String(day)}>{day}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Select
+                              value={answers.dob.split('-')[1] || ""}
+                              onValueChange={(month) => {
+                                const [year, , day] = answers.dob.split('-');
+                                updateAnswer("dob", `${year || "1990"}-${month.padStart(2, '0')}-${day || "01"}`);
+                              }}
+                            >
+                              <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                                <SelectValue placeholder="Month" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((month, i) => (
+                                  <SelectItem key={i + 1} value={String(i + 1)}>{month}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Select
+                              value={answers.dob.split('-')[0] || ""}
+                              onValueChange={(year) => {
+                                const [, month, day] = answers.dob.split('-');
+                                updateAnswer("dob", `${year}-${month || "01"}-${day || "01"}`);
+                              }}
+                            >
+                              <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                                <SelectValue placeholder="Year" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {Array.from({ length: new Date().getFullYear() - 1920 + 1 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                                  <SelectItem key={year} value={String(year)}>{year}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
                       </div>
                       <div>
                         <Label className="text-white mb-2 block">Time of Birth (optional)</Label>
