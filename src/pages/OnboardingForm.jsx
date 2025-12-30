@@ -86,6 +86,8 @@ export default function OnboardingForm() {
   const [step, setStep] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [answers, setAnswers] = useState({
+    fullName: "",
+    email: "",
     concerns: [],
     currentFeeling: "",
     capacityScore: 5,
@@ -108,7 +110,7 @@ export default function OnboardingForm() {
     dailyUpdateEnabled: false,
   });
 
-  const totalSteps = 11; // 0-10
+  const totalSteps = 12; // 0-11
 
   const updateAnswer = (key, value) => {
     setAnswers((prev) => ({ ...prev, [key]: value }));
@@ -175,22 +177,24 @@ export default function OnboardingForm() {
       case 0:
         return true; // Welcome screen
       case 1:
-        return answers.concerns.length > 0;
+        return answers.fullName.trim() !== "" && answers.email.trim() !== ""; // Name and email required
       case 2:
-        return answers.currentFeeling !== ""; // Required
+        return answers.concerns.length > 0;
       case 3:
-        return answers.timeAvailable !== ""; // Required
+        return answers.currentFeeling !== ""; // Required
       case 4:
-        return true; // Capacity is always set
+        return answers.timeAvailable !== ""; // Required
       case 5:
-        return answers.userContextText.trim() !== ""; // Required
+        return true; // Capacity is always set
       case 6:
-        return answers.cycleProfile.cycleStage !== ""; // Required
+        return answers.userContextText.trim() !== ""; // Required
       case 7:
-        return !answers.enableDeepPersonalisation || answers.dob !== "";
+        return answers.cycleProfile.cycleStage !== ""; // Required
       case 8:
-        return answers.values.length > 0;
+        return !answers.enableDeepPersonalisation || answers.dob !== "";
       case 9:
+        return answers.values.length > 0;
+      case 10:
         return true; // Snapshot prefs have defaults
       default:
         return true;
@@ -207,6 +211,12 @@ export default function OnboardingForm() {
 
   const handleComplete = async () => {
     setIsProcessing(true);
+
+    // Update user profile with name and email
+    await base44.auth.updateMe({
+      full_name: answers.fullName,
+      email: answers.email,
+    });
 
     const result = await analyzeAnswers(answers);
 
@@ -421,7 +431,7 @@ Be warm, specific, and action-oriented.`;
 
   // Determine if current step needs manual next button
   const needsNextButton = () => {
-    return step === 0 || step === 1 || step === 4 || step === 5 || step === 6 || step === 7 || step === 8 || step === 9 || step === 10;
+    return step === 0 || step === 1 || step === 2 || step === 5 || step === 6 || step === 7 || step === 8 || step === 9 || step === 10 || step === 11;
   };
 
   if (isProcessing) {
@@ -488,8 +498,41 @@ Be warm, specific, and action-oriented.`;
                 </div>
               )}
 
-              {/* Step 1: Concerns */}
+              {/* Step 1: Name & Email */}
               {step === 1 && (
+                <div className="space-y-6">
+                  <div>
+                    <h2 className="text-3xl font-bold text-white mb-2">
+                      Let's get to <span className="text-[#FECDD4]">know you</span>
+                    </h2>
+                    <p className="text-white/60">Tell us your name and email</p>
+                  </div>
+                  <Card className="bg-white/5 border-white/10 p-6 space-y-4">
+                    <div>
+                      <Label className="text-white mb-2 block">Full Name *</Label>
+                      <Input
+                        value={answers.fullName}
+                        onChange={(e) => updateAnswer("fullName", e.target.value)}
+                        className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
+                        placeholder="Enter your full name"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-white mb-2 block">Email *</Label>
+                      <Input
+                        type="email"
+                        value={answers.email}
+                        onChange={(e) => updateAnswer("email", e.target.value)}
+                        className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
+                        placeholder="your@email.com"
+                      />
+                    </div>
+                  </Card>
+                </div>
+              )}
+
+              {/* Step 2: Concerns */}
+              {step === 2 && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
@@ -529,8 +572,8 @@ Be warm, specific, and action-oriented.`;
                 </div>
               )}
 
-              {/* Step 2: Current Feeling */}
-              {step === 2 && (
+              {/* Step 3: Current Feeling */}
+              {step === 3 && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
@@ -556,8 +599,8 @@ Be warm, specific, and action-oriented.`;
                 </div>
               )}
 
-              {/* Step 3: Time Available */}
-              {step === 3 && (
+              {/* Step 4: Time Available */}
+              {step === 4 && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
@@ -584,8 +627,8 @@ Be warm, specific, and action-oriented.`;
                 </div>
               )}
 
-              {/* Step 4: Capacity */}
-              {step === 4 && (
+              {/* Step 5: Capacity */}
+              {step === 5 && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
@@ -616,8 +659,8 @@ Be warm, specific, and action-oriented.`;
                 </div>
               )}
 
-              {/* Step 5: Free Text Context */}
-              {step === 5 && (
+              {/* Step 6: Free Text Context */}
+              {step === 6 && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
@@ -640,8 +683,8 @@ Be warm, specific, and action-oriented.`;
                 </div>
               )}
 
-              {/* Step 6: Cycle Profile */}
-              {step === 6 && (
+              {/* Step 7: Cycle Profile */}
+              {step === 7 && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
@@ -695,8 +738,8 @@ Be warm, specific, and action-oriented.`;
                 </div>
               )}
 
-              {/* Step 7: Birth Details */}
-              {step === 7 && (
+              {/* Step 8: Birth Details */}
+              {step === 8 && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
@@ -798,8 +841,8 @@ Be warm, specific, and action-oriented.`;
                 </div>
               )}
 
-              {/* Step 8: Values, Identity, Boundaries */}
-              {step === 8 && (
+              {/* Step 9: Values, Identity, Boundaries */}
+              {step === 9 && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
@@ -884,8 +927,8 @@ Be warm, specific, and action-oriented.`;
                 </div>
               )}
 
-              {/* Step 9: Snapshot Preferences */}
-              {step === 9 && (
+              {/* Step 10: Snapshot Preferences */}
+              {step === 10 && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">
@@ -932,8 +975,8 @@ Be warm, specific, and action-oriented.`;
                 </div>
               )}
 
-              {/* Step 10: Summary */}
-              {step === 10 && (
+              {/* Step 11: Summary */}
+              {step === 11 && (
                 <div className="space-y-6">
                   <div className="text-center">
                     <div className="w-20 h-20 bg-[#FECDD4]/20 rounded-full flex items-center justify-center mx-auto mb-6">
