@@ -72,8 +72,7 @@ export default function PlaceAutocomplete({ value, onChange, className, placehol
   return (
     <Input
       ref={inputRef}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
+      defaultValue={value}
       className={className}
       placeholder={error ? "Type city name manually" : placeholder}
       autoComplete="off"
