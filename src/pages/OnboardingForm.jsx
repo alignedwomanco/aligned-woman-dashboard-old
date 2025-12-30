@@ -19,6 +19,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import PlaceAutocomplete from "@/components/onboarding/PlaceAutocomplete";
 import {
   Sparkles,
   Briefcase,
@@ -709,36 +713,57 @@ Be warm, specific, and action-oriented.`;
                       />
                     </div>
                     {answers.enableDeepPersonalisation && (
-                      <>
-                        <div>
-                          <Label className="text-white mb-2 block">Date of Birth *</Label>
-                          <Input
-                            type="date"
-                            value={answers.dob}
-                            onChange={(e) => updateAnswer("dob", e.target.value)}
-                            className="bg-white/10 border-white/20 text-white"
-                          />
-                        </div>
-                        <div>
-                          <Label className="text-white mb-2 block">Time of Birth (optional)</Label>
-                          <Input
-                            type="time"
-                            value={answers.tob}
-                            onChange={(e) => updateAnswer("tob", e.target.value)}
-                            className="bg-white/10 border-white/20 text-white"
-                            placeholder="I don't know"
-                          />
-                        </div>
-                        <div>
-                          <Label className="text-white mb-2 block">Place of Birth (optional)</Label>
-                          <Input
-                            value={answers.pob}
-                            onChange={(e) => updateAnswer("pob", e.target.value)}
-                            className="bg-white/10 border-white/20 text-white"
-                            placeholder="City, Country"
-                          />
-                        </div>
-                      </>
+                    <>
+                      <div>
+                        <Label className="text-white mb-2 block">Date of Birth *</Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className="w-full justify-start text-left font-normal bg-white/10 border-white/20 text-white hover:bg-white/20 hover:text-white"
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {answers.dob ? format(new Date(answers.dob), "PPP") : "Select your birth date"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={answers.dob ? new Date(answers.dob) : undefined}
+                              onSelect={(date) => {
+                                if (date) {
+                                  updateAnswer("dob", format(date, "yyyy-MM-dd"));
+                                }
+                              }}
+                              defaultMonth={new Date(1990, 0)}
+                              captionLayout="dropdown-buttons"
+                              fromYear={1920}
+                              toYear={new Date().getFullYear()}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      <div>
+                        <Label className="text-white mb-2 block">Time of Birth (optional)</Label>
+                        <Input
+                          type="time"
+                          value={answers.tob}
+                          onChange={(e) => updateAnswer("tob", e.target.value)}
+                          className="bg-white/10 border-white/20 text-white"
+                          placeholder="I don't know"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-white mb-2 block">Place of Birth (optional)</Label>
+                        <PlaceAutocomplete
+                          value={answers.pob}
+                          onChange={(value) => updateAnswer("pob", value)}
+                          className="bg-white/10 border-white/20 text-white placeholder:text-white/30"
+                          placeholder="Start typing city name..."
+                        />
+                      </div>
+                    </>
                     )}
                   </Card>
                 </div>
