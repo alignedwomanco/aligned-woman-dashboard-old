@@ -19,7 +19,7 @@ const pillars = [
     icon: User,
     title: "Woman Centered",
     description: "Authority always remains with you. This is education designed to restore self-trust.",
-    color: "from-[#C67793] to-[#8B2E4D]",
+    color: "from-[#A962E9] to-[#8B4FC9]",
   },
 ];
 
@@ -76,7 +76,7 @@ export default function WhatWeDoDifferentlySection() {
           </div>
 
           <div className="text-center mt-8">
-            <div className="inline-block bg-gradient-to-r from-[#C67793] to-[#8B2E4D] rounded-full px-8 py-4">
+            <div className="inline-block bg-gradient-to-r from-[#A962E9] to-[#8B4FC9] rounded-full px-8 py-4">
               <p className="text-2xl font-semibold text-white">
                 This is an operating system for embodied living
               </p>

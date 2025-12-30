@@ -55,7 +55,7 @@ export default function WhoIsForSectionCompany() {
                     transition={{ duration: 0.4, delay: index * 0.1 }}
                     className="flex items-start gap-3"
                   >
-                    <div className="w-6 h-6 bg-gradient-to-br from-[#C67793] to-[#8B2E4D] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <div className="w-6 h-6 bg-gradient-to-br from-[#A962E9] to-[#8B4FC9] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <Check className="w-4 h-4 text-white" />
                     </div>
                     <span className="text-gray-700 leading-relaxed">{quality}</span>
@@ -75,7 +75,7 @@ export default function WhoIsForSectionCompany() {
             <div className="bg-gradient-to-br from-[#3B224E] to-[#4A2B5E] rounded-3xl p-12 text-white">
               <h3 className="text-3xl font-light mb-6">Why This Has Never Existed Before</h3>
               <p className="text-xl mb-8 text-white/90">
-                Because <span className="font-semibold text-[#C67793]">coherence is harder than scale.</span>
+                Because <span className="font-semibold text-[#A962E9]">coherence is harder than scale.</span>
               </p>
 
               <div className="space-y-4 mb-8">
@@ -101,7 +101,7 @@ export default function WhoIsForSectionCompany() {
                 </div>
               </div>
 
-              <p className="text-xl font-semibold mt-8 text-[#C67793]">
+              <p className="text-xl font-semibold mt-8 text-[#A962E9]">
                 We chose coherence over hype.
               </p>
             </div>
@@ -127,7 +127,7 @@ export default function WhoIsForSectionCompany() {
               <Button
                 onClick={() => window.location.href = createPageUrl("OnboardingForm")}
                 size="lg"
-                className="bg-gradient-to-r from-[#6B1B3D] to-[#8B2E4D] hover:from-[#4A1228] hover:to-[#6B1B3D] text-white px-10 py-7 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group"
+                className="bg-gradient-to-r from-[#7340B9] to-[#8B4FC9] hover:from-[#5B2FA9] hover:to-[#7340B9] text-white px-10 py-7 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group"
               >
                 Create Your Free Account
                 <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -136,7 +136,7 @@ export default function WhoIsForSectionCompany() {
                 onClick={() => window.location.href = createPageUrl("AWBlueprint")}
                 size="lg"
                 variant="outline"
-                className="border-2 border-[#6B1B3D] text-[#6B1B3D] hover:bg-[#6B1B3D] hover:text-white px-10 py-7 text-lg font-semibold rounded-full transition-all duration-300"
+                className="border-2 border-[#7340B9] text-[#7340B9] hover:bg-[#7340B9] hover:text-white px-10 py-7 text-lg font-semibold rounded-full transition-all duration-300"
               >
                 Explore The Blueprint
               </Button>

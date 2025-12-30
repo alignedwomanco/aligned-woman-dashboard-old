@@ -85,7 +85,7 @@ export default function FoundationalEducationSection() {
             <p className="text-3xl font-light text-[#3B224E] mb-6">
               But through one coherent system.
             </p>
-            <div className="h-1 w-24 bg-gradient-to-r from-[#C67793] to-[#8B2E4D] mb-8" />
+            <div className="h-1 w-24 bg-gradient-to-r from-[#A962E9] to-[#8B4FC9] mb-8" />
             <p className="text-xl text-gray-700 mb-4">This is not self-help</p>
             <p className="text-2xl font-semibold text-[#6B1B3D]">
               This is foundational education for real life
@@ -110,7 +110,7 @@ export default function FoundationalEducationSection() {
               transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
               className="bg-white border border-pink-100 rounded-2xl p-6 hover:shadow-lg transition-shadow"
             >
-              <div className="w-12 h-12 bg-gradient-to-br from-[#C67793] to-[#8B2E4D] rounded-xl flex items-center justify-center mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-[#A962E9] to-[#8B4FC9] rounded-xl flex items-center justify-center mb-4">
                 <topic.icon className="w-6 h-6 text-white" />
               </div>
               <p className="text-gray-700 leading-relaxed">{topic.title}</p>

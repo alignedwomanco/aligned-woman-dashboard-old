@@ -25,7 +25,7 @@ export default function CompanyHeroSection() {
           className="space-y-8"
         >
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-2 mb-4">
-            <Sparkles className="w-4 h-4 text-[#C67793]" />
+            <Sparkles className="w-4 h-4 text-[#A962E9]" />
             <span className="text-white text-sm font-medium">The Education Women Were Never Given</span>
           </div>
 
@@ -44,7 +44,7 @@ export default function CompanyHeroSection() {
             className="text-lg text-white/80 max-w-4xl mx-auto leading-relaxed"
           >
             The Aligned Woman is a modern education and development company for women who want{" "}
-            <span className="text-[#C67793] font-semibold">clarity, confidence, and success</span>{" "}
+            <span className="text-[#A962E9] font-semibold">clarity, confidence, and success</span>{" "}
             without burnout, self-abandonment, or fragmentation.
           </motion.p>
 
@@ -57,7 +57,7 @@ export default function CompanyHeroSection() {
             <Button
               onClick={() => window.location.href = createPageUrl("AWBlueprint")}
               size="lg"
-              className="bg-gradient-to-r from-[#C67793] to-[#8B2E4D] hover:from-[#8B2E4D] hover:to-[#6B1B3D] text-white px-10 py-7 text-lg font-semibold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 group"
+              className="bg-gradient-to-r from-[#A962E9] to-[#8B4FC9] hover:from-[#8B4FC9] hover:to-[#7340B9] text-white px-10 py-7 text-lg font-semibold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 group"
             >
               Explore The Blueprint
               <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
