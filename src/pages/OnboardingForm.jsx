@@ -870,36 +870,40 @@ Be warm, specific, and action-oriented.`;
                   </div>
 
                   <div>
-                    <Label className="text-white mb-2 block">Releasing (Identity Evolution)</Label>
+                    <Label className="text-white mb-2 block">Letting go (what feels heavy right now)</Label>
+                    <p className="text-white/60 text-sm mb-3">This can be a habit, a belief, a role you're playing, or something that's draining you.</p>
                     <Input
                       value={answers.releasing}
                       onChange={(e) => updateAnswer("releasing", e.target.value)}
-                      className="bg-white/10 border-white/20 text-white"
-                      placeholder="What are you letting go of?"
+                      className="bg-white/10 border-white/20 text-white placeholder:text-white/40"
+                      placeholder="For example: people-pleasing, overworking, self-doubt, a relationship pattern, unrealistic expectations…"
                     />
                   </div>
 
                   <div>
-                    <Label className="text-white mb-2 block">Becoming (Identity Evolution)</Label>
+                    <Label className="text-white mb-2 block">What do you want more of in your life?</Label>
+                    <p className="text-white/60 text-sm mb-1">You don't need a full answer, just a direction.</p>
+                    <p className="text-white/60 text-sm mb-3">For example: feeling less overwhelmed, setting clearer boundaries, or having more energy day to day.</p>
+                    <p className="text-white/50 text-xs mb-3">Think in feelings or qualities, not labels.</p>
                     <Input
                       value={answers.becoming}
                       onChange={(e) => updateAnswer("becoming", e.target.value)}
-                      className="bg-white/10 border-white/20 text-white"
-                      placeholder="Who are you becoming?"
+                      className="bg-white/10 border-white/20 text-white placeholder:text-white/40"
+                      placeholder="For example: more calm, more confidence, more honesty, more ease, more self-trust…"
                     />
                   </div>
 
                   <div>
-                    <Label className="text-white mb-2 block">Active Boundaries</Label>
-                    <p className="text-white/60 text-sm mb-3">What boundaries do you need right now?</p>
+                    <Label className="text-white mb-2 block">Where do you need better boundaries right now?</Label>
+                    <p className="text-white/60 text-sm mb-3">This helps protect your energy while you're growing.</p>
                     <div className="space-y-2">
                       {answers.boundaries.map((boundary, index) => (
                         <div key={index} className="flex gap-2">
                           <Input
                             value={boundary}
                             onChange={(e) => updateBoundary(index, e.target.value)}
-                            className="bg-white/10 border-white/20 text-white"
-                            placeholder={`Boundary ${index + 1}`}
+                            className="bg-white/10 border-white/20 text-white placeholder:text-white/40"
+                            placeholder="For example: no work after 7pm, fewer explanations to others, space from certain conversations…"
                           />
                           {answers.boundaries.length > 1 && (
                             <Button
@@ -919,7 +923,7 @@ Be warm, specific, and action-oriented.`;
                           onClick={addBoundary}
                           className="w-full bg-white/5 border-white/20 text-white hover:bg-white/10"
                         >
-                          + Add Boundary
+                          ➕ Add another boundary
                         </Button>
                       )}
                     </div>
