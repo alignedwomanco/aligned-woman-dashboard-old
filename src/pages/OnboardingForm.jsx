@@ -883,7 +883,6 @@ Be warm, specific, and action-oriented.`;
                   <div>
                     <Label className="text-white mb-2 block">What do you want more of in your life?</Label>
                     <p className="text-white/60 text-sm mb-1">You don't need a full answer, just a direction.</p>
-                    <p className="text-white/60 text-sm mb-3">For example: feeling less overwhelmed, setting clearer boundaries, or having more energy day to day.</p>
                     <p className="text-white/50 text-xs mb-3">Think in feelings or qualities, not labels.</p>
                     <Input
                       value={answers.becoming}
