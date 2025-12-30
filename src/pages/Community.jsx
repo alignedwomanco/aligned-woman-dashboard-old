@@ -1,24 +1,138 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Search, TrendingUp, Award, Plus, MessageSquare } from "lucide-react";
-import { createPageUrl } from "@/utils";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Search, Users, Lock, ChevronRight, Heart, Briefcase, Brain, TrendingUp } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { motion } from "framer-motion";
-import CreatePostCard from "../components/community/CreatePostCard";
-import PostCard from "../components/community/PostCard";
-import CommunityLeaderboard from "../components/community/CommunityLeaderboard";
-import confetti from "canvas-confetti";
+
+// Mock data for community spaces
+const communitySpaces = [
+  {
+    id: 1,
+    tag: "Life stage • Support space • Guided",
+    title: "Navigating a breakup",
+    description: "A grounded space for women experiencing this chapter.",
+    members: 128,
+    isPrivate: true,
+    gradient: "from-rose-400 to-pink-500"
+  },
+  {
+    id: 2,
+    tag: "Work & ambition • Nervous system",
+    title: "Building without burnout",
+    description: "For high-capacity women in a low-energy season.",
+    members: 256,
+    isPrivate: true,
+    gradient: "from-purple-400 to-indigo-500"
+  },
+  {
+    id: 3,
+    tag: "Cycle-aware living • Relationships",
+    title: "Cycle-aware work & life",
+    description: "Understanding your body's rhythm in real time.",
+    members: 189,
+    isPrivate: false,
+    gradient: "from-amber-400 to-orange-500"
+  },
+  {
+    id: 4,
+    tag: "Relationships • Support space",
+    title: "Redefining love & boundaries",
+    description: "A space for women redesigning their relationships.",
+    members: 94,
+    isPrivate: true,
+    gradient: "from-teal-400 to-cyan-500"
+  },
+  {
+    id: 5,
+    tag: "Work & ambition • Life stage",
+    title: "High-capacity women in a low-energy season",
+    description: "For ambitious women navigating depletion.",
+    members: 312,
+    isPrivate: true,
+    gradient: "from-violet-400 to-purple-500"
+  },
+  {
+    id: 6,
+    tag: "Nervous system • Support space",
+    title: "Understanding emotional patterns in luteal",
+    description: "Processing the shifts before your period.",
+    members: 203,
+    isPrivate: false,
+    gradient: "from-pink-400 to-rose-500"
+  }
+];
+
+const recommendedSpaces = [
+  {
+    id: 7,
+    tag: "Nervous system • Cycle-aware",
+    title: "Understanding emotional patterns in luteal",
+    description: "Based on your recent check-ins and cycle phase.",
+    members: 203,
+    isPrivate: false,
+    gradient: "from-blue-400 to-indigo-500"
+  },
+  {
+    id: 8,
+    tag: "Relationships • Support space",
+    title: "Boundaries without guilt",
+    description: "Based on your nervous system state.",
+    members: 167,
+    isPrivate: true,
+    gradient: "from-emerald-400 to-teal-500"
+  },
+  {
+    id: 9,
+    tag: "Life stage • Support space",
+    title: "Restoring safety after heartbreak",
+    description: "A space to rebuild trust and stability.",
+    members: 142,
+    isPrivate: true,
+    gradient: "from-fuchsia-400 to-pink-500"
+  }
+];
+
+const communityGuides = [
+  {
+    id: 1,
+    name: "Sarah Chen",
+    area: "Nervous System",
+    image: "https://i.pravatar.cc/150?img=1"
+  },
+  {
+    id: 2,
+    name: "Maya Patel",
+    area: "Relationships",
+    image: "https://i.pravatar.cc/150?img=5"
+  },
+  {
+    id: 3,
+    name: "Elena Rodriguez",
+    area: "Cycle Awareness",
+    image: "https://i.pravatar.cc/150?img=9"
+  },
+  {
+    id: 4,
+    name: "Jasmine Lee",
+    area: "Work & Ambition",
+    image: "https://i.pravatar.cc/150?img=20"
+  }
+];
+
+const recentActivity = [
+  { text: "New women joined Navigating a Breakup", time: "2m ago" },
+  { text: "Live circle tomorrow in Building Without Burnout", time: "1h ago" },
+  { text: "Reflection posted in Cycle-Aware Work", time: "3h ago" },
+  { text: "Weekly session starts in Boundaries Without Guilt", time: "5h ago" }
+];
 
 export default function Community() {
   const [currentUser, setCurrentUser] = React.useState(null);
-  const [sortBy, setSortBy] = useState("new");
-  const [searchQuery, setSearchQuery] = useState("");
-  const queryClient = useQueryClient();
+  const [activeFilter, setActiveFilter] = useState("All");
 
   React.useEffect(() => {
     const loadUser = async () => {
@@ -28,193 +142,11 @@ export default function Community() {
     loadUser();
   }, []);
 
-  const { data: posts = [] } = useQuery({
-    queryKey: ["communityPosts", sortBy],
-    queryFn: async () => {
-      const allPosts = await base44.entities.CommunityPost.list("-created_date");
-      if (sortBy === "top") {
-        return allPosts.sort((a, b) => (b.likes || 0) - (a.likes || 0));
-      }
-      return allPosts;
-    },
-  });
+  const filters = ["All", "Life stage", "Relationships", "Work & ambition", "Nervous system", "Cycle-aware living"];
 
-  const { data: users = [] } = useQuery({
-    queryKey: ["users"],
-    queryFn: () => base44.entities.User.list(),
-    initialData: [],
-  });
-
-  const { data: likes = [] } = useQuery({
-    queryKey: ["postLikes"],
-    queryFn: () => base44.entities.PostLike.filter({}),
-    initialData: [],
-  });
-
-  const { data: comments = [] } = useQuery({
-    queryKey: ["postComments"],
-    queryFn: () => base44.entities.PostComment.list("-created_date"),
-    initialData: [],
-  });
-
-  const createPostMutation = useMutation({
-    mutationFn: (postData) => base44.entities.CommunityPost.create(postData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["communityPosts"] });
-    },
-  });
-
-  const likePostMutation = useMutation({
-    mutationFn: async (postId) => {
-      const existingLike = likes.find(l => l.postId === postId && l.created_by === currentUser.email);
-      const post = posts.find(p => p.id === postId);
-      
-      if (existingLike) {
-        await base44.entities.PostLike.delete(existingLike.id);
-        await base44.entities.CommunityPost.update(postId, { 
-          likes: Math.max(0, (post?.likes || 0) - 1) 
-        });
-      } else {
-        await base44.entities.PostLike.create({ postId });
-        await base44.entities.CommunityPost.update(postId, { 
-          likes: (post?.likes || 0) + 1 
-        });
-        
-        // Award points for engagement
-        await awardPoints(2, "post_liked");
-        
-        // Notify post author
-        if (post.created_by !== currentUser.email) {
-          await base44.entities.Notification.create({
-            type: "like",
-            message: `${currentUser.full_name} liked your post`,
-            linkTo: `/community?post=${postId}`,
-            source_user_email: currentUser.email,
-            target_post_id: postId,
-            created_by: post.created_by,
-          });
-        }
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["communityPosts"] });
-      queryClient.invalidateQueries({ queryKey: ["postLikes"] });
-    },
-  });
-
-  const commentMutation = useMutation({
-    mutationFn: async ({ postId, content, parentCommentId }) => {
-      const comment = await base44.entities.PostComment.create({ 
-        postId, 
-        content,
-        parentCommentId 
-      });
-      
-      const post = posts.find(p => p.id === postId);
-      await base44.entities.CommunityPost.update(postId, { 
-        commentCount: (post?.commentCount || 0) + 1 
-      });
-
-      // Award points
-      await awardPoints(5, "comment_created");
-
-      // Notify post author
-      if (post.created_by !== currentUser.email) {
-        await base44.entities.Notification.create({
-          type: "comment",
-          message: `${currentUser.full_name} commented on your post`,
-          linkTo: `/community?post=${postId}`,
-          source_user_email: currentUser.email,
-          target_post_id: postId,
-          target_comment_id: comment.id,
-          created_by: post.created_by,
-        });
-      }
-
-      return comment;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["postComments"] });
-      queryClient.invalidateQueries({ queryKey: ["communityPosts"] });
-    },
-  });
-
-  const deletePostMutation = useMutation({
-    mutationFn: (postId) => base44.entities.CommunityPost.delete(postId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["communityPosts"] });
-    },
-  });
-
-  const sharePostMutation = useMutation({
-    mutationFn: async (post) => {
-      await base44.entities.CommunityPost.create({
-        content: `Reshared from ${getUserByEmail(post.created_by)?.full_name || post.created_by}`,
-        reshared_from_post_id: post.id,
-        media_urls: post.media_urls,
-        hashtags: post.hashtags,
-      });
-
-      await base44.entities.CommunityPost.update(post.id, {
-        shareCount: (post.shareCount || 0) + 1,
-      });
-
-      // Award points
-      await awardPoints(3, "post_shared");
-
-      confetti({
-        particleCount: 50,
-        spread: 60,
-        origin: { y: 0.7 }
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["communityPosts"] });
-    },
-  });
-
-  const awardPoints = async (points, reason) => {
-    try {
-      const userPoints = await base44.entities.UserPoints.filter({});
-      const current = userPoints[0];
-      
-      if (current) {
-        const newTotal = (current.points || 0) + points;
-        await base44.entities.UserPoints.update(current.id, {
-          points: newTotal,
-          level: Math.floor(newTotal / 100) + 1,
-        });
-      }
-
-      await base44.auth.updateMe({
-        total_community_points: ((currentUser.total_community_points || 0) + points),
-      });
-    } catch (error) {
-      console.error("Failed to award points:", error);
-    }
-  };
-
-  const getUserByEmail = (email) => {
-    return users.find(u => u.email === email);
-  };
-
-  const hasLiked = (postId) => {
-    return likes.some(l => l.postId === postId && l.created_by === currentUser?.email);
-  };
-
-  const getPostComments = (postId) => {
-    return comments.filter(c => c.postId === postId);
-  };
-
-  const filteredPosts = posts.filter(post => {
-    if (!searchQuery) return true;
-    const searchLower = searchQuery.toLowerCase();
-    return (
-      post.content.toLowerCase().includes(searchLower) ||
-      post.hashtags?.some(tag => tag.toLowerCase().includes(searchLower)) ||
-      getUserByEmail(post.created_by)?.full_name?.toLowerCase().includes(searchLower)
-    );
-  });
+  const filteredSpaces = activeFilter === "All" 
+    ? communitySpaces 
+    : communitySpaces.filter(space => space.tag.includes(activeFilter));
 
   if (!currentUser) {
     return (
@@ -225,224 +157,212 @@ export default function Community() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: currentUser?.background_image?.startsWith('#') ? currentUser.background_image : 'transparent' }}>
-      {currentUser?.background_image && !currentUser.background_image.startsWith('#') && (
-        <div 
-          className="fixed inset-0 -z-10"
-          style={{
-            backgroundImage: currentUser.background_image.startsWith('data:image/svg+xml') 
-              ? `url("${currentUser.background_image}")`
-              : `url(${currentUser.background_image})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundAttachment: 'fixed'
-          }}
-        />
-      )}
-      {/* Header Bar */}
-      <motion.div 
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className="sticky top-0 z-40 backdrop-blur-xl border-b border-white/10"
-        style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)' }}
-      >
-        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
-          <h1 className="text-xl font-bold text-white">
-            Community
-          </h1>
-          <div className="flex items-center gap-3">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", delay: 0.2 }}
-              className="flex items-center gap-2 bg-white/10 px-4 py-1.5 rounded-full border border-white/20"
-            >
-              <Award className="w-4 h-4 text-yellow-400" />
-              <span className="text-sm font-semibold text-white">
-                {currentUser?.total_community_points || 0} pts
-              </span>
-            </motion.div>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50/30 via-pink-50/20 to-indigo-50/30">
+      {/* Top Bar */}
+      <div className="border-b border-gray-200 bg-white/80 backdrop-blur-sm sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-6 py-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-light text-gray-900 tracking-tight">Community</h1>
+              <p className="text-sm text-gray-500 mt-0.5 font-light">You don't have to navigate this season alone.</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <Search className="w-5 h-5 text-gray-600" />
+              </Button>
+              <Avatar className="w-10 h-10">
+                <AvatarImage src={currentUser?.profile_picture} />
+                <AvatarFallback className="bg-purple-100 text-purple-700">
+                  {currentUser?.full_name?.[0]}
+                </AvatarFallback>
+              </Avatar>
+            </div>
           </div>
-        </div>
-      </motion.div>
-
-      <div className="max-w-2xl mx-auto pb-20">
-        {/* Stories Bar */}
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.1 }}
-          className="px-4 py-4 border-b border-gray-200"
-        >
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide">
-            {users.slice(0, 8).map((user, idx) => (
-              <motion.div
-                key={user.email}
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ delay: idx * 0.05, type: "spring" }}
-                className="flex-shrink-0 text-center"
-              >
-                <div className="w-16 h-16 rounded-full p-0.5 mb-1" style={{ background: `linear-gradient(to top right, var(--theme-primary, #3C224F), var(--theme-secondary, #5B2E84))` }}>
-                  <div className="w-full h-full rounded-full bg-white/90 p-0.5">
-                    <Avatar className="w-full h-full">
-                      <AvatarImage src={user.profile_picture} />
-                      <AvatarFallback className="text-white text-xs" style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }}>
-                        {user.full_name?.[0] || "U"}
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
-                </div>
-                <p className="text-xs text-gray-700 truncate w-16">{user.full_name?.split(" ")[0]}</p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Search Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="px-4 py-3"
-        >
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <Input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search posts, people, #tags..."
-              className="pl-12 h-11 bg-white/90 border-gray-200 rounded-full"
-            />
-          </div>
-        </motion.div>
-
-        {/* Sort Pills */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3 }}
-          className="px-4 py-2 flex gap-2"
-        >
-          <Button
-            onClick={() => setSortBy("new")}
-            variant="ghost"
-            size="sm"
-            className={`rounded-full ${
-              sortBy === "new"
-                ? "text-white"
-                : "bg-white/90 text-gray-700 hover:bg-white"
-            }`}
-            style={sortBy === "new" ? { backgroundColor: 'var(--theme-secondary, #5B2E84)' } : {}}
-          >
-            <TrendingUp className="w-4 h-4 mr-1" />
-            Latest
-          </Button>
-          <Button
-            onClick={() => setSortBy("top")}
-            variant="ghost"
-            size="sm"
-            className={`rounded-full ${
-              sortBy === "top"
-                ? "text-white"
-                : "bg-white/90 text-gray-700 hover:bg-white"
-            }`}
-            style={sortBy === "top" ? { backgroundColor: 'var(--theme-secondary, #5B2E84)' } : {}}
-          >
-            <Award className="w-4 h-4 mr-1" />
-            Popular
-          </Button>
-        </motion.div>
-
-        {/* Create Post Quick Action */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4 }}
-          className="px-4 py-3"
-        >
-          <CreatePostCard 
-            currentUser={currentUser} 
-            onPostCreated={(data) => createPostMutation.mutate(data)}
-          />
-        </motion.div>
-
-        {/* Feed */}
-        <div className="space-y-0 border-t border-gray-200">
-          {filteredPosts.map((post, idx) => (
-            <motion.div
-              key={post.id}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.05, type: "spring", stiffness: 100 }}
-            >
-              <PostCard
-                post={post}
-                currentUser={currentUser}
-                author={getUserByEmail(post.created_by)}
-                isLiked={hasLiked(post.id)}
-                comments={getPostComments(post.id)}
-                onLike={likePostMutation.mutate}
-                onComment={commentMutation.mutate}
-                onDelete={deletePostMutation.mutate}
-                onShare={(post) => sharePostMutation.mutate(post)}
-                getUserByEmail={getUserByEmail}
-              />
-            </motion.div>
-          ))}
-
-          {filteredPosts.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="p-12 text-center"
-            >
-              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)', opacity: 0.2 }}>
-                <Search className="w-10 h-10 text-gray-600" />
-              </div>
-              <p className="text-gray-600">
-                {searchQuery ? "No posts found" : "Be the first to share!"}
-              </p>
-            </motion.div>
-          )}
         </div>
       </div>
 
-      {/* Bottom Nav Bar */}
-      <motion.div
-        initial={{ y: 100 }}
-        animate={{ y: 0 }}
-        className="fixed bottom-0 left-0 right-0 backdrop-blur-xl border-t border-white/10 z-40"
-        style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }}
-      >
-        <div className="max-w-2xl mx-auto px-6 py-3 flex items-center justify-around">
-          <Button variant="ghost" size="icon" className="text-white">
-            <TrendingUp className="w-6 h-6" />
-          </Button>
-          <Button variant="ghost" size="icon" className="text-white">
-            <Search className="w-6 h-6" />
-          </Button>
-          <Button
-            size="icon"
-            className="w-12 h-12 rounded-full hover:scale-110 transition-transform"
-            style={{ background: `linear-gradient(to right, var(--theme-primary, #3C224F), var(--theme-secondary, #5B2E84))` }}
-            onClick={() => document.querySelector('.ql-editor')?.focus()}
-          >
-            <Plus className="w-6 h-6" />
-          </Button>
-          <Button variant="ghost" size="icon" className="text-white">
-            <MessageSquare className="w-6 h-6" />
-          </Button>
-          <Button variant="ghost" size="icon" className="text-white" onClick={() => window.location.href = createPageUrl("ProfileSettings")}>
-            <Avatar className="w-8 h-8">
-              <AvatarImage src={currentUser?.profile_picture} />
-              <AvatarFallback className="text-white text-xs" style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }}>
-                {currentUser?.full_name?.[0]}
-              </AvatarFallback>
-            </Avatar>
-          </Button>
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Content - Left/Center */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Hero Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-500 to-pink-500 p-12"
+            >
+              <div className="relative z-10">
+                <h2 className="text-3xl font-light text-white mb-3 tracking-tight">Find your people</h2>
+                <p className="text-white/90 text-lg font-light mb-8 max-w-md">
+                  Spaces for women in the same life stage, season, or emotional rhythm as you.
+                </p>
+                <div className="flex gap-3">
+                  <Button size="lg" className="bg-white text-purple-700 hover:bg-white/90 rounded-full px-8 font-light shadow-lg">
+                    Explore groups
+                  </Button>
+                  <Button size="lg" variant="ghost" className="text-white hover:bg-white/10 rounded-full px-8 font-light">
+                    How this works
+                  </Button>
+                </div>
+              </div>
+              {/* Decorative gradient overlay */}
+              <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
+            </motion.div>
+
+            {/* Filters */}
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-light text-gray-900 tracking-tight">Community spaces</h3>
+            </div>
+
+            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+              {filters.map((filter) => (
+                <Button
+                  key={filter}
+                  onClick={() => setActiveFilter(filter)}
+                  variant="ghost"
+                  size="sm"
+                  className={`rounded-full whitespace-nowrap font-light ${
+                    activeFilter === filter
+                      ? "bg-purple-100 text-purple-700 hover:bg-purple-100"
+                      : "bg-white text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  {filter}
+                </Button>
+              ))}
+            </div>
+
+            {/* Community Spaces Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {filteredSpaces.map((space, idx) => (
+                <motion.div
+                  key={space.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.05 }}
+                >
+                  <Card className="overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow">
+                    {/* Gradient Header */}
+                    <div className={`h-32 bg-gradient-to-br ${space.gradient} relative`}>
+                      <div className="absolute top-3 left-3">
+                        <Badge className="bg-white/20 backdrop-blur-sm text-white border-0 font-light text-xs">
+                          {space.tag.split(' • ')[0]}
+                        </Badge>
+                      </div>
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="p-5 space-y-3">
+                      <h4 className="font-medium text-gray-900 text-lg">{space.title}</h4>
+                      <p className="text-sm text-gray-600 font-light line-clamp-1">{space.description}</p>
+                      
+                      {/* Meta */}
+                      <div className="flex items-center gap-4 text-sm text-gray-500">
+                        <span className="flex items-center gap-1 font-light">
+                          <Users className="w-4 h-4" />
+                          {space.members} women
+                        </span>
+                        {space.isPrivate && (
+                          <span className="flex items-center gap-1 font-light">
+                            <Lock className="w-4 h-4" />
+                            Private
+                          </span>
+                        )}
+                      </div>
+
+                      {/* CTA */}
+                      <Button className="w-full bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-light">
+                        Enter space
+                      </Button>
+                    </div>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Recommended Section */}
+            <div className="mt-12">
+              <div className="mb-4">
+                <h3 className="text-xl font-light text-gray-900 tracking-tight mb-1">Recommended for you</h3>
+                <p className="text-sm text-gray-500 font-light">Based on your recent check-ins, cycle phase, and nervous system state.</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {recommendedSpaces.map((space, idx) => (
+                  <motion.div
+                    key={space.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.08 }}
+                  >
+                    <Card className="overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow bg-white/60 backdrop-blur-sm">
+                      <div className={`h-24 bg-gradient-to-br ${space.gradient}`} />
+                      <div className="p-4 space-y-2">
+                        <h4 className="font-medium text-gray-900 text-sm">{space.title}</h4>
+                        <p className="text-xs text-gray-600 font-light line-clamp-2">{space.description}</p>
+                        <Button variant="ghost" size="sm" className="w-full text-gray-700 hover:bg-gray-100 rounded-lg font-light text-xs">
+                          View space
+                        </Button>
+                      </div>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Sidebar */}
+          <div className="space-y-6">
+            {/* Community Guides */}
+            <Card className="border-0 shadow-sm p-6 bg-white/60 backdrop-blur-sm">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-medium text-gray-900">Community guides</h3>
+                <button className="text-sm text-purple-600 hover:text-purple-700 font-light">See all</button>
+              </div>
+              <div className="space-y-3">
+                {communityGuides.map((guide) => (
+                  <div key={guide.id} className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="w-10 h-10">
+                        <AvatarImage src={guide.image} />
+                        <AvatarFallback className="bg-purple-100 text-purple-700">
+                          {guide.name[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">{guide.name}</p>
+                        <p className="text-xs text-gray-500 font-light">{guide.area}</p>
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="sm" className="text-xs font-light">
+                      View
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            {/* What's Happening */}
+            <Card className="border-0 shadow-sm p-6 bg-white/60 backdrop-blur-sm">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-medium text-gray-900">What's happening</h3>
+                <button className="text-sm text-purple-600 hover:text-purple-700 font-light">See all</button>
+              </div>
+              <div className="space-y-4">
+                {recentActivity.map((activity, idx) => (
+                  <div key={idx} className="flex items-start gap-3">
+                    <div className="w-2 h-2 rounded-full bg-purple-400 mt-1.5 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-gray-900 font-light">{activity.text}</p>
+                      <p className="text-xs text-gray-500 mt-0.5 font-light">{activity.time}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
