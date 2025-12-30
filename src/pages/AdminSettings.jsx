@@ -72,8 +72,11 @@ export default function AdminSettings() {
 
   const { data: allUsers = [] } = useQuery({
     queryKey: ["allUsers"],
-    queryFn: () => base44.entities.User.list(),
-    enabled: currentUser?.role === "admin" || currentUser?.role === "master_admin" || currentUser?.role === "owner",
+    queryFn: async () => {
+      const response = await base44.functions.invoke('getAllUsers');
+      return response.data.users || [];
+    },
+    enabled: currentUser?.role && ["owner", "admin", "master_admin", "moderator", "expert", "educator", "facilitator", "support"].includes(currentUser.role),
   });
 
   const updateUserRoleMutation = useMutation({
