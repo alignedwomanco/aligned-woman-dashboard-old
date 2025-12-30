@@ -45,6 +45,7 @@ export default function Layout({ children, currentPageName }) {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [siteSettings, setSiteSettings] = useState(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [showToolsDropdown, setShowToolsDropdown] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -298,8 +299,6 @@ export default function Layout({ children, currentPageName }) {
             }
 
             // Authenticated app layout with left sidebar
-            const [showToolsDropdown, setShowToolsDropdown] = React.useState(false);
-
             return (
               <div className="min-h-screen flex">
                 <style>{`
