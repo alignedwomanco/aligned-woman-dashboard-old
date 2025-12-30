@@ -44,8 +44,8 @@ export default function SolutionSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center gap-2 bg-pink-100 border border-pink-200 rounded-full px-5 py-2 mb-6">
-            <Sparkles className="w-4 h-4 text-[#6B1B3D]" />
+          <div className="inline-flex items-center gap-2 bg-purple-100 border border-purple-200 rounded-full px-5 py-2 mb-6">
+            <Sparkles className="w-4 h-4" style={{ color: '#7340B9' }} />
             <span className="text-[#3D2250] text-sm font-medium">The Solution</span>
           </div>
           <h2 className="text-4xl sm:text-5xl font-light text-gray-900 tracking-tight mb-6">

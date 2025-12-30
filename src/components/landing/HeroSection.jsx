@@ -5,16 +5,35 @@ import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 
 export default function HeroSection() {
+  const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 });
+
+  React.useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth) * 100,
+        y: (e.clientY / window.innerHeight) * 100,
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
         <img
-          src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1920&q=80"
-          alt="Serene woman in nature"
+          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1920&q=80"
+          alt="Confident woman"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#3D2250]/80 via-[#5B2E84]/70 to-[#5B2E84]/90" />
+        <div 
+          className="absolute inset-0 bg-gradient-to-b from-[#3D2250]/80 via-[#5B2E84]/70 to-[#5B2E84]/90 transition-all duration-700 ease-out"
+          style={{
+            background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(169, 98, 233, 0.4) 0%, rgba(91, 46, 132, 0.75) 50%, rgba(61, 34, 80, 0.85) 100%)`
+          }}
+        />
       </div>
 
       {/* Content */}
