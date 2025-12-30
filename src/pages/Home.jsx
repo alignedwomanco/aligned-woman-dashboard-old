@@ -10,7 +10,7 @@ import FinalCTASection from "@/components/landing/FinalCTASection";
 
 export default function Home() {
   return (
-    <div className="bg-white">
+    <div className="bg-gradient-to-br from-purple-50/30 via-pink-50/20 to-indigo-50/30">
       <HeroSection />
       <ProblemSection />
       <GapSection />
