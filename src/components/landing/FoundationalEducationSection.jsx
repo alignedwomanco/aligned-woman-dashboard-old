@@ -23,23 +23,23 @@ const topics = [
 
 export default function FoundationalEducationSection() {
   return (
-    <section className="py-24 lg:py-32 bg-white">
+    <section className="py-16 sm:py-20 lg:py-32 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-20"
+          className="text-center mb-12 sm:mb-16 lg:mb-20"
         >
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-light text-[#3B224E] tracking-tight mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-[#3B224E] tracking-tight mb-6 px-4">
             What should have been taught in school
             <br />
             <span className="font-bold" style={{ color: '#7340B9' }}>but never was</span>
           </h2>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
+        <div className="grid md:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center mb-12 sm:mb-16 lg:mb-20">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -48,13 +48,13 @@ export default function FoundationalEducationSection() {
             className="space-y-6"
           >
             <div className="space-y-4">
-              <p className="text-xl text-gray-700 leading-relaxed">
+              <p className="text-lg sm:text-xl text-gray-700 leading-relaxed">
                 How the female nervous system works.
               </p>
-              <p className="text-xl text-gray-700 leading-relaxed">
+              <p className="text-lg sm:text-xl text-gray-700 leading-relaxed">
                 How capacity actually functions.
               </p>
-              <p className="text-xl text-gray-700 leading-relaxed">
+              <p className="text-lg sm:text-xl text-gray-700 leading-relaxed">
                 How identity, ambition, money, health, and leadership are meant to integrate.
               </p>
             </div>
@@ -80,14 +80,14 @@ export default function FoundationalEducationSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-3xl p-12"
+            className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-3xl p-6 sm:p-8 lg:p-12"
           >
-            <p className="text-3xl font-light text-[#3B224E] mb-6">
+            <p className="text-2xl sm:text-3xl font-light text-[#3B224E] mb-6">
               But through one coherent system.
             </p>
-            <div className="h-1 w-24 bg-gradient-to-r from-[#A962E9] to-[#8B4FC9] mb-8" />
-            <p className="text-xl text-gray-700 mb-4">This is not self-help</p>
-            <p className="text-2xl font-semibold" style={{ color: '#7340B9' }}>
+            <div className="h-1 w-20 sm:w-24 bg-gradient-to-r from-[#A962E9] to-[#8B4FC9] mb-6 sm:mb-8" />
+            <p className="text-lg sm:text-xl text-gray-700 mb-4">This is not self-help</p>
+            <p className="text-xl sm:text-2xl font-semibold" style={{ color: '#7340B9' }}>
               This is foundational education for real life
             </p>
           </motion.div>
@@ -99,7 +99,7 @@ export default function FoundationalEducationSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
         >
           {topics.map((topic, index) => (
             <motion.div
@@ -108,12 +108,12 @@ export default function FoundationalEducationSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-              className="bg-white border border-pink-100 rounded-2xl p-6 hover:shadow-lg transition-shadow"
+              className="bg-white border border-pink-100 rounded-2xl p-5 sm:p-6 hover:shadow-lg transition-shadow"
             >
-              <div className="w-12 h-12 bg-gradient-to-br from-[#A962E9] to-[#8B4FC9] rounded-xl flex items-center justify-center mb-4">
-                <topic.icon className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#A962E9] to-[#8B4FC9] rounded-xl flex items-center justify-center mb-4">
+                <topic.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
-              <p className="text-gray-700 leading-relaxed">{topic.title}</p>
+              <p className="text-sm sm:text-base text-gray-700 leading-relaxed">{topic.title}</p>
             </motion.div>
           ))}
         </motion.div>
