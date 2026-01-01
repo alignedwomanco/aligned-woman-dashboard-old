@@ -135,8 +135,8 @@ export default function Layout({ children, currentPageName }) {
         `}</style>
 
         <div className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm px-4 sm:px-6 lg:px-8 py-2">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <Link to={createPageUrl("Home")}>
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <Link to={createPageUrl("Home")} className="flex-shrink-0">
               <img
                 src={siteSettings?.dark_logo || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695154cb868ee011bb627195/23f49bf5a_AlignedWomanLogoPurple.png"}
                 alt="The Aligned Woman"
@@ -145,7 +145,7 @@ export default function Layout({ children, currentPageName }) {
               />
             </Link>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-shrink-0">
               {isAuthenticated && user && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
