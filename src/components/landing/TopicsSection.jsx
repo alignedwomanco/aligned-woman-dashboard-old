@@ -2,10 +2,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import {
   Activity,
-  Battery,
   Heart,
-  Apple,
-  PersonStanding,
+  Leaf,
   MessageSquare,
   Lightbulb,
   DollarSign,
@@ -18,7 +16,7 @@ import {
 const topics = [
   { icon: Activity, label: "Nervous system regulation and burnout literacy" },
   { icon: Heart, label: "Hormones, cycles, and female physiology" },
-  { icon: Apple, label: "Nutrition and movement that support capacity" },
+  { icon: Leaf, label: "Nutrition and movement that support capacity" },
   { icon: MessageSquare, label: "Shame, people-pleasing, and trauma-informed awareness" },
   { icon: Lightbulb, label: "Intuition and embodied decision-making" },
   { icon: DollarSign, label: "Money mindset and financial literacy" },
