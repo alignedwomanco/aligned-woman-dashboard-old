@@ -93,8 +93,8 @@ export default function Layout({ children, currentPageName }) {
           const userData = await base44.auth.me();
           setUser(userData);
 
-          // Redirect to onboarding if not completed
-          if (!isPublicPage && currentPageName !== "OnboardingForm") {
+          // Redirect to onboarding if not completed (skip for admins)
+          if (!isPublicPage && currentPageName !== "OnboardingForm" && userData?.role !== "admin") {
             const sessions = await base44.entities.DiagnosticSession.filter(
               { isComplete: true },
               "-created_date",
