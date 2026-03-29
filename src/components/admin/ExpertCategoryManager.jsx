@@ -159,10 +159,7 @@ export default function ExpertCategoryManager() {
                           >
                             <GripVertical className="w-4 h-4" />
                           </button>
-                          <span
-                            className="px-2 py-0.5 rounded-full text-xs font-medium text-white"
-                            style={{ backgroundColor: cat.color || "#7340B9" }}
-                          >
+                          <span className="px-2 py-0.5 rounded-full text-xs font-medium text-white" style={{ backgroundColor: "#7A1B33" }}>
                             {cat.name}
                           </span>
                           {cat.description && (
@@ -214,84 +211,7 @@ export default function ExpertCategoryManager() {
                 placeholder="Short description (optional)"
               />
             </div>
-            <div>
-              <Label>Badge Colour</Label>
-              <div className="mt-2 space-y-3">
-                {/* Template swatches */}
-                <div className="flex gap-2 flex-wrap items-center">
-                  {colorTemplates.map((t, idx) => (
-                    <div key={idx} className="relative group">
-                      <button
-                        type="button"
-                        title={t.label}
-                        onClick={() => setForm({ ...form, color: t.value })}
-                        className="w-8 h-8 rounded-full border-2 transition-transform hover:scale-110"
-                        style={{
-                          backgroundColor: t.value,
-                          borderColor: form.color === t.value ? "#6B21A8" : "#e5e7eb",
-                        }}
-                      />
-                      {/* Edit tooltip on hover */}
-                      {editingTemplateIdx !== idx && (
-                        <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap pointer-events-auto">
-                          Click to select, right-click to edit
-                        </div>
-                      )}
-                      {/* Edit input overlay */}
-                      {editingTemplateIdx === idx && (
-                        <div className="absolute top-0 left-0 flex items-center gap-1 bg-white border rounded shadow-lg p-1 z-10">
-                          <input
-                            type="text"
-                            value={tempTemplateColor}
-                            onChange={(e) => setTempTemplateColor(e.target.value)}
-                            placeholder="#000000"
-                            className="w-20 px-2 py-1 text-xs font-mono border rounded focus:outline-none focus:ring-1 focus:ring-purple-500"
-                            autoFocus
-                          />
-                          <button
-                            type="button"
-                            onClick={() => handleSaveTemplate(idx)}
-                            className="px-2 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600"
-                          >
-                            ✓
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setEditingTemplateIdx(null)}
-                            className="px-2 py-1 bg-gray-300 text-gray-700 text-xs rounded hover:bg-gray-400"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                {/* Hex input + preview */}
-                <div className="flex items-center gap-3">
-                  <input
-                    type="color"
-                    value={form.color}
-                    onChange={(e) => setForm({ ...form, color: e.target.value })}
-                    className="w-8 h-8 rounded-full cursor-pointer border border-gray-200 p-0.5"
-                  />
-                  <Input
-                    value={form.color}
-                    onChange={(e) => setForm({ ...form, color: e.target.value })}
-                    placeholder="#F3E8FF"
-                    className="font-mono w-28"
-                    maxLength={7}
-                  />
-                  {/* Badge preview */}
-                  <span
-                    className="px-3 py-1 rounded-full text-sm font-medium text-white"
-                    style={{ backgroundColor: form.color }}
-                  >
-                    {form.name || "Preview"}
-                  </span>
-                </div>
-              </div>
-            </div>
+
             <div className="flex gap-2 pt-2">
               <Button
                 onClick={handleSave}
