@@ -6,8 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { base44 } from "@/api/base44Client";
-import { Search, BookOpen, Clock, Users, ArrowRight, Star, Edit, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Search, BookOpen, Clock, Users, ArrowRight, Star } from "lucide-react";
 
 export default function Classroom() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -61,111 +60,25 @@ export default function Classroom() {
           <p className="text-gray-600">Explore your courses and continue your learning journey.</p>
         </motion.div>
 
-        {/* Featured Course */}
-         {!searchQuery && filteredCourses.length > 0 && (
-           <motion.div
-             initial={{ opacity: 0, y: 20 }}
-             animate={{ opacity: 1, y: 0 }}
-             transition={{ delay: 0.05 }}
-             className="mb-12"
-           >
-             <Link to={createPageUrl("CourseDetail") + `?courseId=${filteredCourses[0].id}`}>
-               <div className="relative rounded-3xl overflow-hidden h-48 bg-gradient-to-r from-[#3B224E] to-[#5B2E84] p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer group">
-                 {/* Background Image */}
-                 {filteredCourses[0].coverImage && (
-                   <img
-                     src={filteredCourses[0].coverImage}
-                     alt={filteredCourses[0].title}
-                     className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-80 transition-opacity"
-                   />
-                 )}
-                 {/* Dark overlay */}
-                 <div className="absolute inset-0 bg-black/40" />
-
-                 {/* Content */}
-                 <div className="relative z-10">
-                   {/* Badges */}
-                   <div className="flex flex-wrap gap-2 mb-4">
-                     {filteredCourses[0].isPublished && (
-                       <Badge className="bg-green-500 text-white border-0 text-xs font-semibold">
-                         Published
-                       </Badge>
-                     )}
-                     {filteredCourses[0].isFeatured && (
-                       <Badge className="bg-amber-400 text-amber-900 border-0 text-xs font-semibold">
-                         <Star className="w-3 h-3 mr-1" />
-                         Featured
-                       </Badge>
-                     )}
-                     {filteredCourses[0].price > 0 && (
-                       <Badge className="bg-blue-400 text-white border-0 text-xs font-semibold">
-                         ${filteredCourses[0].price}
-                       </Badge>
-                     )}
-                     {filteredCourses[0].category && (
-                       <Badge className="bg-white/90 text-gray-700 border-0 text-xs font-semibold">
-                         {filteredCourses[0].category}
-                       </Badge>
-                     )}
-                   </div>
-
-                   {/* Title and Description */}
-                   <h2 className="text-2xl sm:text-3xl font-bold text-white mb-1">
-                     {filteredCourses[0].title}
-                   </h2>
-                   {filteredCourses[0].description && (
-                     <p className="text-white/90 text-sm">{filteredCourses[0].description}</p>
-                   )}
-                 </div>
-
-                 {/* Bottom Info */}
-                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 z-10">
-                   <div className="flex items-center justify-between">
-                     <div className="text-white text-sm">
-                       <span className="font-semibold">
-                         {courses.filter(c => c.id === filteredCourses[0].id)[0]?.sections?.length || 0} sections
-                       </span>
-                       {' · '}
-                       <span className="font-semibold">
-                         3 modules
-                       </span>
-                     </div>
-                     <div className="flex gap-2">
-                       <Button size="sm" variant="outline" className="text-white border-white hover:bg-white/20">
-                         <Edit className="w-4 h-4 mr-1" />
-                         Edit Course
-                       </Button>
-                       <Button size="sm" className="bg-purple-600 hover:bg-purple-700 text-white">
-                         <Plus className="w-4 h-4 mr-1" />
-                         Add Section
-                       </Button>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-             </Link>
-           </motion.div>
-         )}
-
         {/* Search */}
-         <motion.div
-           initial={{ opacity: 0, y: 20 }}
-           animate={{ opacity: 1, y: 0 }}
-           transition={{ delay: 0.1 }}
-           className="mb-8"
-         >
-           <div className="relative max-w-md">
-             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-             <Input
-               value={searchQuery}
-               onChange={(e) => setSearchQuery(e.target.value)}
-               placeholder="Search courses..."
-               className="pl-10 rounded-xl border-gray-200 bg-white"
-             />
-           </div>
-         </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mb-8"
+        >
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search courses..."
+              className="pl-10 rounded-xl border-gray-200 bg-white"
+            />
+          </div>
+        </motion.div>
 
-         {/* Courses Grid */}
+        {/* Courses Grid */}
         {loading ? (
           <div className="flex justify-center py-20">
             <div className="animate-spin w-8 h-8 border-4 border-[#3B224E] border-t-transparent rounded-full" />
@@ -184,7 +97,7 @@ export default function Classroom() {
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCourses.slice(1).map((course, idx) => {
+            {filteredCourses.map((course, idx) => {
               const progress = getCourseProgress(course.id);
               return (
                 <motion.div
