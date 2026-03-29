@@ -152,6 +152,19 @@ export default function Classroom() {
                           </p>
                         )}
 
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-gray-500">Progress</span>
+                            <span className="text-xs font-semibold text-[#3B224E]">{progress}%</span>
+                          </div>
+                          <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-green-400 transition-all duration-300"
+                              style={{ width: `${progress}%` }}
+                            />
+                          </div>
+                        </div>
+
                         <div className="flex items-center justify-between mt-auto">
                           <div className="flex items-center gap-3 text-xs text-gray-500">
                             {course.enrollmentCount > 0 && (
