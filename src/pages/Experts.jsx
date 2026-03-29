@@ -29,10 +29,10 @@ export default function Experts() {
   const getCategoryColor = (catId) => categories.find(c => c.id === catId)?.color || "#7340B9";
 
   const sortedExperts = [...experts].sort((a, b) => {
-    const aIdx = categories.findIndex((c) => c.id === a.category);
-    const bIdx = categories.findIndex((c) => c.id === b.category);
-    const aOrder = aIdx === -1 ? 9999 : aIdx;
-    const bOrder = bIdx === -1 ? 9999 : bIdx;
+    const aCat = categories.find((c) => c.id === a.category);
+    const bCat = categories.find((c) => c.id === b.category);
+    const aOrder = aCat?.order ?? 9999;
+    const bOrder = bCat?.order ?? 9999;
     return aOrder - bOrder;
   });
 

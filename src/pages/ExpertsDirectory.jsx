@@ -33,10 +33,10 @@ export default function ExpertsDirectory() {
   };
 
   const sortedExperts = [...experts].sort((a, b) => {
-    const aIdx = categories.findIndex((c) => c.id === a.category);
-    const bIdx = categories.findIndex((c) => c.id === b.category);
-    const aOrder = aIdx === -1 ? 9999 : aIdx;
-    const bOrder = bIdx === -1 ? 9999 : bIdx;
+    const aCat = categories.find((c) => c.id === a.category);
+    const bCat = categories.find((c) => c.id === b.category);
+    const aOrder = aCat?.order ?? 9999;
+    const bOrder = bCat?.order ?? 9999;
     return aOrder - bOrder;
   });
 
@@ -53,57 +53,57 @@ export default function ExpertsDirectory() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#3C224F] mb-2">Our Experts</h1>
-          <p className="text-gray-600">Connect with specialists who can guide your journey.</p>
-        </div>
+         {/* Header with Search */}
+         <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+           <div>
+             <h1 className="text-3xl font-bold text-[#3C224F] mb-1">Our Experts</h1>
+             <p className="text-gray-600">Connect with specialists who can guide your journey.</p>
+           </div>
+           <div className="relative w-full sm:w-64">
+             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+             <Input
+               placeholder="Search experts..."
+               value={search}
+               onChange={(e) => setSearch(e.target.value)}
+               className="pl-9"
+             />
+           </div>
+         </div>
 
-        {/* Filters */}
-        <div className="flex flex-wrap gap-3 mb-6">
-          <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <Input
-              placeholder="Search experts..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-9"
-            />
-          </div>
+         {/* Category Filters */}
+         <div className="mb-6">
+           <button
+             onClick={() => setSelectedCategory("all")}
+             className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+               selectedCategory === "all"
+                 ? "bg-[#3C224F] text-white border-[#3C224F]"
+                 : "bg-white text-gray-600 border-gray-300 hover:border-[#3C224F]"
+             }`}
+           >
+             All
+           </button>
+           {[...categories].sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999)).map((cat) => (
+             <button
+               key={cat.id}
+               onClick={() => setSelectedCategory(cat.id)}
+               className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                 selectedCategory === cat.id
+                   ? "text-white border-transparent"
+                   : "bg-white text-gray-600 border-gray-300 hover:border-gray-500"
+               }`}
+               style={
+                 selectedCategory === cat.id
+                   ? { backgroundColor: "#7A1B33", borderColor: "#7A1B33" }
+                   : {}
+               }
+             >
+               {cat.name}
+             </button>
+           ))}
+           </div>
+           </div>
 
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setSelectedCategory("all")}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-                selectedCategory === "all"
-                  ? "bg-[#3C224F] text-white border-[#3C224F]"
-                  : "bg-white text-gray-600 border-gray-300 hover:border-[#3C224F]"
-              }`}
-            >
-              All
-            </button>
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-                  selectedCategory === cat.id
-                    ? "text-white border-transparent"
-                    : "bg-white text-gray-600 border-gray-300 hover:border-gray-500"
-                }`}
-                style={
-                  selectedCategory === cat.id
-                    ? { backgroundColor: cat.color || "#7340B9", borderColor: cat.color || "#7340B9" }
-                    : {}
-                }
-              >
-                {cat.name}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Grid */}
+           {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((expert) => (
             <div
