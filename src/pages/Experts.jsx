@@ -21,7 +21,7 @@ export default function Experts() {
 
   const { data: categories = [] } = useQuery({
     queryKey: ["expertCategories"],
-    queryFn: () => base44.entities.ExpertCategory.list(),
+    queryFn: () => base44.entities.ExpertCategory.list("-created_date"),
     initialData: [],
   });
 
@@ -31,9 +31,9 @@ export default function Experts() {
   const sortedExperts = [...experts].sort((a, b) => {
     const aCat = categories.find((c) => c.id === a.category);
     const bCat = categories.find((c) => c.id === b.category);
-    const aOrder = aCat?.order ?? 9999;
-    const bOrder = bCat?.order ?? 9999;
-    return aOrder - bOrder;
+    const aIdx = aCat ? categories.indexOf(aCat) : 9999;
+    const bIdx = bCat ? categories.indexOf(bCat) : 9999;
+    return aIdx - bIdx;
   });
 
   return (

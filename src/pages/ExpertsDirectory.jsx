@@ -19,7 +19,7 @@ export default function ExpertsDirectory() {
 
   const { data: categories = [] } = useQuery({
     queryKey: ["expert-categories"],
-    queryFn: () => base44.entities.ExpertCategory.list(),
+    queryFn: () => base44.entities.ExpertCategory.list("-created_date"),
   });
 
   const getCategoryName = (id) => {
@@ -35,9 +35,9 @@ export default function ExpertsDirectory() {
   const sortedExperts = [...experts].sort((a, b) => {
     const aCat = categories.find((c) => c.id === a.category);
     const bCat = categories.find((c) => c.id === b.category);
-    const aOrder = aCat?.order ?? 9999;
-    const bOrder = bCat?.order ?? 9999;
-    return aOrder - bOrder;
+    const aIdx = aCat ? categories.indexOf(aCat) : 9999;
+    const bIdx = bCat ? categories.indexOf(bCat) : 9999;
+    return aIdx - bIdx;
   });
 
   const filtered = sortedExperts.filter((e) => {
@@ -82,7 +82,7 @@ export default function ExpertsDirectory() {
            >
              All
            </button>
-           {[...categories].sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999)).map((cat) => (
+           {categories.map((cat) => (
              <button
                key={cat.id}
                onClick={() => setSelectedCategory(cat.id)}
