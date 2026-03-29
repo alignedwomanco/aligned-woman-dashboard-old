@@ -179,7 +179,7 @@ export default function CourseBuilderContent() {
     await queryClient.invalidateQueries({ queryKey: [queryKey] });
   };
 
-  const moveCourse = (course, direction) => {
+  const moveCourse = async (course, direction) => {
     // Sort by order then created_date (same as display) to get correct index
     const sorted = [...courses].sort((a, b) => {
       if (a.order !== undefined && b.order !== undefined) return a.order - b.order;
@@ -189,28 +189,28 @@ export default function CourseBuilderContent() {
     });
     const idx = sorted.findIndex((c) => c.id === course.id);
     const targetIdx = direction === "up" ? idx - 1 : idx + 1;
-    swapOrder(sorted, idx, targetIdx, ({ id, data }) => base44.entities.Course.update(id, data), "courses");
+    await swapOrder(sorted, idx, targetIdx, ({ id, data }) => base44.entities.Course.update(id, data), "courses");
   };
 
-  const moveSection = (section, direction) => {
+  const moveSection = async (section, direction) => {
     const sorted = getCourseSections(selectedCourse.id);
     const idx = sorted.findIndex((s) => s.id === section.id);
     const targetIdx = direction === "up" ? idx - 1 : idx + 1;
-    swapOrder(sorted, idx, targetIdx, ({ id, data }) => base44.entities.CourseSection.update(id, data), "courseSections");
+    await swapOrder(sorted, idx, targetIdx, ({ id, data }) => base44.entities.CourseSection.update(id, data), "courseSections");
   };
 
-  const moveModule = (module, sectionId, direction) => {
+  const moveModule = async (module, sectionId, direction) => {
     const sorted = getSectionModules(sectionId);
     const idx = sorted.findIndex((m) => m.id === module.id);
     const targetIdx = direction === "up" ? idx - 1 : idx + 1;
-    swapOrder(sorted, idx, targetIdx, ({ id, data }) => base44.entities.CourseModule.update(id, data), "courseModules");
+    await swapOrder(sorted, idx, targetIdx, ({ id, data }) => base44.entities.CourseModule.update(id, data), "courseModules");
   };
 
-  const movePage = (page, moduleId, direction) => {
+  const movePage = async (page, moduleId, direction) => {
     const sorted = getModulePages(moduleId);
     const idx = sorted.findIndex((p) => p.id === page.id);
     const targetIdx = direction === "up" ? idx - 1 : idx + 1;
-    swapOrder(sorted, idx, targetIdx, ({ id, data }) => base44.entities.CoursePage.update(id, data), "coursePages");
+    await swapOrder(sorted, idx, targetIdx, ({ id, data }) => base44.entities.CoursePage.update(id, data), "coursePages");
   };
 
   const resetCourseForm = () => { setCourseForm({ title: "", description: "", coverImage: "", category: "", expertId: "", price: 0, isPublished: false, isComingSoon: false, isFeatured: false }); setEditingCourse(null); };
