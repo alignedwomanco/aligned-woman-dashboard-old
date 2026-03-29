@@ -107,12 +107,8 @@ export default function CourseDetail() {
               {course.description && <p className="text-white/80 text-sm mt-1 line-clamp-2">{course.description}</p>}
             </div>
           </div>
-          <div className="bg-white px-6 py-4 flex items-center justify-between flex-wrap gap-4">
+          <div className="bg-white px-6 py-4">
             <span className="text-sm text-gray-600">{sections.length} sections · {modules.length} modules</span>
-            <div className="flex gap-2">
-              <Button size="sm" variant="outline">Edit Course</Button>
-              <Button size="sm" className="text-white" style={{ backgroundColor: "var(--theme-secondary, #5B2E84)" }}>Add Section</Button>
-            </div>
           </div>
         </div>
       </div>
@@ -213,32 +209,24 @@ export default function CourseDetail() {
                                          {module.durationMinutes} min
                                        </span>
                                      )}
-                                     <Badge
-                                       variant="outline"
-                                       className={
-                                         status === "Complete"
-                                           ? "border-green-300 text-green-700 bg-green-50"
-                                           : status === "InProgress"
-                                           ? "border-purple-300 text-purple-700 bg-purple-50"
-                                           : "border-gray-200 text-gray-500"
-                                       }
-                                     >
-                                       {status === "Complete"
-                                         ? "Completed"
-                                         : status === "InProgress"
-                                         ? "In Progress"
-                                         : "Start"}
-                                     </Badge>
                                    </div>
-                                   {prog > 0 && (
-                                     <div>
-                                       <div className="flex justify-between text-xs text-gray-500 mb-1">
-                                         <span>Progress</span>
-                                         <span>{prog}%</span>
-                                       </div>
-                                       <Progress value={prog} className="h-1.5" />
+                                   <div className="space-y-2">
+                                     <div className="flex justify-between items-center text-xs">
+                                       <Badge
+                                         className={
+                                           status === "Complete"
+                                             ? "bg-green-100 text-green-700 border-0"
+                                             : status === "InProgress"
+                                             ? "bg-purple-100 text-purple-700 border-0"
+                                             : "bg-gray-100 text-gray-700 border-0"
+                                         }
+                                       >
+                                         {status === "Complete" ? "✓ Completed" : status === "InProgress" ? "In Progress" : "Start"}
+                                       </Badge>
+                                       <span className="font-semibold text-gray-700">{prog}%</span>
                                      </div>
-                                   )}
+                                     <Progress value={prog} className="h-2" />
+                                   </div>
                                  </CardContent>
                                </Card>
                              </Link>
