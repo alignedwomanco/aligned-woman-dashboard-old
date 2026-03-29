@@ -12,7 +12,15 @@ import { Plus, Trash2, Edit, Tag } from "lucide-react";
 export default function ExpertCategoryManager() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
-  const [form, setForm] = useState({ name: "", description: "", color: "#7340B9" });
+  const [form, setForm] = useState({ name: "", description: "", color: "#7A1B33" });
+
+  const colorTemplates = [
+    { label: "Founder", value: "#7A1B33" },
+    { label: "Sage", value: "#3D7A5E" },
+    { label: "Indigo", value: "#3D2E7A" },
+    { label: "Amber", value: "#B8600A" },
+    { label: "Steel", value: "#2E5F7A" },
+  ];
   const queryClient = useQueryClient();
 
   const { data: categories = [] } = useQuery({
@@ -45,20 +53,20 @@ export default function ExpertCategoryManager() {
 
   const openCreate = () => {
     setEditingCategory(null);
-    setForm({ name: "", description: "", color: "#7340B9" });
+    setForm({ name: "", description: "", color: "#7A1B33" });
     setDialogOpen(true);
   };
 
   const openEdit = (cat) => {
     setEditingCategory(cat);
-    setForm({ name: cat.name, description: cat.description || "", color: cat.color || "#7340B9" });
+    setForm({ name: cat.name, description: cat.description || "", color: cat.color || "#7A1B33" });
     setDialogOpen(true);
   };
 
   const closeDialog = () => {
     setDialogOpen(false);
     setEditingCategory(null);
-    setForm({ name: "", description: "", color: "#7340B9" });
+    setForm({ name: "", description: "", color: "#7A1B33" });
   };
 
   const handleSave = () => {
@@ -146,14 +154,36 @@ export default function ExpertCategoryManager() {
             </div>
             <div>
               <Label>Badge Colour</Label>
-              <div className="flex items-center gap-3 mt-1">
-                <input
-                  type="color"
-                  value={form.color}
-                  onChange={(e) => setForm({ ...form, color: e.target.value })}
-                  className="w-10 h-10 rounded cursor-pointer border"
-                />
-                <Badge style={{ backgroundColor: form.color, color: "#fff" }}>{form.name || "Preview"}</Badge>
+              <div className="mt-2 space-y-3">
+                <div className="flex gap-2">
+                  {colorTemplates.map((t) => (
+                    <button
+                      key={t.value}
+                      type="button"
+                      title={t.label}
+                      onClick={() => setForm({ ...form, color: t.value })}
+                      className="w-8 h-8 rounded-full border-2 transition-transform hover:scale-110"
+                      style={{
+                        backgroundColor: t.value,
+                        borderColor: form.color === t.value ? "#000" : "transparent",
+                      }}
+                    />
+                  ))}
+                </div>
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-8 h-8 rounded-full border flex-shrink-0"
+                    style={{ backgroundColor: form.color }}
+                  />
+                  <Input
+                    value={form.color}
+                    onChange={(e) => setForm({ ...form, color: e.target.value })}
+                    placeholder="#7A1B33"
+                    className="font-mono w-32"
+                    maxLength={7}
+                  />
+                  <Badge style={{ backgroundColor: form.color, color: "#fff" }}>{form.name || "Preview"}</Badge>
+                </div>
               </div>
             </div>
             <div className="flex gap-2 pt-2">
