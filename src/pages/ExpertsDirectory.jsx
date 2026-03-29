@@ -271,76 +271,80 @@ export default function ExpertsDirectory() {
 
                 {/* Action Buttons — only for users with accounts */}
                 <div className="space-y-2">
-                  {!expert._isExpertProfile && <Button
-                    onClick={() => followMutation.mutate(expert.email)}
-                    variant={isFollowing(expert.email) ? "outline" : "default"}
-                    className={`w-full ${
-                      !isFollowing(expert.email) && "bg-gradient-to-r from-purple-600 to-pink-600"
-                    }`}
-                  >
-                    {isFollowing(expert.email) ? (
-                      <>
-                        <UserMinus className="w-4 h-4 mr-2" />
-                        Unfollow
-                      </>
-                    ) : (
-                      <>
-                        <Heart className="w-4 h-4 mr-2" />
-                        Follow
-                      </>
-                    )}
-                  </Button>
+                  {!expert._isExpertProfile && (
+                    <Button
+                      onClick={() => followMutation.mutate(expert.email)}
+                      variant={isFollowing(expert.email) ? "outline" : "default"}
+                      className={`w-full ${
+                        !isFollowing(expert.email) && "bg-gradient-to-r from-purple-600 to-pink-600"
+                      }`}
+                    >
+                      {isFollowing(expert.email) ? (
+                        <>
+                          <UserMinus className="w-4 h-4 mr-2" />
+                          Unfollow
+                        </>
+                      ) : (
+                        <>
+                          <Heart className="w-4 h-4 mr-2" />
+                          Follow
+                        </>
+                      )}
+                    </Button>
+                  )}
 
-                  {!expert._isExpertProfile && isConnected(expert.email) ? (
-                    <Button disabled className="w-full" variant="outline">
-                      <CheckCircle className="w-4 h-4 mr-2" />
-                      Connected
-                    </Button>
-                  ) : isPending(expert.email) ? (
-                    <Button disabled className="w-full" variant="outline">
-                      <UserCheck className="w-4 h-4 mr-2" />
-                      Pending
-                    </Button>
-                  ) : (
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button
-                          className="w-full bg-[#7340B9] hover:bg-[#5B2D83]"
-                          onClick={() => handleConnect(expert)}
-                        >
-                          <UserCheck className="w-4 h-4 mr-2" />
-                          Request Connection
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>
-                            Connect with {expert.full_name}
-                          </DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-4">
-                          <div>
-                            <label className="text-sm font-medium mb-2 block">
-                              Why would you like to connect?
-                            </label>
-                            <Textarea
-                              value={connectionNote}
-                              onChange={(e) => setConnectionNote(e.target.value)}
-                              placeholder="Share what you're working on and how this expert can support you..."
-                              className="min-h-[120px]"
-                            />
-                          </div>
+                  {!expert._isExpertProfile && (
+                    isConnected(expert.email) ? (
+                      <Button disabled className="w-full" variant="outline">
+                        <CheckCircle className="w-4 h-4 mr-2" />
+                        Connected
+                      </Button>
+                    ) : isPending(expert.email) ? (
+                      <Button disabled className="w-full" variant="outline">
+                        <UserCheck className="w-4 h-4 mr-2" />
+                        Pending
+                      </Button>
+                    ) : (
+                      <Dialog>
+                        <DialogTrigger asChild>
                           <Button
-                            onClick={submitConnection}
-                            disabled={!connectionNote.trim() || requestConnectionMutation.isPending}
                             className="w-full bg-[#7340B9] hover:bg-[#5B2D83]"
+                            onClick={() => handleConnect(expert)}
                           >
-                            {requestConnectionMutation.isPending ? "Sending..." : "Send Connection Request"}
+                            <UserCheck className="w-4 h-4 mr-2" />
+                            Request Connection
                           </Button>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  ) : null}
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>
+                              Connect with {expert.full_name}
+                            </DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-4">
+                            <div>
+                              <label className="text-sm font-medium mb-2 block">
+                                Why would you like to connect?
+                              </label>
+                              <Textarea
+                                value={connectionNote}
+                                onChange={(e) => setConnectionNote(e.target.value)}
+                                placeholder="Share what you're working on and how this expert can support you..."
+                                className="min-h-[120px]"
+                              />
+                            </div>
+                            <Button
+                              onClick={submitConnection}
+                              disabled={!connectionNote.trim() || requestConnectionMutation.isPending}
+                              className="w-full bg-[#7340B9] hover:bg-[#5B2D83]"
+                            >
+                              {requestConnectionMutation.isPending ? "Sending..." : "Send Connection Request"}
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    )
+                  )}
 
                   {!expert._isExpertProfile && expert.offerings && expert.offerings.length > 0 && (
                     <Button variant="outline" className="w-full">
