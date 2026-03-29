@@ -34,9 +34,10 @@ export default function SectionDetail() {
           setCourse(courses[0]);
         }
 
-        // Load modules for this section sorted by order
-        const sectionModules = await base44.entities.CourseModule.filter({ sectionId }, "order");
-        setModules(sectionModules);
+        // Load modules for this section sorted by order field
+        const sectionModules = await base44.entities.CourseModule.filter({ sectionId });
+        const sorted = sectionModules.sort((a, b) => (a.order || 0) - (b.order || 0));
+        setModules(sorted);
 
         // Load progress
         const prog = await base44.entities.CourseProgress.filter({});
@@ -85,11 +86,11 @@ export default function SectionDetail() {
     <div className="min-h-screen" style={{ backgroundColor: "#E4CAFB" }}>
       {/* Header */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
-        <Link to={courseId ? createPageUrl("CourseDetail") + `?courseId=${courseId}` : createPageUrl("Classroom")} className="inline-block mb-4">
+        <button onClick={() => navigate(-1)} className="inline-block mb-4">
           <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
             <ArrowLeft className="w-4 h-4 mr-2" /> Back
           </Button>
-        </Link>
+        </button>
 
         {/* Section Banner */}
         <div className="rounded-2xl overflow-hidden border-2" style={{ borderColor: "var(--theme-secondary, #5B2E84)" }}>

@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { ArrowLeft, Clock, Play, CheckCircle, Lock, BookOpen, Grid2x2, Star } from "lucide-react";
+import { ArrowLeft, Clock, Play, CheckCircle, Lock, BookOpen, Grid2x2, Star, ArrowRight } from "lucide-react";
 
 export default function CourseDetail() {
   const [searchParams] = useSearchParams();
@@ -134,40 +134,69 @@ export default function CourseDetail() {
              {/* Sections Grid */}
              <div className="mb-8">
                <h2 className="text-lg font-semibold text-[#3B224E] mb-4">Course Sections</h2>
-               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                  {sections.map((section, idx) => {
                    const sectionProg = getSectionProgress(section.id);
+                   const modulesInSection = getSectionModules(section.id).length;
                    return (
                      <motion.div
                        key={section.id}
-                       initial={{ opacity: 0, scale: 0.9 }}
-                       animate={{ opacity: 1, scale: 1 }}
-                       transition={{ delay: idx * 0.05 }}
+                       initial={{ opacity: 0, y: 20 }}
+                       animate={{ opacity: 1, y: 0 }}
+                       transition={{ delay: idx * 0.07 }}
                      >
                        <Link to={createPageUrl("SectionDetail") + `?sectionId=${section.id}&courseId=${courseId}`}>
-                         <div className="relative h-32 rounded-2xl overflow-hidden group transition-all cursor-pointer hover:shadow-lg">
-                           {section.coverImage ? (
-                             <img src={section.coverImage} alt={section.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                           ) : (
-                             <div className="w-full h-full bg-gradient-to-br from-purple-300 to-purple-500 flex items-center justify-center">
-                               <Grid2x2 className="w-8 h-8 text-white opacity-60" />
-                             </div>
-                           )}
-                           <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors flex flex-col items-end justify-between p-3">
-                             <p className="text-white font-medium text-sm leading-tight text-right flex-1 flex items-end">{section.title}</p>
+                         <Card className="h-full hover:shadow-xl transition-all duration-300 cursor-pointer bg-white overflow-hidden group">
+                           {/* Cover Image */}
+                           <div className="h-44 bg-gradient-to-br from-purple-300 to-purple-500 relative overflow-hidden">
+                             {section.coverImage ? (
+                               <img
+                                 src={section.coverImage}
+                                 alt={section.title}
+                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                               />
+                             ) : (
+                               <div className="w-full h-full flex items-center justify-center">
+                                 <Grid2x2 className="w-12 h-12 text-white/40" />
+                               </div>
+                             )}
                              {sectionProg > 0 && (
-                               <div className="w-full h-1.5 bg-white/30 rounded-full mt-2 overflow-hidden">
-                                 <div className="h-full bg-green-400 transition-all" style={{ width: `${sectionProg}%` }} />
+                               <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-white/20">
+                                 <div
+                                   className="h-full bg-green-400 transition-all"
+                                   style={{ width: `${sectionProg}%` }}
+                                 />
                                </div>
                              )}
                            </div>
-                         </div>
+
+                           <CardContent className="p-5">
+                             <h3 className="font-bold text-[#3B224E] text-lg leading-snug mb-2 group-hover:text-[#5B2E84] transition-colors">
+                               {section.title}
+                             </h3>
+                             {section.description && (
+                               <p className="text-sm text-gray-500 line-clamp-2 mb-4">
+                                 {section.description}
+                               </p>
+                             )}
+
+                             <div className="flex items-center justify-between mt-auto">
+                               <span className="text-xs text-gray-500">
+                                 {modulesInSection} modules
+                               </span>
+                               <div className="flex items-center gap-1 text-[#3B224E] text-sm font-medium">
+                                 {sectionProg > 0 ? `${sectionProg}% done` : "Start"}
+                                 <ArrowRight className="w-4 h-4" />
+                               </div>
+                             </div>
+                           </CardContent>
+                         </Card>
                        </Link>
                      </motion.div>
                    );
                  })}
                </div>
-               </div>
+             </div>
 
 
            </>
