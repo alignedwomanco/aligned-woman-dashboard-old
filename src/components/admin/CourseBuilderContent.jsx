@@ -34,6 +34,7 @@ import {
   ArrowLeft,
   Star,
   Clock,
+  Upload,
 } from "lucide-react";
 
 export default function CourseBuilderContent() {
@@ -460,7 +461,32 @@ export default function CourseBuilderContent() {
             <div className="space-y-4">
               <div><Label>Course Title *</Label><Input value={courseForm.title} onChange={(e) => setCourseForm({ ...courseForm, title: e.target.value })} placeholder="e.g., The Aligned Woman Blueprint" /></div>
               <div><Label>Description</Label><Textarea value={courseForm.description} onChange={(e) => setCourseForm({ ...courseForm, description: e.target.value })} placeholder="Course description" className="min-h-[80px]" /></div>
-              <div><Label>Cover Image URL</Label><Input value={courseForm.coverImage} onChange={(e) => setCourseForm({ ...courseForm, coverImage: e.target.value })} placeholder="https://..." /></div>
+              <div>
+                <Label>Cover Image</Label>
+                <div className="space-y-3">
+                  {courseForm.coverImage && (
+                    <div className="relative w-full h-40 rounded-lg overflow-hidden border border-gray-200">
+                      <img src={courseForm.coverImage} alt="Preview" className="w-full h-full object-cover" />
+                    </div>
+                  )}
+                  <label className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer text-sm font-medium text-gray-700">
+                    <Upload className="w-4 h-4" />
+                    {courseForm.coverImage ? "Change Image" : "Upload Image"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                          setCourseForm({ ...courseForm, coverImage: file_url });
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 <div><Label>Category</Label><Input value={courseForm.category} onChange={(e) => setCourseForm({ ...courseForm, category: e.target.value })} placeholder="e.g., Personal Development" /></div>
                 <div><Label>Price ($)</Label><Input type="number" value={courseForm.price} onChange={(e) => setCourseForm({ ...courseForm, price: Number(e.target.value) })} placeholder="0 for free" /></div>
