@@ -56,10 +56,12 @@ export default function ExpertsManagementContent() {
   const [tempImage, setTempImage] = useState(null);
   const queryClient = useQueryClient();
 
-  const { data: expertCategories = [] } = useQuery({
+  const { data: expertCategoriesRaw = [] } = useQuery({
     queryKey: ["expertCategories"],
     queryFn: () => base44.entities.ExpertCategory.list(),
   });
+
+  const expertCategories = [...expertCategoriesRaw].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   const { data: expertsProfiles = [] } = useQuery({
     queryKey: ["expertsProfiles"],
@@ -206,12 +208,12 @@ export default function ExpertsManagementContent() {
     };
   };
 
-  // Sort experts by category order (first category in list = highest priority)
+  // Sort experts by category order
   const sortedExperts = [...expertsProfiles].sort((a, b) => {
-    const aIdx = expertCategories.findIndex((c) => c.id === a.category);
-    const bIdx = expertCategories.findIndex((c) => c.id === b.category);
-    const aOrder = aIdx === -1 ? 9999 : aIdx;
-    const bOrder = bIdx === -1 ? 9999 : bIdx;
+    const aCat = expertCategories.find((c) => c.id === a.category);
+    const bCat = expertCategories.find((c) => c.id === b.category);
+    const aOrder = aCat?.order ?? 9999;
+    const bOrder = bCat?.order ?? 9999;
     return aOrder - bOrder;
   });
 
