@@ -13,14 +13,15 @@ export default function ExpertCategoryManager() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [form, setForm] = useState({ name: "", description: "", color: "#7A1B33" });
-
-  const colorTemplates = [
+  const [colorTemplates, setColorTemplates] = useState([
     { label: "Rose", value: "#99526C" },
     { label: "Lavender", value: "#F3E8FF" },
     { label: "Mint", value: "#DCFCE8" },
     { label: "Sky", value: "#DBE9FE" },
     { label: "Peach", value: "#FFE4D6" },
-  ];
+  ]);
+  const [editingTemplateIdx, setEditingTemplateIdx] = useState(null);
+  const [tempTemplateColor, setTempTemplateColor] = useState("");
   const queryClient = useQueryClient();
 
   const { data: categories = [] } = useQuery({
@@ -67,6 +68,23 @@ export default function ExpertCategoryManager() {
     setDialogOpen(false);
     setEditingCategory(null);
     setForm({ name: "", description: "", color: "#7A1B33" });
+    setEditingTemplateIdx(null);
+    setTempTemplateColor("");
+  };
+
+  const handleEditTemplate = (idx) => {
+    setEditingTemplateIdx(idx);
+    setTempTemplateColor(colorTemplates[idx].value);
+  };
+
+  const handleSaveTemplate = (idx) => {
+    if (tempTemplateColor.match(/^#[0-9A-F]{6}$/i)) {
+      const updated = [...colorTemplates];
+      updated[idx].value = tempTemplateColor;
+      setColorTemplates(updated);
+      setEditingTemplateIdx(null);
+      setTempTemplateColor("");
+    }
   };
 
   const handleSave = () => {
@@ -157,19 +175,53 @@ export default function ExpertCategoryManager() {
               <Label>Badge Colour</Label>
               <div className="mt-2 space-y-3">
                 {/* Template swatches */}
-                <div className="flex gap-2 flex-wrap">
-                  {colorTemplates.map((t) => (
-                    <button
-                      key={t.value}
-                      type="button"
-                      title={t.label}
-                      onClick={() => setForm({ ...form, color: t.value })}
-                      className="w-8 h-8 rounded-full border-2 transition-transform hover:scale-110"
-                      style={{
-                        backgroundColor: t.value,
-                        borderColor: form.color === t.value ? "#6B21A8" : "#e5e7eb",
-                      }}
-                    />
+                <div className="flex gap-2 flex-wrap items-center">
+                  {colorTemplates.map((t, idx) => (
+                    <div key={idx} className="relative group">
+                      <button
+                        type="button"
+                        title={t.label}
+                        onClick={() => setForm({ ...form, color: t.value })}
+                        className="w-8 h-8 rounded-full border-2 transition-transform hover:scale-110"
+                        style={{
+                          backgroundColor: t.value,
+                          borderColor: form.color === t.value ? "#6B21A8" : "#e5e7eb",
+                        }}
+                      />
+                      {/* Edit tooltip on hover */}
+                      {editingTemplateIdx !== idx && (
+                        <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap pointer-events-auto">
+                          Click to select, right-click to edit
+                        </div>
+                      )}
+                      {/* Edit input overlay */}
+                      {editingTemplateIdx === idx && (
+                        <div className="absolute top-0 left-0 flex items-center gap-1 bg-white border rounded shadow-lg p-1 z-10">
+                          <input
+                            type="text"
+                            value={tempTemplateColor}
+                            onChange={(e) => setTempTemplateColor(e.target.value)}
+                            placeholder="#000000"
+                            className="w-20 px-2 py-1 text-xs font-mono border rounded focus:outline-none focus:ring-1 focus:ring-purple-500"
+                            autoFocus
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleSaveTemplate(idx)}
+                            className="px-2 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600"
+                          >
+                            ✓
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setEditingTemplateIdx(null)}
+                            className="px-2 py-1 bg-gray-300 text-gray-700 text-xs rounded hover:bg-gray-400"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </div>
                 {/* Hex input + preview */}
