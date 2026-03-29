@@ -50,8 +50,17 @@ export default function CourseDetail() {
     loadData();
   }, [courseId]);
 
-  const getSectionModules = (sectionId) =>
-    modules.filter((m) => m.sectionId === sectionId);
+  const getSectionModules = (sectionId) => {
+    const sectionMods = modules.filter((m) => m.sectionId === sectionId);
+    return sectionMods.sort((a, b) => {
+      const aHasOrder = a.order !== undefined && a.order !== null;
+      const bHasOrder = b.order !== undefined && b.order !== null;
+      if (aHasOrder && bHasOrder) return a.order - b.order;
+      if (aHasOrder) return -1;
+      if (bHasOrder) return 1;
+      return (a.created_date || "").localeCompare(b.created_date || "");
+    });
+  };
 
   const getSectionProgress = (sectionId) => {
     const sectionMods = getSectionModules(sectionId);
