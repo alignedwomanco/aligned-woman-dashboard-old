@@ -33,9 +33,11 @@ export default function CourseDetail() {
         const courseSections = await base44.entities.CourseSection.filter({ courseId });
         const courseModules = await base44.entities.CourseModule.filter({ courseId });
         
-        // Sort sections by created_date (oldest first)
+        // Sort sections by order field (set in course builder)
         const sortedSections = courseSections.sort((a, b) => {
-          return (a.created_date || "").localeCompare(b.created_date || "");
+          const aOrder = a.order ?? Infinity;
+          const bOrder = b.order ?? Infinity;
+          return aOrder - bOrder;
         });
         
         setSections(sortedSections);
@@ -69,12 +71,9 @@ export default function CourseDetail() {
         // Reload sections on any update
         base44.entities.CourseSection.filter({ courseId }).then((courseSections) => {
           const sortedSections = courseSections.sort((a, b) => {
-            const aHasOrder = a.order !== undefined && a.order !== null;
-            const bHasOrder = b.order !== undefined && b.order !== null;
-            if (aHasOrder && bHasOrder) return a.order - b.order;
-            if (aHasOrder) return -1;
-            if (bHasOrder) return 1;
-            return (a.created_date || "").localeCompare(b.created_date || "");
+            const aOrder = a.order ?? Infinity;
+            const bOrder = b.order ?? Infinity;
+            return aOrder - bOrder;
           });
           setSections(sortedSections);
         });
