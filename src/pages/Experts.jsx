@@ -84,27 +84,25 @@ export default function Experts() {
                   />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-[#3D2250] mb-1">
-                    {expert.name}
-                  </h3>
-                  <p className="text-[#C67793] font-medium text-sm mb-2">
-                    {expert.title}
-                  </p>
-                  {expert.category && getCategoryName(expert.category) && (
-                    <span
-                      className="inline-block text-xs font-medium px-2 py-0.5 rounded-full mb-2"
-                      style={{
-                        backgroundColor: getCategoryColor(expert.category) + "22",
-                        color: getCategoryColor(expert.category),
-                        border: `1px solid ${getCategoryColor(expert.category)}55`,
-                      }}
-                    >
-                      {getCategoryName(expert.category)}
-                    </span>
-                  )}
-                  <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                    {expert.bio}
-                  </p>
+                   <h3 className="text-xl font-bold text-[#3D2250] mb-1">
+                     {expert.name}
+                   </h3>
+                   <p className="text-[#C67793] font-medium text-sm mb-3">
+                     {expert.title}
+                   </p>
+                   {expert.category && getCategoryName(expert.category) && (
+                     <span
+                       className="inline-block text-xs font-semibold px-3 py-1 rounded-full text-white mb-4"
+                       style={{
+                         backgroundColor: getCategoryColor(expert.category),
+                       }}
+                     >
+                       {getCategoryName(expert.category)}
+                     </span>
+                   )}
+                   <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                     {expert.bio}
+                   </p>
                   {expert.services && expert.services.length > 0 && (
                     <div className="flex items-center gap-2 text-[#5B2E84] font-medium text-sm">
                       <span>{expert.services.length} service{expert.services.length > 1 ? 's' : ''} available</span>

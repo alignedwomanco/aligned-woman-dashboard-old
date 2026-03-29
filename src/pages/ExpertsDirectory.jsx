@@ -56,27 +56,27 @@ export default function ExpertsDirectory() {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto">
          {/* Header with Search */}
-         <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-           <div>
+         <div className="mb-8">
+           <div className="mb-6">
              <h1 className="text-3xl font-bold text-[#3C224F] mb-1">Our Experts</h1>
              <p className="text-gray-600">Connect with specialists who can guide your journey.</p>
            </div>
-           <div className="relative w-full sm:w-64">
-             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+           <div className="relative w-full">
+             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
              <Input
                placeholder="Search experts..."
                value={search}
                onChange={(e) => setSearch(e.target.value)}
-               className="pl-9"
+               className="pl-12 py-3 text-base"
              />
            </div>
          </div>
 
          {/* Category Filters */}
-         <div className="mb-6">
+         <div className="mb-8 flex flex-wrap gap-3">
            <button
              onClick={() => setSelectedCategory("all")}
-             className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+             className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
                selectedCategory === "all"
                  ? "bg-[#3C224F] text-white border-[#3C224F]"
                  : "bg-white text-gray-600 border-gray-300 hover:border-[#3C224F]"
@@ -88,7 +88,7 @@ export default function ExpertsDirectory() {
              <button
                key={cat.id}
                onClick={() => setSelectedCategory(cat.id)}
-               className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+               className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors max-w-xs ${
                  selectedCategory === cat.id
                    ? "text-white border-transparent"
                    : "bg-white text-gray-600 border-gray-300 hover:border-gray-500"
@@ -98,6 +98,7 @@ export default function ExpertsDirectory() {
                    ? { backgroundColor: "#7A1B33", borderColor: "#7A1B33" }
                    : {}
                }
+               title={cat.name}
              >
                {cat.name}
              </button>
