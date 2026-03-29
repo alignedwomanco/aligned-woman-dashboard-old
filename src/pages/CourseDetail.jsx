@@ -67,6 +67,26 @@ export default function CourseDetail() {
       }
     };
     loadData();
+
+    // Subscribe to section updates to reflect reordering
+    const unsubscribeSections = base44.entities.CourseSection.subscribe((event) => {
+      if (event.data?.courseId === courseId) {
+        // Reload sections on any update
+        base44.entities.CourseSection.filter({ courseId }).then((courseSections) => {
+          const sortedSections = courseSections.sort((a, b) => {
+            const aHasOrder = a.order !== undefined && a.order !== null;
+            const bHasOrder = b.order !== undefined && b.order !== null;
+            if (aHasOrder && bHasOrder) return a.order - b.order;
+            if (aHasOrder) return -1;
+            if (bHasOrder) return 1;
+            return (a.created_date || "").localeCompare(b.created_date || "");
+          });
+          setSections(sortedSections);
+        });
+      }
+    });
+
+    return unsubscribeSections;
   }, [courseId]);
 
   const getSectionModules = (sectionId) => {
