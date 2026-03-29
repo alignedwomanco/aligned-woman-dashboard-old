@@ -17,10 +17,12 @@ export default function ExpertsDirectory() {
     queryFn: () => base44.entities.Expert.filter({ isPublished: true }),
   });
 
-  const { data: categories = [] } = useQuery({
+  const { data: categoriesRaw = [] } = useQuery({
     queryKey: ["expert-categories"],
-    queryFn: () => base44.entities.ExpertCategory.list("-created_date"),
+    queryFn: () => base44.entities.ExpertCategory.list(),
   });
+
+  const categories = [...categoriesRaw].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   const getCategoryName = (id) => {
     const cat = categories.find((c) => c.id === id);
@@ -35,9 +37,9 @@ export default function ExpertsDirectory() {
   const sortedExperts = [...experts].sort((a, b) => {
     const aCat = categories.find((c) => c.id === a.category);
     const bCat = categories.find((c) => c.id === b.category);
-    const aIdx = aCat ? categories.indexOf(aCat) : 9999;
-    const bIdx = bCat ? categories.indexOf(bCat) : 9999;
-    return aIdx - bIdx;
+    const aOrder = aCat?.order ?? 9999;
+    const bOrder = bCat?.order ?? 9999;
+    return aOrder - bOrder;
   });
 
   const filtered = sortedExperts.filter((e) => {

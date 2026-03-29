@@ -19,11 +19,13 @@ export default function Experts() {
     initialData: [],
   });
 
-  const { data: categories = [] } = useQuery({
+  const { data: categoriesRaw = [] } = useQuery({
     queryKey: ["expertCategories"],
-    queryFn: () => base44.entities.ExpertCategory.list("-created_date"),
+    queryFn: () => base44.entities.ExpertCategory.list(),
     initialData: [],
   });
+
+  const categories = [...categoriesRaw].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   const getCategoryName = (catId) => categories.find(c => c.id === catId)?.name || "";
   const getCategoryColor = (catId) => categories.find(c => c.id === catId)?.color || "#7340B9";
@@ -31,9 +33,9 @@ export default function Experts() {
   const sortedExperts = [...experts].sort((a, b) => {
     const aCat = categories.find((c) => c.id === a.category);
     const bCat = categories.find((c) => c.id === b.category);
-    const aIdx = aCat ? categories.indexOf(aCat) : 9999;
-    const bIdx = bCat ? categories.indexOf(bCat) : 9999;
-    return aIdx - bIdx;
+    const aOrder = aCat?.order ?? 9999;
+    const bOrder = bCat?.order ?? 9999;
+    return aOrder - bOrder;
   });
 
   return (

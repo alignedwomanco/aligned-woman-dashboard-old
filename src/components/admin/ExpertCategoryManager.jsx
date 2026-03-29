@@ -25,10 +25,12 @@ export default function ExpertCategoryManager() {
   const [tempTemplateColor, setTempTemplateColor] = useState("");
   const queryClient = useQueryClient();
 
-  const { data: categories = [] } = useQuery({
+  const { data: categoriesRaw = [] } = useQuery({
     queryKey: ["expertCategories"],
-    queryFn: () => base44.entities.ExpertCategory.list("-created_date"),
+    queryFn: () => base44.entities.ExpertCategory.list(),
   });
+
+  const categories = [...categoriesRaw].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.ExpertCategory.create(data),
@@ -89,14 +91,27 @@ export default function ExpertCategoryManager() {
   };
 
   const handleReorderCategories = async (result) => {
-    // Reordering disabled - categories sort by creation date automatically
+    const { source, destination } = result;
+    if (!destination || source.index === destination.index) return;
+
+    const reordered = Array.from(categories);
+    const [moved] = reordered.splice(source.index, 1);
+    reordered.splice(destination.index, 0, moved);
+
+    const updates = reordered.map((cat, idx) => 
+      base44.entities.ExpertCategory.update(cat.id, { order: idx })
+    );
+
+    await Promise.all(updates);
+    queryClient.invalidateQueries({ queryKey: ["expertCategories"] });
   };
 
   const handleSave = () => {
     if (editingCategory) {
       updateMutation.mutate({ id: editingCategory.id, data: form });
     } else {
-      createMutation.mutate(form);
+      const maxOrder = categories.length > 0 ? Math.max(...categories.map(c => c.order ?? 0)) : -1;
+      createMutation.mutate({ ...form, order: maxOrder + 1 });
     }
   };
 
