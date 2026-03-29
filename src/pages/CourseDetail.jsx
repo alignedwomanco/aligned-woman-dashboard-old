@@ -33,13 +33,8 @@ export default function CourseDetail() {
         const courseSections = await base44.entities.CourseSection.filter({ courseId });
         const courseModules = await base44.entities.CourseModule.filter({ courseId });
         
-        // Sort sections by order field, fallback to created_date
+        // Sort sections by created_date (oldest first)
         const sortedSections = courseSections.sort((a, b) => {
-          const aHasOrder = a.order !== undefined && a.order !== null;
-          const bHasOrder = b.order !== undefined && b.order !== null;
-          if (aHasOrder && bHasOrder) return a.order - b.order;
-          if (aHasOrder) return -1;
-          if (bHasOrder) return 1;
           return (a.created_date || "").localeCompare(b.created_date || "");
         });
         
