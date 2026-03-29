@@ -32,7 +32,15 @@ export default function ExpertsDirectory() {
     return cat?.color || "#7340B9";
   };
 
-  const filtered = experts.filter((e) => {
+  const sortedExperts = [...experts].sort((a, b) => {
+    const aIdx = categories.findIndex((c) => c.id === a.category);
+    const bIdx = categories.findIndex((c) => c.id === b.category);
+    const aOrder = aIdx === -1 ? 9999 : aIdx;
+    const bOrder = bIdx === -1 ? 9999 : bIdx;
+    return aOrder - bOrder;
+  });
+
+  const filtered = sortedExperts.filter((e) => {
     const matchesSearch =
       !search ||
       e.name?.toLowerCase().includes(search.toLowerCase()) ||

@@ -27,6 +27,15 @@ export default function Experts() {
 
   const getCategoryName = (catId) => categories.find(c => c.id === catId)?.name || "";
   const getCategoryColor = (catId) => categories.find(c => c.id === catId)?.color || "#7340B9";
+
+  const sortedExperts = [...experts].sort((a, b) => {
+    const aIdx = categories.findIndex((c) => c.id === a.category);
+    const bIdx = categories.findIndex((c) => c.id === b.category);
+    const aOrder = aIdx === -1 ? 9999 : aIdx;
+    const bOrder = bIdx === -1 ? 9999 : bIdx;
+    return aOrder - bOrder;
+  });
+
   return (
     <div className="pt-20">
       {/* Hero */}
@@ -55,7 +64,7 @@ export default function Experts() {
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {experts.map((expert, index) => (
+            {sortedExperts.map((expert, index) => (
               <motion.div
                 key={expert.id}
                 initial={{ opacity: 0, y: 30 }}

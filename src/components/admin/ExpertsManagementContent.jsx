@@ -206,14 +206,13 @@ export default function ExpertsManagementContent() {
     };
   };
 
-  // Sort experts: Founder category first, then rest
-  const founderCategory = expertCategories.find(c => c.name?.toLowerCase() === "founder");
+  // Sort experts by category order (first category in list = highest priority)
   const sortedExperts = [...expertsProfiles].sort((a, b) => {
-    const aIsFounder = founderCategory && a.category === founderCategory.id;
-    const bIsFounder = founderCategory && b.category === founderCategory.id;
-    if (aIsFounder && !bIsFounder) return -1;
-    if (!aIsFounder && bIsFounder) return 1;
-    return 0;
+    const aIdx = expertCategories.findIndex((c) => c.id === a.category);
+    const bIdx = expertCategories.findIndex((c) => c.id === b.category);
+    const aOrder = aIdx === -1 ? 9999 : aIdx;
+    const bOrder = bIdx === -1 ? 9999 : bIdx;
+    return aOrder - bOrder;
   });
 
   return (
