@@ -25,10 +25,12 @@ export default function ExpertCategoryManager() {
   const [tempTemplateColor, setTempTemplateColor] = useState("");
   const queryClient = useQueryClient();
 
-  const { data: categories = [] } = useQuery({
+  const { data: categoriesRaw = [] } = useQuery({
     queryKey: ["expertCategories"],
     queryFn: () => base44.entities.ExpertCategory.list(),
   });
+
+  const categories = [...categoriesRaw].sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
 
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.ExpertCategory.create(data),
@@ -117,7 +119,7 @@ export default function ExpertCategoryManager() {
     if (editingCategory) {
       updateMutation.mutate({ id: editingCategory.id, data: form });
     } else {
-      createMutation.mutate(form);
+      createMutation.mutate({ ...form, order: categories.length });
     }
   };
 
