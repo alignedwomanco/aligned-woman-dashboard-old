@@ -34,14 +34,15 @@ export default function SectionDetail() {
           setCourse(courses[0]);
         }
 
-        // Load modules for this section sorted by order field, then created_date as fallback
+        // Load modules for this section
         const sectionModules = await base44.entities.CourseModule.filter({ sectionId });
+        // Sort: items with explicit order first (by order), then by created_date
         const sorted = sectionModules.sort((a, b) => {
-          const aOrder = a.order !== undefined && a.order !== null ? a.order : Infinity;
-          const bOrder = b.order !== undefined && b.order !== null ? b.order : Infinity;
-          if (aOrder !== Infinity && bOrder !== Infinity) return aOrder - bOrder;
-          if (aOrder !== Infinity) return -1;
-          if (bOrder !== Infinity) return 1;
+          const aHasOrder = a.order !== undefined && a.order !== null;
+          const bHasOrder = b.order !== undefined && b.order !== null;
+          if (aHasOrder && bHasOrder) return a.order - b.order;
+          if (aHasOrder) return -1;
+          if (bHasOrder) return 1;
           return (a.created_date || "").localeCompare(b.created_date || "");
         });
         setModules(sorted);

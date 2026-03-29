@@ -233,20 +233,25 @@ export default function CourseBuilderContent() {
     else createPageMutation.mutate(data);
   };
 
+  const sortByOrderAndDate = (items) => {
+    return items.sort((a, b) => {
+      const aHasOrder = a.order !== undefined && a.order !== null;
+      const bHasOrder = b.order !== undefined && b.order !== null;
+      if (aHasOrder && bHasOrder) return a.order - b.order;
+      if (aHasOrder) return -1;
+      if (bHasOrder) return 1;
+      return (a.created_date || "").localeCompare(b.created_date || "");
+    });
+  };
+
   const getCourseSections = (courseId) =>
-    sections
-      .filter((s) => s.courseId === courseId)
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || (a.created_date || "").localeCompare(b.created_date || ""));
+    sortByOrderAndDate(sections.filter((s) => s.courseId === courseId));
 
   const getSectionModules = (sectionId) =>
-    modules
-      .filter((m) => m.sectionId === sectionId)
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || (a.created_date || "").localeCompare(b.created_date || ""));
+    sortByOrderAndDate(modules.filter((m) => m.sectionId === sectionId));
 
   const getModulePages = (moduleId) =>
-    pages
-      .filter((p) => p.moduleId === moduleId)
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || (a.created_date || "").localeCompare(b.created_date || ""));
+    sortByOrderAndDate(pages.filter((p) => p.moduleId === moduleId));
 
   const toggleSectionExpanded = (id) => setExpandedSections((prev) => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; });
   const toggleModuleExpanded = (id) => setExpandedModules((prev) => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; });
