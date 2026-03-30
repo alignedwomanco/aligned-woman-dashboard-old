@@ -179,18 +179,23 @@ export default function Classroom() {
             {/* Phase Entry Cards */}
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
               <div className="space-y-3">
-                {(sections.length > 0 ? sections : CANONICAL_PHASES.map(p => ({ id: p.name, title: p.name, _canonical: p }))).map((section, idx) => {
-                  const phase = CANONICAL_PHASES[idx] || CANONICAL_PHASES[0];
+                {CANONICAL_PHASES.map((phase) => {
+                  const section = sections.find((s) => {
+                    const normalizedTitle = (s.title || "").toLowerCase();
+                    const normalizedPhase = (s.phase || "").toLowerCase();
+                    const canonicalName = phase.name.toLowerCase();
+                    const canonicalShortName = canonicalName.replace(" & ", " and ");
+                    return normalizedPhase === canonicalName || normalizedTitle.includes(canonicalName) || normalizedTitle.includes(canonicalShortName);
+                  }) || { id: phase.name, title: phase.name };
+
                   const sectionMods = modules.filter(m => m.sectionId === section.id);
                   const sectionCompleted = sectionMods.filter(m => {
                     const p = progress.find(pr => pr.moduleId === m.id);
                     return p?.status === "completed";
                   }).length;
-                  // Use canonical count as fallback if no modules loaded yet
                   const displayTotal = sectionMods.length > 0 ? sectionMods.length : phase.count;
                   const sectionProg = displayTotal > 0 ? Math.round((sectionCompleted / displayTotal) * 100) : 0;
 
-                  // Get modules for display (up to 4 visible)
                   const sortedMods = sectionMods
                     .sort((a, b) => {
                       if (a.order != null && b.order != null) return a.order - b.order;
@@ -200,14 +205,13 @@ export default function Classroom() {
 
                   return (
                     <div
-                      key={section.id}
+                      key={phase.label}
                       className="bg-white rounded-2xl overflow-hidden shadow-sm border-l-4"
                       style={{ borderLeftColor: phase.color }}
                     >
-                      {/* Phase header */}
                       <div className="px-5 pt-4 pb-3 flex items-center justify-between">
                         <div>
-                          <h3 className="font-bold text-[#3B224E] text-base">{phase.label} — {section.title || phase.name}</h3>
+                          <h3 className="font-bold text-[#3B224E] text-base">{phase.label} — {phase.name}</h3>
                           <p className="text-xs text-gray-400 mt-0.5">
                             {sectionCompleted > 0 ? `${sectionCompleted} of ${displayTotal} completed` : `${displayTotal} masterclasses`}
                           </p>
@@ -224,7 +228,6 @@ export default function Classroom() {
                         )}
                       </div>
 
-                      {/* Module grid */}
                       {sortedMods.length > 0 && (
                         <div className="px-5 pb-4 grid grid-cols-2 gap-2">
                           {sortedMods.map(mod => {
@@ -253,7 +256,6 @@ export default function Classroom() {
                         </div>
                       )}
 
-                      {/* Progress bar at bottom */}
                       <div className="h-1 bg-gray-100">
                         <div className="h-full transition-all" style={{ width: `${sectionProg}%`, backgroundColor: phase.color }} />
                       </div>
