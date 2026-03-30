@@ -4,14 +4,15 @@ import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, CheckCircle, Play, Lock } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle, Play } from "lucide-react";
 
-const PHASES = [
-  { color: "#7340B9", light: "#EDE0FF", label: "Phase 1" },
-  { color: "#C4687D", light: "#FCE8EC", label: "Phase 2" },
-  { color: "#4B7BB5", light: "#E0ECFF", label: "Phase 3" },
-  { color: "#5B9B6A", light: "#E0F5E8", label: "Phase 4" },
+const CANONICAL_PHASES = [
+  { label: "Phase 1", name: "Awareness", count: 5, color: "#7340B9", light: "#EDE0FF" },
+  { label: "Phase 2", name: "Liberation", count: 3, color: "#C4687D", light: "#FCE8EC" },
+  { label: "Phase 3", name: "Intention", count: 3, color: "#4B7BB5", light: "#E0ECFF" },
+  { label: "Phase 4", name: "Vision & Embodiment", count: 3, color: "#5B9B6A", light: "#E0F5E8" },
 ];
+const CANONICAL_TOTAL = 14;
 
 export default function CourseDetail() {
   const [searchParams] = useSearchParams();
@@ -22,6 +23,7 @@ export default function CourseDetail() {
   const [sections, setSections] = useState([]);
   const [modules, setModules] = useState([]);
   const [progress, setProgress] = useState([]);
+  const [selectedPhaseIdx, setSelectedPhaseIdx] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -36,8 +38,19 @@ export default function CourseDetail() {
         ]);
 
         setCourse(courses[0]);
-        setSections(courseSections.sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity)));
-        setModules(courseModules.sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity)));
+
+        const sorted = courseSections.sort((a, b) => {
+          if (a.order != null && b.order != null) return a.order - b.order;
+          if (a.order != null) return -1;
+          if (b.order != null) return 1;
+          return (a.created_date || "").localeCompare(b.created_date || "");
+        });
+        setSections(sorted);
+
+        setModules(courseModules.sort((a, b) => {
+          if (a.order != null && b.order != null) return a.order - b.order;
+          return (a.created_date || "").localeCompare(b.created_date || "");
+        }));
         setProgress(prog);
       } catch (e) {
         console.error(e);
@@ -60,7 +73,10 @@ export default function CourseDetail() {
   const getSectionModules = (sectionId) =>
     modules
       .filter((m) => m.sectionId === sectionId)
-      .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity));
+      .sort((a, b) => {
+        if (a.order != null && b.order != null) return a.order - b.order;
+        return (a.created_date || "").localeCompare(b.created_date || "");
+      });
 
   const getModuleStatus = (moduleId) => {
     const p = progress.find((p) => p.moduleId === moduleId);
@@ -69,11 +85,10 @@ export default function CourseDetail() {
     return "in_progress";
   };
 
-  const totalModules = modules.length;
+  const totalBasis = Math.max(modules.length, CANONICAL_TOTAL);
   const completedModules = modules.filter(m => getModuleStatus(m.id) === "completed").length;
-  const overallProgress = totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0;
+  const overallProgress = totalBasis > 0 ? Math.round((completedModules / totalBasis) * 100) : 0;
 
-  // Find resume module
   const getResumeModule = () => {
     for (const section of sections) {
       const mods = getSectionModules(section.id);
@@ -101,177 +116,217 @@ export default function CourseDetail() {
     );
   }
 
+  // Build the displayed phases — merge canonical with real section data
+  const displayPhases = CANONICAL_PHASES.map((canon, idx) => {
+    const section = sections[idx] || null;
+    const mods = section ? getSectionModules(section.id) : [];
+    return { canon, section, mods };
+  });
+
+  const selectedPhase = displayPhases[selectedPhaseIdx];
+  const selectedPhaseMods = selectedPhase.mods;
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#E4CAFB" }}>
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
 
         {/* Back */}
-        <button onClick={() => navigate(-1)} className="mb-6 inline-block">
+        <button onClick={() => navigate(-1)} className="mb-5 inline-block">
           <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
             <ArrowLeft className="w-4 h-4 mr-2" /> Back to Classroom
           </Button>
         </button>
 
-        {/* Blueprint Hero */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-[#3B224E] rounded-2xl overflow-hidden mb-6"
-        >
-          {course.coverImage && (
-            <div className="h-48 relative overflow-hidden">
-              <img src={course.coverImage} alt={course.title} className="w-full h-full object-cover opacity-50" />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#3B224E]" />
-            </div>
-          )}
-          <div className="p-6">
-            <p className="text-purple-300 text-xs font-semibold tracking-widest uppercase mb-2">
-              The Aligned Woman Blueprint™
-            </p>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 leading-tight">
-              {course.title}
-            </h1>
-            {course.description && (
-              <p className="text-white/70 text-sm leading-relaxed mb-5">{course.description}</p>
-            )}
+        {/* ── Page label ── */}
+        <p className="text-xs font-bold tracking-widest text-[#7340B9] uppercase mb-4">
+          CourseDetail repurposed as — Blueprint Overview Page
+        </p>
 
-            {/* Progress */}
-            <div className="mb-4">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-white/70 text-xs">
-                  {completedModules} of {totalModules} masterclasses complete
-                </span>
-                <span className="text-white text-xs font-bold">{overallProgress}%</span>
+        <div className="grid lg:grid-cols-5 gap-6">
+
+          {/* ── Left: Course intro + actions ── */}
+          <div className="lg:col-span-2 space-y-5">
+
+            {/* Course intro card */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
+              <div className="h-40 bg-gradient-to-br from-[#3B224E] to-[#7340B9] relative">
+                {course.coverImage && (
+                  <img src={course.coverImage} alt={course.title} className="w-full h-full object-cover opacity-50" />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40" />
               </div>
-              <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-purple-400 rounded-full transition-all duration-500"
-                  style={{ width: `${overallProgress}%` }}
-                />
+              <div className="p-5">
+                <p className="text-xs font-bold tracking-widest text-[#7340B9] uppercase mb-1">Course Intro</p>
+                <h1 className="text-xl font-bold text-[#3B224E] leading-tight mb-2">
+                  The Aligned Woman Blueprint™
+                </h1>
+                <p className="text-sm text-gray-500 leading-relaxed mb-4">
+                  {course.description || "Your personal operating system for embodied success — 4 phases, 14 masterclasses."}
+                </p>
+
+                {/* Progress */}
+                <div className="mb-3">
+                  <div className="flex justify-between mb-1">
+                    <span className="text-xs text-gray-400">{completedModules} of {CANONICAL_TOTAL} complete</span>
+                    <span className="text-xs font-bold text-[#3B224E]">{overallProgress}%</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-[#7340B9] rounded-full" style={{ width: `${overallProgress}%` }} />
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Resume CTA */}
-            {resumeModule ? (
-              <Link to={createPageUrl("ModulePlayer") + `?moduleId=${resumeModule.id}&courseId=${courseId}`}>
-                <button className="inline-flex items-center gap-2 px-5 py-3 bg-white text-[#3B224E] font-semibold rounded-xl hover:bg-purple-50 transition-colors text-sm">
-                  {completedModules > 0 ? "Continue Learning" : "Start Learning"}
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </Link>
-            ) : (
-              <div className="inline-flex items-center gap-2 px-5 py-3 bg-green-400 text-green-900 font-semibold rounded-xl text-sm">
-                <CheckCircle className="w-4 h-4" />
-                Blueprint Complete!
-              </div>
-            )}
+            {/* Overview actions */}
+            <div className="bg-white rounded-2xl p-5 shadow-sm space-y-3">
+              <p className="text-xs font-bold tracking-widest text-gray-400 uppercase mb-1">Overview Actions</p>
+
+              {resumeModule && (
+                <Link
+                  to={createPageUrl("ModulePlayer") + `?moduleId=${resumeModule.id}&courseId=${courseId}`}
+                  className="flex items-center justify-between w-full px-4 py-3 bg-[#3B224E] text-white rounded-xl hover:bg-[#5B2E84] transition-colors text-sm font-semibold group"
+                >
+                  {completedModules > 0 ? "Resume last masterclass" : "Start from Phase 1"}
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              )}
+
+              {sections[0] && (
+                <Link
+                  to={createPageUrl("SectionDetail") + `?sectionId=${sections[0].id}&courseId=${courseId}`}
+                  className="flex items-center justify-between w-full px-4 py-3 border border-gray-200 text-[#3B224E] rounded-xl hover:bg-gray-50 transition-colors text-sm font-semibold group"
+                >
+                  Start from Phase 1
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              )}
+
+              <button
+                onClick={() => {
+                  document.getElementById("phase-map")?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="flex items-center justify-between w-full px-4 py-3 border border-gray-200 text-[#3B224E] rounded-xl hover:bg-gray-50 transition-colors text-sm font-semibold"
+              >
+                View all {CANONICAL_TOTAL} masterclasses
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
-        </motion.div>
 
-        {/* Overview stats */}
-        <div className="grid grid-cols-3 gap-3 mb-8">
-          {[
-            { label: "Phases", value: sections.length || 4 },
-            { label: "Masterclasses", value: totalModules || 14 },
-            { label: "Completed", value: completedModules },
-          ].map((stat) => (
-            <div key={stat.label} className="bg-white rounded-xl p-4 text-center shadow-sm">
-              <p className="text-2xl font-bold text-[#3B224E]">{stat.value}</p>
-              <p className="text-xs text-gray-500 mt-0.5">{stat.label}</p>
-            </div>
-          ))}
-        </div>
+          {/* ── Right: Phase Map (two-column) ── */}
+          <div className="lg:col-span-3" id="phase-map">
+            <p className="text-xs font-bold tracking-widest text-gray-400 uppercase mb-3">
+              4 Phases / {CANONICAL_TOTAL} Masterclasses — Phase Map
+            </p>
 
-        {/* Phase sections */}
-        {sections.length > 0 && (
-          <div>
-            <h2 className="text-sm font-semibold tracking-widest text-[#7340B9] uppercase mb-5">
-              Curriculum — 4 Phases
-            </h2>
-            <div className="space-y-4">
-              {sections.map((section, sIdx) => {
-                const sectionMods = getSectionModules(section.id);
-                const sectionCompleted = sectionMods.filter(m => getModuleStatus(m.id) === "completed").length;
-                const sectionProg = sectionMods.length > 0 ? Math.round((sectionCompleted / sectionMods.length) * 100) : 0;
-                const phase = PHASES[sIdx] || PHASES[0];
+            <div className="grid sm:grid-cols-2 gap-4 mb-5">
+              {displayPhases.map(({ canon, section, mods }, idx) => {
+                const sectionCompleted = mods.filter(m => getModuleStatus(m.id) === "completed").length;
+                const displayCount = mods.length > 0 ? mods.length : canon.count;
+                const isSelected = selectedPhaseIdx === idx;
 
                 return (
-                  <motion.div
-                    key={section.id}
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: sIdx * 0.08 }}
-                    className="bg-white rounded-2xl overflow-hidden shadow-sm"
+                  <button
+                    key={canon.label}
+                    onClick={() => setSelectedPhaseIdx(idx)}
+                    className={`text-left rounded-2xl p-4 border-2 transition-all ${
+                      isSelected ? "shadow-md" : "bg-white border-gray-100 hover:border-gray-200"
+                    }`}
+                    style={isSelected ? { backgroundColor: canon.light, borderColor: canon.color } : {}}
                   >
-                    {/* Section header */}
-                    <div
-                      className="px-5 py-4 flex items-center justify-between cursor-pointer"
-                      style={{ borderLeft: `4px solid ${phase.color}` }}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                          style={{ backgroundColor: phase.color }}
-                        >
-                          {sIdx + 1}
-                        </div>
-                        <div>
-                          <p className="font-bold text-[#3B224E] text-sm leading-snug">{section.title}</p>
-                          <p className="text-xs text-gray-400">{sectionMods.length} masterclasses · {sectionProg}% done</p>
-                        </div>
-                      </div>
-                      <Link
-                        to={createPageUrl("SectionDetail") + `?sectionId=${section.id}&courseId=${courseId}`}
-                        className="flex-shrink-0"
-                        onClick={e => e.stopPropagation()}
-                      >
-                        <div
-                          className="text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1"
-                          style={{ backgroundColor: phase.light, color: phase.color }}
-                        >
-                          Open <ArrowRight className="w-3 h-3" />
-                        </div>
-                      </Link>
-                    </div>
-
-                    {/* Module list */}
-                    {sectionMods.length > 0 && (
-                      <div className="border-t border-gray-50">
-                        {sectionMods.map((mod, mIdx) => {
-                          const status = getModuleStatus(mod.id);
-                          return (
-                            <Link
-                              key={mod.id}
-                              to={createPageUrl("ModulePlayer") + `?moduleId=${mod.id}&courseId=${courseId}`}
-                              className="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0 group"
-                            >
-                              <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-                                {status === "completed" ? (
-                                  <CheckCircle className="w-5 h-5 text-green-500" />
-                                ) : status === "in_progress" ? (
-                                  <Play className="w-4 h-4" style={{ color: phase.color }} />
-                                ) : (
-                                  <span className="text-xs font-bold text-gray-400">{mIdx + 1}</span>
-                                )}
-                              </div>
-                              <p className={`text-sm flex-1 leading-snug ${status === "completed" ? "text-gray-400 line-through" : "text-[#3B224E] group-hover:text-[#5B2E84]"}`}>
-                                {mod.title}
-                              </p>
-                              {mod.durationMinutes > 0 && (
-                                <span className="text-xs text-gray-400 flex-shrink-0">{mod.durationMinutes}m</span>
-                              )}
-                            </Link>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </motion.div>
+                    <p className="text-xs font-bold tracking-widest uppercase mb-1" style={{ color: canon.color }}>
+                      {canon.label}
+                    </p>
+                    <p className="font-bold text-[#3B224E] text-sm mb-1">{section?.title || canon.name}</p>
+                    <p className="text-xs text-gray-400">
+                      {sectionCompleted > 0 ? `${sectionCompleted} of ${displayCount} complete` : `${displayCount} masterclasses`}
+                    </p>
+                  </button>
                 );
               })}
             </div>
-          </div>
-        )}
 
+            {/* Selected Phase Detail */}
+            {selectedPhase && (
+              <motion.div
+                key={selectedPhaseIdx}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white rounded-2xl overflow-hidden shadow-sm"
+              >
+                <div
+                  className="px-5 py-4 border-b border-gray-50 flex items-center justify-between"
+                  style={{ borderLeftWidth: 4, borderLeftColor: selectedPhase.canon.color, borderLeftStyle: "solid" }}
+                >
+                  <div>
+                    <p className="text-xs font-bold tracking-widest uppercase mb-0.5" style={{ color: selectedPhase.canon.color }}>
+                      Selected Phase Detail
+                    </p>
+                    <h3 className="font-bold text-[#3B224E]">
+                      {selectedPhase.canon.label}: {selectedPhase.section?.title || selectedPhase.canon.name}
+                    </h3>
+                  </div>
+                  {selectedPhase.section && (
+                    <Link
+                      to={createPageUrl("SectionDetail") + `?sectionId=${selectedPhase.section.id}&courseId=${courseId}`}
+                      className="flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1"
+                      style={{ backgroundColor: selectedPhase.canon.light, color: selectedPhase.canon.color }}
+                    >
+                      View phase <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  )}
+                </div>
+
+                {/* Module list for selected phase */}
+                {selectedPhaseMods.length > 0 ? (
+                  <div>
+                    {selectedPhaseMods.map((mod, mIdx) => {
+                      const status = getModuleStatus(mod.id);
+                      return (
+                        <Link
+                          key={mod.id}
+                          to={createPageUrl("ModulePlayer") + `?moduleId=${mod.id}&courseId=${courseId}`}
+                          className="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0 group"
+                        >
+                          <div className="flex-shrink-0 w-5">
+                            {status === "completed" ? (
+                              <CheckCircle className="w-4 h-4 text-green-500" />
+                            ) : status === "in_progress" ? (
+                              <Play className="w-4 h-4" style={{ color: selectedPhase.canon.color }} />
+                            ) : (
+                              <span className="text-xs font-bold text-gray-300">{mIdx + 1}</span>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs text-gray-400 uppercase tracking-wider mb-0.5">Masterclass {mIdx + 1}</p>
+                            <p className={`text-sm font-medium leading-snug group-hover:text-[#5B2E84] transition-colors ${status === "completed" ? "text-gray-400 line-through" : "text-[#3B224E]"}`}>
+                              {mod.title}
+                            </p>
+                          </div>
+                          <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-[#7340B9] flex-shrink-0 transition-colors" />
+                        </Link>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  // No modules loaded yet — show canonical placeholder rows
+                  <div>
+                    {Array.from({ length: selectedPhase.canon.count }).map((_, i) => (
+                      <div key={i} className="flex items-center gap-3 px-5 py-3 border-b border-gray-50 last:border-0">
+                        <span className="text-xs font-bold text-gray-200 w-5">{i + 1}</span>
+                        <div>
+                          <p className="text-xs text-gray-300 uppercase tracking-wider mb-0.5">Masterclass {i + 1}</p>
+                          <div className="h-3 bg-gray-100 rounded w-40" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </div>
+
+        </div>
       </div>
     </div>
   );
