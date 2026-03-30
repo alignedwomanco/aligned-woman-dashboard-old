@@ -236,7 +236,7 @@ export default function Classroom() {
                               <Link
                                 key={mod.id}
                                 to={createPageUrl("ModulePlayer") + `?moduleId=${mod.id}&courseId=${blueprintCourse?.id}`}
-                                className="flex items-center gap-2 text-xs text-gray-600 hover:text-[#3B224E] py-1 group"
+                                className="flex items-center gap-2 rounded-xl border border-gray-300 px-4 py-3 text-xs text-gray-600 hover:text-[#3B224E] group"
                               >
                                 <div className="flex-shrink-0 w-4 h-4">
                                   {modStatus === "completed" ? (
