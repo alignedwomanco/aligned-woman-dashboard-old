@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
-import CourseDetail from './pages/CourseDetail';
+import CourseDetail from './pages/CourseDetail.jsx';
 import SectionDetail from './pages/SectionDetail';
 
 const { Pages, Layout, mainPage } = pagesConfig;
