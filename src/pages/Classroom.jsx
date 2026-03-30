@@ -128,15 +128,15 @@ export default function Classroom() {
 
               {/* Stats row */}
               <div className="grid grid-cols-3 gap-3 mb-4">
-                <div className="text-center">
+                <div className="rounded-2xl border border-[#D8CBEA] p-4 text-center">
                   <p className="text-2xl font-bold text-[#3B224E]">{completedModules}</p>
                   <p className="text-xs text-gray-400 mt-0.5">Completed</p>
                 </div>
-                <div className="text-center">
+                <div className="rounded-2xl border border-[#D8CBEA] p-4 text-center">
                   <p className="text-2xl font-bold text-[#3B224E]">{inProgressModules}</p>
                   <p className="text-xs text-gray-400 mt-0.5">In Progress</p>
                 </div>
-                <div className="text-center">
+                <div className="rounded-2xl border border-[#D8CBEA] p-4 text-center">
                   <p className="text-2xl font-bold text-[#3B224E]">{CANONICAL_TOTAL}</p>
                   <p className="text-xs text-gray-400 mt-0.5">Total Masterclasses</p>
                 </div>
