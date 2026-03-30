@@ -137,11 +137,6 @@ export default function CourseDetail() {
           </Button>
         </button>
 
-        {/* ── Page label ── */}
-        <p className="text-xs font-bold tracking-widest text-[#7340B9] uppercase mb-4">
-          CourseDetail repurposed as — Blueprint Overview Page
-        </p>
-
         <div className="grid lg:grid-cols-5 gap-6">
 
           {/* ── Left: Course intro + actions ── */}
@@ -156,7 +151,6 @@ export default function CourseDetail() {
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40" />
               </div>
               <div className="p-5">
-                <p className="text-xs font-bold tracking-widest text-[#7340B9] uppercase mb-1">Course Intro</p>
                 <h1 className="text-xl font-bold text-[#3B224E] leading-tight mb-2">
                   The Aligned Woman Blueprint™
                 </h1>
@@ -179,8 +173,6 @@ export default function CourseDetail() {
 
             {/* Overview actions */}
             <div className="bg-white rounded-2xl p-5 shadow-sm space-y-3">
-              <p className="text-xs font-bold tracking-widest text-gray-400 uppercase mb-1">Overview Actions</p>
-
               {resumeModule && (
                 <Link
                   to={createPageUrl("ModulePlayer") + `?moduleId=${resumeModule.id}&courseId=${courseId}`}
@@ -215,8 +207,8 @@ export default function CourseDetail() {
 
           {/* ── Right: Phase Map (two-column) ── */}
           <div className="lg:col-span-3" id="phase-map">
-            <p className="text-xs font-bold tracking-widest text-gray-400 uppercase mb-3">
-              4 Phases / {CANONICAL_TOTAL} Masterclasses — Phase Map
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+              4 Phases · {CANONICAL_TOTAL} Masterclasses
             </p>
 
             <div className="grid sm:grid-cols-2 gap-4 mb-5">

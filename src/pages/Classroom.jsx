@@ -116,7 +116,6 @@ export default function Classroom() {
             {/* Progress Snapshot */}
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
               className="bg-white rounded-2xl p-5 shadow-sm border border-purple-100">
-              <p className="text-xs font-bold tracking-widest text-gray-400 uppercase mb-3">Progress Snapshot</p>
               <h2 className="text-lg font-bold text-[#3B224E] mb-3">Your Blueprint Journey</h2>
 
               {/* Progress bar */}
@@ -179,7 +178,6 @@ export default function Classroom() {
 
             {/* Phase Entry Cards */}
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <p className="text-xs font-bold tracking-widest text-gray-400 uppercase mb-3">Phase Entry Cards</p>
               <div className="space-y-3">
                 {(sections.length > 0 ? sections : CANONICAL_PHASES.map(p => ({ id: p.name, title: p.name, _canonical: p }))).map((section, idx) => {
                   const phase = CANONICAL_PHASES[idx] || CANONICAL_PHASES[0];
@@ -270,7 +268,6 @@ export default function Classroom() {
           {/* ── Right column: Course Card + Profile CTA echo ── */}
           <div className="space-y-5">
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-              <p className="text-xs font-bold tracking-widest text-gray-400 uppercase mb-3">Course Card</p>
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
                 {/* Cover image */}
                 <div className="h-40 bg-gradient-to-br from-[#3B224E] to-[#7340B9] relative overflow-hidden">
@@ -312,7 +309,6 @@ export default function Classroom() {
             {/* Profile CTA echo */}
             {resumeTarget && blueprintCourse && (
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                <p className="text-xs font-bold tracking-widest text-gray-400 uppercase mb-3">Continue the Blueprint</p>
                 <div className="bg-white rounded-2xl p-4 shadow-sm">
                   <p className="text-xs text-gray-500 mb-3">
                     {overallProgress}% complete · returns you to your last active masterclass
