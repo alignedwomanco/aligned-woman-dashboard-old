@@ -11,6 +11,7 @@ import LessonHeader from "../components/module-player/LessonHeader";
 import OverviewCard from "../components/module-player/OverviewCard";
 import ExpertBioCard from "../components/module-player/ExpertBioCard";
 import BottomNav from "../components/module-player/BottomNav";
+import NotesPanel from "../components/module-player/NotesPanel";
 
 const CANONICAL_PHASES = [
   { name: "Awareness" },
@@ -25,6 +26,8 @@ export default function ModulePlayer() {
   const moduleId = searchParams.get("moduleId");
   const courseId = searchParams.get("courseId");
   const queryClient = useQueryClient();
+  const [viewMode, setViewMode] = useState("standard"); // "standard" | "notes"
+  const [notesText, setNotesText] = useState("");
 
   // ── Data queries (preserved from original) ──
 
@@ -200,14 +203,28 @@ export default function ModulePlayer() {
           </button>
 
           <div className="flex items-center gap-1">
-            <span className="flex items-center gap-1.5 text-xs font-semibold text-[#3B224E] bg-white border border-[#3B224E]/20 rounded-full px-3 py-1.5">
+            <button
+              onClick={() => setViewMode("standard")}
+              className={`flex items-center gap-1.5 text-xs rounded-full px-3 py-1.5 transition-colors ${
+                viewMode === "standard"
+                  ? "font-semibold text-[#3B224E] bg-white border border-[#3B224E]/20"
+                  : "text-gray-400 hover:text-gray-600"
+              }`}
+            >
               <Monitor className="w-3.5 h-3.5" />
               Standard view
-            </span>
-            <span className="flex items-center gap-1.5 text-xs text-gray-300 rounded-full px-3 py-1.5 cursor-default">
+            </button>
+            <button
+              onClick={() => setViewMode("notes")}
+              className={`flex items-center gap-1.5 text-xs rounded-full px-3 py-1.5 transition-colors ${
+                viewMode === "notes"
+                  ? "font-semibold text-[#3B224E] bg-white border border-[#3B224E]/20"
+                  : "text-gray-400 hover:text-gray-600"
+              }`}
+            >
               <StickyNote className="w-3.5 h-3.5" />
               Notes view
-            </span>
+            </button>
             <span className="flex items-center gap-1.5 text-xs text-gray-300 rounded-full px-3 py-1.5 cursor-default">
               <Maximize className="w-3.5 h-3.5" />
               Full-screen
@@ -227,37 +244,70 @@ export default function ModulePlayer() {
           />
         </motion.div>
 
-        {/* ── 3. Primary video ── */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="mb-4">
-          <VideoEmbed videoUrl={primaryVideoUrl} />
-        </motion.div>
+        {viewMode === "standard" ? (
+          <>
+            {/* ── 3. Primary video ── */}
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="mb-4">
+              <VideoEmbed videoUrl={primaryVideoUrl} />
+            </motion.div>
 
-        {/* Video meta row */}
-        <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400 mb-6 px-1">
-          {primaryVideoDuration && (
-            <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" />
-              {primaryVideoDuration} min lesson
-            </span>
-          )}
-          {module.durationMinutes && !primaryVideoDuration && (
-            <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" />
-              {module.durationMinutes} min
-            </span>
-          )}
-        </div>
+            {/* Video meta row */}
+            <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400 mb-6 px-1">
+              {primaryVideoDuration && (
+                <span className="flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5" />
+                  {primaryVideoDuration} min lesson
+                </span>
+              )}
+              {module.durationMinutes && !primaryVideoDuration && (
+                <span className="flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5" />
+                  {module.durationMinutes} min
+                </span>
+              )}
+            </div>
 
-        {/* ── 4. Supporting content cards ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="grid sm:grid-cols-2 gap-4 mb-8"
-        >
-          <OverviewCard description={module.description} pages={pages} />
-          <ExpertBioCard expert={expert} />
-        </motion.div>
+            {/* ── 4. Supporting content cards ── */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="grid sm:grid-cols-2 gap-4 mb-8"
+            >
+              <OverviewCard description={module.description} pages={pages} />
+              <ExpertBioCard expert={expert} />
+            </motion.div>
+          </>
+        ) : (
+          /* ── Notes view layout ── */
+          <div className="mb-8 space-y-4">
+            {/* Video — upper ~3/4 */}
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+              <VideoEmbed videoUrl={primaryVideoUrl} />
+            </motion.div>
+
+            {/* Video meta row */}
+            <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400 px-1">
+              {primaryVideoDuration && (
+                <span className="flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5" />
+                  {primaryVideoDuration} min lesson
+                </span>
+              )}
+              {module.durationMinutes && !primaryVideoDuration && (
+                <span className="flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5" />
+                  {module.durationMinutes} min
+                </span>
+              )}
+            </div>
+
+            {/* Notes panel — lower ~1/4 */}
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+              <NotesPanel value={notesText} onChange={setNotesText} />
+            </motion.div>
+          </div>
+        )}
 
         {/* ── 5. Bottom navigation row ── */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
