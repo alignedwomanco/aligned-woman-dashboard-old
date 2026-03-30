@@ -4,53 +4,56 @@ import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, CheckCircle, Play } from "lucide-react";
-
-const CANONICAL_PHASES = [
-  { label: "Phase 1", name: "Awareness", count: 5, color: "#7340B9", light: "#EDE0FF" },
-  { label: "Phase 2", name: "Liberation", count: 3, color: "#C4687D", light: "#FCE8EC" },
-  { label: "Phase 3", name: "Intention", count: 3, color: "#4B7BB5", light: "#E0ECFF" },
-  { label: "Phase 4", name: "Vision & Embodiment", count: 3, color: "#5B9B6A", light: "#E0F5E8" },
-];
-const CANONICAL_TOTAL = 14;
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { ArrowLeft, Clock, Play, CheckCircle, Lock, BookOpen, Grid2x2, Star, ArrowRight } from "lucide-react";
 
 export default function CourseDetail() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const courseId = searchParams.get("courseId");
-
   const [course, setCourse] = useState(null);
   const [sections, setSections] = useState([]);
   const [modules, setModules] = useState([]);
   const [progress, setProgress] = useState([]);
-  const [selectedPhaseIdx, setSelectedPhaseIdx] = useState(0);
+  const [activeSection, setActiveSection] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!courseId) return;
     const loadData = async () => {
       try {
-        const [courses, courseSections, courseModules, prog] = await Promise.all([
-          base44.entities.Course.filter({ id: courseId }),
-          base44.entities.CourseSection.filter({ courseId }),
-          base44.entities.CourseModule.filter({ courseId }),
-          base44.entities.CourseProgress.filter({}),
-        ]);
+        const courses = await base44.entities.Course.filter({ id: courseId });
+        const courseData = courses[0];
+        setCourse(courseData);
 
-        setCourse(courses[0]);
-
-        const sorted = courseSections.sort((a, b) => {
-          if (a.order != null && b.order != null) return a.order - b.order;
-          if (a.order != null) return -1;
-          if (b.order != null) return 1;
+        // Load sections and modules without pre-sorting
+        const courseSections = await base44.entities.CourseSection.filter({ courseId });
+        const courseModules = await base44.entities.CourseModule.filter({ courseId });
+        
+        // Sort sections by created_date (oldest first)
+        const sortedSections = courseSections.sort((a, b) => {
           return (a.created_date || "").localeCompare(b.created_date || "");
         });
-        setSections(sorted);
+        
+        setSections(sortedSections);
+        if (sortedSections.length > 0) setActiveSection(sortedSections[0].id);
 
-        setModules(courseModules.sort((a, b) => {
-          if (a.order != null && b.order != null) return a.order - b.order;
+        // Sort modules by order field, fallback to created_date
+        const sortedModules = courseModules.sort((a, b) => {
+          const aHasOrder = a.order !== undefined && a.order !== null;
+          const bHasOrder = b.order !== undefined && b.order !== null;
+          if (aHasOrder && bHasOrder) return a.order - b.order;
+          if (aHasOrder) return -1;
+          if (bHasOrder) return 1;
           return (a.created_date || "").localeCompare(b.created_date || "");
-        }));
+        });
+        setModules(sortedModules);
+
+        // Load progress
+        const prog = await base44.entities.CourseProgress.filter({ courseId });
         setProgress(prog);
       } catch (e) {
         console.error(e);
@@ -60,49 +63,73 @@ export default function CourseDetail() {
     };
     loadData();
 
-    const unsubscribe = base44.entities.CourseSection.subscribe((event) => {
+    // Subscribe to section updates to reflect reordering
+    const unsubscribeSections = base44.entities.CourseSection.subscribe((event) => {
       if (event.data?.courseId === courseId) {
-        base44.entities.CourseSection.filter({ courseId }).then((s) => {
-          setSections(s.sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity)));
+        // Reload sections on any update
+        base44.entities.CourseSection.filter({ courseId }).then((courseSections) => {
+          const sortedSections = courseSections.sort((a, b) => {
+            const aHasOrder = a.order !== undefined && a.order !== null;
+            const bHasOrder = b.order !== undefined && b.order !== null;
+            if (aHasOrder && bHasOrder) return a.order - b.order;
+            if (aHasOrder) return -1;
+            if (bHasOrder) return 1;
+            return (a.created_date || "").localeCompare(b.created_date || "");
+          });
+          setSections(sortedSections);
         });
       }
     });
-    return unsubscribe;
+
+    return unsubscribeSections;
   }, [courseId]);
 
-  const getSectionModules = (sectionId) =>
-    modules
-      .filter((m) => m.sectionId === sectionId)
-      .sort((a, b) => {
-        if (a.order != null && b.order != null) return a.order - b.order;
-        return (a.created_date || "").localeCompare(b.created_date || "");
-      });
+  const getSectionModules = (sectionId) => {
+    const sectionMods = modules.filter((m) => m.sectionId === sectionId);
+    return sectionMods.sort((a, b) => {
+      const aHasOrder = a.order !== undefined && a.order !== null;
+      const bHasOrder = b.order !== undefined && b.order !== null;
+      if (aHasOrder && bHasOrder) return a.order - b.order;
+      if (aHasOrder) return -1;
+      if (bHasOrder) return 1;
+      return (a.created_date || "").localeCompare(b.created_date || "");
+    });
+  };
+
+  const getSectionProgress = (sectionId) => {
+    const sectionMods = getSectionModules(sectionId);
+    if (sectionMods.length === 0) return 0;
+    const completed = sectionMods.filter(m => {
+      const p = progress.find(pr => pr.moduleId === m.id);
+      return p?.status === "completed";
+    }).length;
+    return Math.round((completed / sectionMods.length) * 100);
+  };
+
+  const getModuleProgress = (moduleId) => {
+    const p = progress.find((p) => p.moduleId === moduleId);
+    return p?.progressPercentage || 0;
+  };
 
   const getModuleStatus = (moduleId) => {
     const p = progress.find((p) => p.moduleId === moduleId);
-    if (!p || p.status === "not_started") return "available";
-    if (p.status === "completed") return "completed";
-    return "in_progress";
+    if (!p || p.status === "not_started") return "Available";
+    if (p.status === "completed") return "Complete";
+    return "InProgress";
   };
 
-  const totalBasis = Math.max(modules.length, CANONICAL_TOTAL);
-  const completedModules = modules.filter(m => getModuleStatus(m.id) === "completed").length;
-  const overallProgress = totalBasis > 0 ? Math.round((completedModules / totalBasis) * 100) : 0;
-
-  const getResumeModule = () => {
-    for (const section of sections) {
-      const mods = getSectionModules(section.id);
-      for (const mod of mods) {
-        if (getModuleStatus(mod.id) !== "completed") return mod;
-      }
-    }
-    return null;
+  const getCourseProgress = () => {
+    if (modules.length === 0) return 0;
+    const completed = modules.filter(m => {
+      const p = progress.find(pr => pr.moduleId === m.id);
+      return p?.status === "completed";
+    }).length;
+    return Math.round((completed / modules.length) * 100);
   };
-  const resumeModule = getResumeModule();
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#E4CAFB" }}>
+      <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin w-8 h-8 border-4 border-[#3B224E] border-t-transparent rounded-full" />
       </div>
     );
@@ -110,217 +137,139 @@ export default function CourseDetail() {
 
   if (!course) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#E4CAFB" }}>
+      <div className="min-h-screen flex items-center justify-center">
         <p className="text-gray-500">Course not found.</p>
       </div>
     );
   }
 
-  // Build the displayed phases — merge canonical with real section data using canonical phase matching
-  const displayPhases = CANONICAL_PHASES.map((canon) => {
-    const canonicalName = canon.name.toLowerCase();
-    const canonicalShortName = canonicalName.replace(" & ", " and ");
-    const section = sections.find((s) => {
-      const normalizedTitle = (s.title || s.name || "").toLowerCase();
-      const normalizedPhase = (s.phase || "").toLowerCase();
-      return normalizedPhase === canonicalName || normalizedTitle.includes(canonicalName) || normalizedTitle.includes(canonicalShortName);
-    }) || null;
-    const mods = section ? getSectionModules(section.id) : [];
-    return { canon, section, mods };
-  });
-
-  const selectedPhase = displayPhases[selectedPhaseIdx];
-  const selectedPhaseMods = selectedPhase.mods;
-
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#E4CAFB" }}>
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
-
-        {/* Back */}
-        <button onClick={() => navigate(-1)} className="mb-5 inline-block">
+      {/* Banner */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+        <Link to={createPageUrl("Classroom")} className="inline-block mb-4">
           <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
             <ArrowLeft className="w-4 h-4 mr-2" /> Back to Classroom
           </Button>
-        </button>
-
-        <div className="grid lg:grid-cols-5 gap-6">
-
-          {/* ── Left: Course intro + actions ── */}
-          <div className="lg:col-span-2 space-y-5">
-
-            {/* Course intro card */}
-            <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
-              <div className="h-40 bg-gradient-to-br from-[#3B224E] to-[#7340B9] relative">
-                {course.coverImage && (
-                  <img src={course.coverImage} alt={course.title} className="w-full h-full object-cover opacity-50" />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40" />
-              </div>
-              <div className="p-5">
-                <h1 className="text-xl font-bold text-[#3B224E] leading-tight mb-2">
-                  The Aligned Woman Blueprint™
-                </h1>
-                <p className="text-sm text-gray-500 leading-relaxed mb-4">
-                  {course.description || "Your personal operating system for embodied success — 4 phases, 14 masterclasses."}
-                </p>
-
-                {/* Progress */}
-                <div className="mb-3">
-                  <div className="flex justify-between mb-1">
-                    <span className="text-xs text-gray-400">{completedModules} of {CANONICAL_TOTAL} complete</span>
-                    <span className="text-xs font-bold text-[#3B224E]">{overallProgress}%</span>
-                  </div>
-                  <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-[#7340B9] rounded-full" style={{ width: `${overallProgress}%` }} />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Overview actions */}
-            <div className="bg-white rounded-2xl p-5 shadow-sm space-y-3">
-              {resumeModule && (
-                <Link
-                  to={createPageUrl("ModulePlayer") + `?moduleId=${resumeModule.id}&courseId=${courseId}`}
-                  className="flex items-center justify-between w-full px-4 py-3 bg-[#3B224E] text-white rounded-xl hover:bg-[#5B2E84] transition-colors text-sm font-semibold group"
-                >
-                  {completedModules > 0 ? "Resume last masterclass" : "Start from Phase 1"}
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              )}
-
-              {sections[0] && (
-                <Link
-                  to={createPageUrl("SectionDetail") + `?sectionId=${sections[0].id}&courseId=${courseId}`}
-                  className="flex items-center justify-between w-full px-4 py-3 border border-gray-200 text-[#3B224E] rounded-xl hover:bg-gray-50 transition-colors text-sm font-semibold group"
-                >
-                  Start from Phase 1
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              )}
-
-              <button
-                onClick={() => {
-                  document.getElementById("phase-map")?.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="flex items-center justify-between w-full px-4 py-3 border border-gray-200 text-[#3B224E] rounded-xl hover:bg-gray-50 transition-colors text-sm font-semibold"
-              >
-                View all {CANONICAL_TOTAL} masterclasses
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* ── Right: Phase Map (two-column) ── */}
-          <div className="lg:col-span-3" id="phase-map">
-            <div className="grid sm:grid-cols-2 gap-4 mb-5">
-              {displayPhases.map(({ canon, section, mods }, idx) => {
-                const sectionCompleted = mods.filter(m => getModuleStatus(m.id) === "completed").length;
-                const displayCount = mods.length > 0 ? mods.length : canon.count;
-                const isSelected = selectedPhaseIdx === idx;
-
-                return (
-                  <button
-                    key={canon.label}
-                    onClick={() => setSelectedPhaseIdx(idx)}
-                    className={`text-left rounded-2xl p-4 border-2 transition-all ${
-                      isSelected ? "shadow-md" : "bg-white border-gray-100 hover:border-gray-200"
-                    }`}
-                    style={isSelected ? { backgroundColor: canon.light, borderColor: canon.color } : {}}
-                  >
-                    <p className="text-xs font-bold tracking-widest uppercase mb-1" style={{ color: canon.color }}>
-                      {canon.label}
-                    </p>
-                    <p className="font-bold text-[#3B224E] text-sm mb-1">{canon.name}</p>
-                    <p className="text-xs text-gray-400">
-                      {sectionCompleted > 0 ? `${sectionCompleted} of ${displayCount} complete` : `${displayCount} masterclasses`}
-                    </p>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Selected Phase Detail */}
-            {selectedPhase && (
-              <motion.div
-                key={selectedPhaseIdx}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-2xl overflow-hidden shadow-sm"
-              >
-                <div
-                  className="px-5 py-4 border-b border-gray-50 flex items-center justify-between"
-                  style={{ borderLeftWidth: 4, borderLeftColor: selectedPhase.canon.color, borderLeftStyle: "solid" }}
-                >
-                  <div>
-                    <p className="text-xs font-bold tracking-widest uppercase mb-0.5" style={{ color: selectedPhase.canon.color }}>
-                      Selected Phase Detail
-                    </p>
-                    <h3 className="font-bold text-[#3B224E]">
-                      {selectedPhase.canon.label}: {selectedPhase.section?.title || selectedPhase.canon.name}
-                    </h3>
-                  </div>
-                  {selectedPhase.section && (
-                    <Link
-                      to={createPageUrl("SectionDetail") + `?sectionId=${selectedPhase.section.id}&courseId=${courseId}`}
-                      className="flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1"
-                      style={{ backgroundColor: selectedPhase.canon.light, color: selectedPhase.canon.color }}
-                    >
-                      View phase <ArrowRight className="w-3 h-3" />
-                    </Link>
-                  )}
-                </div>
-
-                {/* Module list for selected phase */}
-                {selectedPhaseMods.length > 0 ? (
-                  <div>
-                    {selectedPhaseMods.map((mod, mIdx) => {
-                      const status = getModuleStatus(mod.id);
-                      return (
-                        <Link
-                          key={mod.id}
-                          to={createPageUrl("ModulePlayer") + `?moduleId=${mod.id}&courseId=${courseId}`}
-                          className="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0 group"
-                        >
-                          <div className="flex-shrink-0 w-5">
-                            {status === "completed" ? (
-                              <CheckCircle className="w-4 h-4 text-green-500" />
-                            ) : status === "in_progress" ? (
-                              <Play className="w-4 h-4" style={{ color: selectedPhase.canon.color }} />
-                            ) : (
-                              <span className="text-xs font-bold text-gray-300">{mIdx + 1}</span>
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs text-gray-400 uppercase tracking-wider mb-0.5">Masterclass {mIdx + 1}</p>
-                            <p className={`text-sm font-medium leading-snug group-hover:text-[#5B2E84] transition-colors ${status === "completed" ? "text-gray-400 line-through" : "text-[#3B224E]"}`}>
-                              {mod.title}
-                            </p>
-                          </div>
-                          <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-[#7340B9] flex-shrink-0 transition-colors" />
-                        </Link>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  // No modules loaded yet — show canonical placeholder rows
-                  <div>
-                    {Array.from({ length: selectedPhase.canon.count }).map((_, i) => (
-                      <div key={i} className="flex items-center gap-3 px-5 py-3 border-b border-gray-50 last:border-0">
-                        <span className="text-xs font-bold text-gray-200 w-5">{i + 1}</span>
-                        <div>
-                          <p className="text-xs text-gray-300 uppercase tracking-wider mb-0.5">Masterclass {i + 1}</p>
-                          <div className="h-3 bg-gray-100 rounded w-40" />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </motion.div>
+        </Link>
+        
+        <div className="rounded-2xl overflow-hidden border-2" style={{ borderColor: "var(--theme-secondary, #5B2E84)" }}>
+          <div className="h-48 bg-gradient-to-br from-[#3B224E] to-[#5B2E84] relative">
+            {course.coverImage && (
+              <img src={course.coverImage} alt={course.title} className="w-full h-full object-cover opacity-60" />
             )}
+            <div className="absolute inset-0 p-6 flex flex-col justify-end">
+              <div className="flex items-center gap-2 flex-wrap mb-2">
+                {course.isPublished ? <Badge className="bg-green-400 text-green-900 border-0">Published</Badge> : <Badge className="bg-gray-200 text-gray-700 border-0">Draft</Badge>}
+                {course.isFeatured && <Badge className="bg-yellow-300 text-yellow-900 border-0"><Star className="w-3 h-3 mr-1" />Featured</Badge>}
+                {course.price > 0 && <Badge className="bg-blue-400 text-blue-900 border-0">${course.price}</Badge>}
+                {course.category && <Badge className="bg-purple-200 text-purple-900 border-0">{course.category}</Badge>}
+              </div>
+              <h1 className="text-3xl font-bold text-white">{course.title}</h1>
+              {course.description && <p className="text-white/80 text-sm mt-1 line-clamp-2">{course.description}</p>}
+            </div>
+          </div>
+          <div className="bg-white px-6 py-4 space-y-3">
+           <div className="flex items-center justify-between">
+             <span className="text-sm text-gray-600">{sections.length} sections · {modules.length} modules</span>
+             <span className="text-sm font-semibold text-[#3B224E]">{getCourseProgress()}% Complete</span>
+           </div>
+           <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+             <div
+               className="h-full bg-green-400 transition-all duration-300"
+               style={{ width: `${getCourseProgress()}%` }}
+             />
+           </div>
+          </div>
+          </div>
           </div>
 
-        </div>
+      <div className="max-w-6xl mx-auto p-4 sm:p-6">
+         {sections.length === 0 ? (
+           <div className="text-center py-16">
+             <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+             <p className="text-gray-500">No sections available yet.</p>
+           </div>
+         ) : (
+           <>
+             {/* Sections Grid */}
+             <div className="mb-8">
+               <h2 className="text-lg font-semibold text-[#3B224E] mb-4">Course Sections</h2>
+               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                 {sections.map((section, idx) => {
+                   const sectionProg = getSectionProgress(section.id);
+                   const modulesInSection = getSectionModules(section.id).length;
+                   return (
+                     <motion.div
+                       key={section.id}
+                       initial={{ opacity: 0, y: 20 }}
+                       animate={{ opacity: 1, y: 0 }}
+                       transition={{ delay: idx * 0.07 }}
+                     >
+                       <Link to={createPageUrl("SectionDetail") + `?sectionId=${section.id}&courseId=${courseId}`}>
+                         <Card className="h-full hover:shadow-xl transition-all duration-300 cursor-pointer bg-white overflow-hidden group">
+                           {/* Cover Image */}
+                           <div className="h-44 bg-gradient-to-br from-purple-300 to-purple-500 relative overflow-hidden">
+                             {section.coverImage ? (
+                               <img
+                                 src={section.coverImage}
+                                 alt={section.title}
+                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                               />
+                             ) : (
+                               <div className="w-full h-full flex items-center justify-center">
+                                 <Grid2x2 className="w-12 h-12 text-white/40" />
+                               </div>
+                             )}
+                             <div className="absolute bottom-0 left-0 right-0 h-2 bg-white/20">
+                               <div
+                                 className="h-full bg-green-400 transition-all duration-300"
+                                 style={{ width: `${sectionProg}%` }}
+                               />
+                             </div>
+                           </div>
+
+                           <CardContent className="p-5 flex flex-col gap-4">
+                             <div>
+                               <h3 className="font-bold text-[#3B224E] text-lg leading-snug mb-2 group-hover:text-[#5B2E84] transition-colors">
+                                 {section.title}
+                               </h3>
+                               {section.description && (
+                                 <p className="text-sm text-gray-500 line-clamp-2">
+                                   {section.description}
+                                 </p>
+                               )}
+                             </div>
+
+                             <div className="space-y-2">
+                               <div className="flex items-center justify-between">
+                                 <span className="text-xs text-gray-500">{modulesInSection} modules</span>
+                                 <span className="text-xs font-semibold text-[#3B224E]">{sectionProg}%</span>
+                               </div>
+                               <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                                 <div
+                                   className="h-full bg-green-400 transition-all duration-300"
+                                   style={{ width: `${sectionProg}%` }}
+                                 />
+                               </div>
+                             </div>
+
+                             <div className="flex items-center gap-1 text-[#3B224E] text-sm font-medium mt-auto">
+                               {sectionProg > 0 ? `Continue` : "Start"}
+                               <ArrowRight className="w-4 h-4" />
+                             </div>
+                           </CardContent>
+                         </Card>
+                       </Link>
+                     </motion.div>
+                   );
+                 })}
+               </div>
+             </div>
+
+
+           </>
+         )}
       </div>
     </div>
   );

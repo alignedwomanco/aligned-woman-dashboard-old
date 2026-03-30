@@ -1,36 +1,35 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { motion } from "framer-motion";
-import { ArrowLeft, Clock, Monitor, StickyNote, Maximize, Minimize, ArrowRight } from "lucide-react";
-
-import VideoEmbed from "../components/module-player/VideoEmbed";
-import LessonHeader from "../components/module-player/LessonHeader";
-import OverviewCard from "../components/module-player/OverviewCard";
-import ExpertBioCard from "../components/module-player/ExpertBioCard";
-import BottomNav from "../components/module-player/BottomNav";
-import NotesPanel from "../components/module-player/NotesPanel";
-
-const CANONICAL_PHASES = [
-  { name: "Awareness" },
-  { name: "Liberation" },
-  { name: "Intention" },
-  { name: "Vision & Embodiment" },
-];
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import {
+  ArrowLeft,
+  CheckCircle,
+  Clock,
+  Eye,
+  Download,
+  MessageCircle,
+  Send,
+  Check,
+} from "lucide-react";
 
 export default function ModulePlayer() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const moduleId = searchParams.get("moduleId");
   const courseId = searchParams.get("courseId");
+  const [selectedPage, setSelectedPage] = useState(null);
+  const [newComment, setNewComment] = useState("");
   const queryClient = useQueryClient();
-  const [viewMode, setViewMode] = useState("standard"); // "standard" | "notes" | "fullscreen"
-  const [preFullscreenMode, setPreFullscreenMode] = useState("standard");
-  const [notesText, setNotesText] = useState("");
-
-  // ── Data queries (preserved from original) ──
 
   const { data: module } = useQuery({
     queryKey: ["courseModule", moduleId],
@@ -56,331 +55,461 @@ export default function ModulePlayer() {
     enabled: !!moduleId,
   });
 
-  const { data: section } = useQuery({
-    queryKey: ["courseSection", module?.sectionId],
-    queryFn: async () => {
-      const sections = await base44.entities.CourseSection.filter({ id: module.sectionId });
-      return sections[0];
-    },
-    enabled: !!module?.sectionId,
-  });
-
-  const { data: expert } = useQuery({
-    queryKey: ["expert", module?.expertId],
-    queryFn: async () => {
-      const experts = await base44.entities.Expert.filter({ id: module.expertId });
-      return experts[0];
-    },
-    enabled: !!module?.expertId,
-  });
-
-  // All modules in the course, for numbering & prev/next
-  const { data: allModules = [] } = useQuery({
-    queryKey: ["allCourseModules", courseId],
-    queryFn: async () => {
-      const mods = await base44.entities.CourseModule.filter({ courseId });
-      return mods.sort((a, b) => {
-        if (a.order != null && b.order != null) return a.order - b.order;
-        return (a.created_date || "").localeCompare(b.created_date || "");
-      });
-    },
-    enabled: !!courseId,
-  });
-
-  // All sections for grouping modules into phases
-  const { data: allSections = [] } = useQuery({
-    queryKey: ["allCourseSections", courseId],
-    queryFn: async () => {
-      const secs = await base44.entities.CourseSection.filter({ courseId });
-      return secs.sort((a, b) => {
-        if (a.order != null && b.order != null) return a.order - b.order;
-        return (a.created_date || "").localeCompare(b.created_date || "");
-      });
-    },
-    enabled: !!courseId,
-  });
-
   const { data: moduleProgress = [] } = useQuery({
     queryKey: ["courseProgress", moduleId],
     queryFn: () => base44.entities.CourseProgress.filter({ moduleId }),
     enabled: !!moduleId,
   });
 
-  // ── Progress mutations (preserved) ──
+  const { data: comments = [] } = useQuery({
+    queryKey: ["comments", moduleId],
+    queryFn: () =>
+      base44.entities.ModuleComment.filter(
+        { moduleId },
+        "-created_date"
+      ),
+    enabled: !!moduleId,
+  });
 
   const updateProgressMutation = useMutation({
     mutationFn: async ({ status, progressPercentage }) => {
       const existing = moduleProgress[0];
       if (existing) {
-        return base44.entities.CourseProgress.update(existing.id, { status, progressPercentage: progressPercentage || existing.progressPercentage || 0 });
+        return base44.entities.CourseProgress.update(existing.id, {
+          status,
+          progressPercentage: progressPercentage || existing.progressPercentage || 0,
+        });
       } else {
-        return base44.entities.CourseProgress.create({ courseId, moduleId, status, progressPercentage: progressPercentage || 0 });
+        return base44.entities.CourseProgress.create({
+          courseId,
+          moduleId,
+          status,
+          progressPercentage: progressPercentage || 0,
+        });
       }
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["courseProgress"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["courseProgress"] });
+    },
+  });
+
+  const addCommentMutation = useMutation({
+    mutationFn: (comment) => base44.entities.ModuleComment.create(comment),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["comments"] });
+      setNewComment("");
+    },
   });
 
   const togglePageCompleteMutation = useMutation({
     mutationFn: async ({ pageId, isComplete }) => {
       const existing = moduleProgress.find(p => p.pageId === pageId);
       if (existing) {
-        return base44.entities.CourseProgress.update(existing.id, { status: isComplete ? "completed" : "in_progress", progressPercentage: isComplete ? 100 : existing.progressPercentage });
+        return base44.entities.CourseProgress.update(existing.id, {
+          status: isComplete ? "completed" : "in_progress",
+          progressPercentage: isComplete ? 100 : existing.progressPercentage,
+        });
       } else {
-        return base44.entities.CourseProgress.create({ courseId, moduleId, pageId, status: isComplete ? "completed" : "in_progress", progressPercentage: isComplete ? 100 : 0 });
+        return base44.entities.CourseProgress.create({
+          courseId,
+          moduleId,
+          pageId,
+          status: isComplete ? "completed" : "in_progress",
+          progressPercentage: isComplete ? 100 : 0,
+        });
       }
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["courseProgress"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["courseProgress"] });
+    },
   });
 
-  // ── Derived data ──
+  useEffect(() => {
+    if (pages.length > 0 && !selectedPage) {
+      setSelectedPage(pages[0]);
+    }
+  }, [pages]);
 
-  // Flatten all modules in canonical phase order for global numbering & prev/next
-  const orderedModules = useMemo(() => {
-    if (!allSections.length || !allModules.length) return [];
-    const result = [];
-    for (const sec of allSections) {
-      const secMods = allModules
-        .filter(m => m.sectionId === sec.id)
-        .sort((a, b) => {
-          if (a.order != null && b.order != null) return a.order - b.order;
-          return (a.created_date || "").localeCompare(b.created_date || "");
+  const handleTogglePageComplete = async () => {
+    const pageProgress = moduleProgress.find(p => p.pageId === selectedPage.id);
+    const isCurrentlyComplete = pageProgress?.status === "completed" || false;
+    
+    await togglePageCompleteMutation.mutateAsync({
+      pageId: selectedPage.id,
+      isComplete: !isCurrentlyComplete,
+    });
+
+    // If marking as complete and it's the last page, complete the module
+    if (!isCurrentlyComplete) {
+      const allPagesCompleted = pages.every(page => {
+        if (page.id === selectedPage.id) return true;
+        const progress = moduleProgress.find(p => p.pageId === page.id);
+        return progress?.status === "completed";
+      });
+
+      if (allPagesCompleted) {
+        await completeModule();
+      }
+    }
+  };
+
+  const completeModule = async () => {
+    updateProgressMutation.mutate({
+      status: "completed",
+      progressPercentage: 100,
+    });
+
+    // Award points for module completion
+    await awardModuleCompletion();
+  };
+
+  const awardModuleCompletion = async () => {
+    try {
+      const pointsRecords = await base44.entities.UserPoints.filter({});
+      const currentPoints = pointsRecords[0];
+      
+      const modulePoints = 50; // Base points for module completion
+      const streakBonus = (currentPoints?.currentStreak || 0) >= 3 ? 5 : 0;
+      const totalPoints = (currentPoints?.points || 0) + modulePoints + streakBonus;
+      const newLevel = Math.floor(totalPoints / 100) + 1;
+
+      if (currentPoints) {
+        await base44.entities.UserPoints.update(currentPoints.id, {
+          points: totalPoints,
+          level: newLevel,
+          lastActivityDate: new Date().toISOString().split('T')[0],
         });
-      result.push(...secMods);
+      } else {
+        await base44.entities.UserPoints.create({
+          points: totalPoints,
+          level: newLevel,
+          lastActivityDate: new Date().toISOString().split('T')[0],
+        });
+      }
+
+      // Award badge for module completion
+      await base44.entities.UserBadge.create({
+        badgeId: `module-${moduleId}`,
+        badgeName: `${module.title} Complete`,
+        badgeIcon: "🎓",
+        earnedDate: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error("Error awarding points:", error);
     }
-    return result;
-  }, [allSections, allModules]);
+  };
 
-  const currentGlobalIndex = orderedModules.findIndex(m => m.id === moduleId);
-  const previousModule = currentGlobalIndex > 0 ? orderedModules[currentGlobalIndex - 1] : null;
-  const nextModule = currentGlobalIndex >= 0 && currentGlobalIndex < orderedModules.length - 1 ? orderedModules[currentGlobalIndex + 1] : null;
-  const masterclassNumber = currentGlobalIndex >= 0 ? currentGlobalIndex + 1 : null;
-  const totalMasterclasses = orderedModules.length || 14;
 
-  // Phase name from section title
-  const phaseName = useMemo(() => {
-    if (!section) return null;
-    const title = (section.title || "").toLowerCase();
-    for (const phase of CANONICAL_PHASES) {
-      if (title.includes(phase.name.toLowerCase())) return phase.name;
-    }
-    return section.title || null;
-  }, [section]);
 
-  // Resolve video URL — first page with a video, or first page
-  const primaryVideoUrl = useMemo(() => {
-    if (!pages.length) return null;
-    const videoPage = pages.find(p => p.videoUrl);
-    return videoPage?.videoUrl || null;
-  }, [pages]);
+  const handleAddComment = () => {
+    if (!newComment.trim()) return;
+    addCommentMutation.mutate({
+      moduleId,
+      comment: newComment,
+      isQuestion: false,
+    });
+  };
 
-  const primaryVideoDuration = useMemo(() => {
-    if (!pages.length) return null;
-    const videoPage = pages.find(p => p.videoUrl);
-    return videoPage?.videoDuration ? Math.round(videoPage.videoDuration / 60) : null;
-  }, [pages]);
+  const currentProgress = moduleProgress[0] || { progressPercentage: 0, status: "not_started" };
+  const overallProgress = currentProgress.progressPercentage || 0;
 
-  // ── Loading state ──
-
-  if (!module) {
+  if (!module || !selectedPage) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#E4CAFB" }}>
-        <div className="animate-spin w-8 h-8 border-4 border-[#3B224E] border-t-transparent rounded-full" />
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-[#6B1B3D] border-t-transparent rounded-full" />
       </div>
     );
   }
 
-  // ── Full-screen overlay ──
-  if (viewMode === "fullscreen") {
-    return (
-      <div className="fixed inset-0 z-[100] bg-[#0f0f13] flex flex-col">
-        {/* Video area — fills most of screen */}
-        <div className="flex-1 flex items-center justify-center p-4 sm:p-8">
-          <div className="w-full max-w-7xl">
-            <VideoEmbed videoUrl={primaryVideoUrl} />
-          </div>
-        </div>
-
-        {/* Minimal footer controls */}
-        <div className="flex items-center justify-between px-6 py-4 bg-[#0f0f13] border-t border-white/10">
-          <div className="flex items-center gap-4">
-            <span className="text-xs text-white/40 truncate max-w-xs sm:max-w-md">
-              {module.title}
-            </span>
-            {primaryVideoDuration && (
-              <span className="hidden sm:flex items-center gap-1 text-xs text-white/30">
-                <Clock className="w-3 h-3" />
-                {primaryVideoDuration} min
-              </span>
-            )}
-          </div>
-
-          <div className="flex items-center gap-3">
-            {previousModule && (
-              <Link
-                to={createPageUrl("ModulePlayer") + `?moduleId=${previousModule.id}&courseId=${courseId}`}
-                className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white/70 transition-colors"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Previous</span>
-              </Link>
-            )}
-            {nextModule && (
-              <Link
-                to={createPageUrl("ModulePlayer") + `?moduleId=${nextModule.id}&courseId=${courseId}`}
-                className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white/70 transition-colors"
-              >
-                <span className="hidden sm:inline">Next</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            )}
-            <button
-              onClick={() => setViewMode(preFullscreenMode)}
-              className="flex items-center gap-1.5 text-xs text-white/60 hover:text-white bg-white/10 hover:bg-white/20 rounded-full px-4 py-2 transition-colors ml-2"
-            >
-              <Minimize className="w-3.5 h-3.5" />
-              Exit full-screen
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const canMarkComplete = currentProgress.progressPercentage >= 50;
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#E4CAFB" }}>
-      <div className={`mx-auto px-4 sm:px-6 py-5 ${viewMode === "notes" ? "max-w-6xl" : "max-w-4xl"}`}>
-
-        {/* ── 1. Top utility row ── */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
-          <button
-            onClick={() => navigate(courseId ? createPageUrl("CourseDetail") + `?courseId=${courseId}` : createPageUrl("Classroom"))}
-            className="flex items-center gap-2 text-sm text-gray-500 hover:text-[#3B224E] transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Blueprint overview</span>
-          </button>
-
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => setViewMode("standard")}
-              className={`flex items-center gap-1.5 text-xs rounded-full px-3 py-1.5 transition-colors ${
-                viewMode === "standard"
-                  ? "font-semibold text-[#3B224E] bg-white border border-[#3B224E]/20"
-                  : "text-gray-400 hover:text-gray-600 bg-white/40 border border-gray-200"
-              }`}
-            >
-              <Monitor className="w-3.5 h-3.5" />
-              Standard view
-            </button>
-            <button
-              onClick={() => setViewMode("notes")}
-              className={`flex items-center gap-1.5 text-xs rounded-full px-3 py-1.5 transition-colors ${
-                viewMode === "notes"
-                  ? "font-semibold text-[#3B224E] bg-white border border-[#3B224E]/20"
-                  : "text-gray-400 hover:text-gray-600 bg-white/40 border border-gray-200"
-              }`}
-            >
-              <StickyNote className="w-3.5 h-3.5" />
-              Notes view
-            </button>
-            <button
-              onClick={() => { setPreFullscreenMode(viewMode); setViewMode("fullscreen"); }}
-              className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 bg-white/40 border border-gray-200 rounded-full px-3 py-1.5 transition-colors"
-            >
-              <Maximize className="w-3.5 h-3.5" />
-              Full-screen
-            </button>
+    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
+      {/* Header */}
+      <div className="bg-white border-b sticky top-20 z-40">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link to={createPageUrl("Classroom")}>
+                <Button variant="ghost" size="icon">
+                  <ArrowLeft className="w-5 h-5" />
+                </Button>
+              </Link>
+              <div>
+                {course && (
+                  <Badge className="bg-purple-100 text-purple-700 border-purple-200 border mb-1">
+                    <Eye className="w-3 h-3 mr-1" />
+                    {course.title}
+                  </Badge>
+                )}
+                <h1 className="text-xl font-bold text-[#4A1228]">{module?.title}</h1>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-500 flex items-center gap-1">
+                <Clock className="w-4 h-4" />
+                {module.durationMinutes} min
+              </span>
+              <Progress value={overallProgress} className="w-32" />
+              <span className="text-sm font-medium text-[#6B1B3D]">{overallProgress}%</span>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* ── 2. Lesson header (Standard view only) ── */}
-        {viewMode === "standard" && (
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mb-5">
-            <LessonHeader
-              phaseName={phaseName}
-              masterclassNumber={masterclassNumber}
-              totalInPhase={totalMasterclasses}
-              title={module.title}
-              expertName={expert?.name}
-              durationMinutes={module.durationMinutes}
-            />
-          </motion.div>
-        )}
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="grid lg:grid-cols-[320px_1fr] gap-6">
+          {/* Left Sidebar - Pages List & Resources */}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm">Course Content</CardTitle>
+                <Progress value={overallProgress} className="h-1.5" />
+              </CardHeader>
+              <CardContent className="p-0">
+                <ScrollArea className="h-[calc(100vh-300px)]">
+                  <div className="space-y-1 p-4">
+                    {pages.map((page, idx) => {
+                      const pageProgress = moduleProgress.find(p => p.pageId === page.id);
+                      const isCompleted = pageProgress?.status === "completed" || false;
+                      return (
+                        <button
+                          key={page.id}
+                          onClick={() => setSelectedPage(page)}
+                          className={`w-full text-left p-3 rounded-lg transition-all ${
+                            selectedPage?.id === page.id
+                              ? "bg-pink-50 border-2 border-[#6B1B3D]"
+                              : "hover:bg-gray-50 border-2 border-transparent"
+                          }`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
+                              isCompleted ? "bg-green-100" : "bg-gray-200"
+                            }`}>
+                              {isCompleted ? (
+                                <CheckCircle className="w-4 h-4 text-green-600" />
+                              ) : (
+                                <span className="text-xs text-gray-600">{idx + 1}</span>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm font-medium text-[#4A1228] truncate">
+                                {page.title}
+                              </div>
+                              {page.videoDuration && (
+                                <div className="text-xs text-gray-500 mt-1">
+                                  <Clock className="w-3 h-3 inline mr-1" />
+                                  {Math.round(page.videoDuration / 60)} min
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </ScrollArea>
+              </CardContent>
+            </Card>
 
-        {viewMode === "standard" ? (
-          <>
-            {/* ── 3-std. Primary video ── */}
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="mb-4">
-              <VideoEmbed videoUrl={primaryVideoUrl} />
-            </motion.div>
-
-            {/* Video meta row */}
-            <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400 mb-6 px-1">
-              {primaryVideoDuration && (
-                <span className="flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5" />
-                  {primaryVideoDuration} min lesson
-                </span>
-              )}
-              {module.durationMinutes && !primaryVideoDuration && (
-                <span className="flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5" />
-                  {module.durationMinutes} min
-                </span>
-              )}
-            </div>
-
-            {/* ── 4. Supporting content cards ── */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="grid sm:grid-cols-2 gap-4 mb-8"
-            >
-              <OverviewCard description={module.description} pages={pages} />
-              <ExpertBioCard expert={expert} />
-            </motion.div>
-          </>
-        ) : (
-          /* ── Notes view layout ── */
-          <div className="mb-8 space-y-4">
-            {/* Video — upper ~3/4 */}
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-              <VideoEmbed videoUrl={primaryVideoUrl} />
-            </motion.div>
-
-            {/* Video meta row */}
-            <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400 px-1">
-              {primaryVideoDuration && (
-                <span className="flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5" />
-                  {primaryVideoDuration} min lesson
-                </span>
-              )}
-              {module.durationMinutes && !primaryVideoDuration && (
-                <span className="flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5" />
-                  {module.durationMinutes} min
-                </span>
-              )}
-            </div>
-
-            {/* Notes panel — lower ~1/4 */}
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-              <NotesPanel value={notesText} onChange={setNotesText} />
-            </motion.div>
+            {/* Resources Section */}
+            {selectedPage.downloads && selectedPage.downloads.length > 0 && (
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <Download className="w-4 h-4" />
+                    Resources
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {selectedPage.downloads.map((download, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-3 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors">
+                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                        <Download className="w-4 h-4 text-[#6B1B3D] flex-shrink-0" />
+                        <span className="text-sm font-medium text-[#4A1228] truncate">
+                          {download.name}
+                        </span>
+                      </div>
+                      <a
+                        href={download.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ml-2"
+                      >
+                        <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                          <Download className="w-4 h-4" />
+                        </Button>
+                      </a>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
           </div>
-        )}
 
-        {/* ── 5. Bottom navigation row ── */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-          <BottomNav
-            previousModule={previousModule}
-            nextModule={nextModule}
-            courseId={courseId}
-          />
-        </motion.div>
+          {/* Main Content */}
+          <div className="space-y-6">
+            {/* Video Player */}
+            <motion.div
+              key={selectedPage.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <Card className="overflow-hidden">
+                <div style={{ paddingTop: '56.25%', position: 'relative' }} className="bg-gray-900">
+                  {selectedPage.videoUrl ? (
+                    (() => {
+                      const url = selectedPage.videoUrl;
+                      let embedUrl = url;
+                      
+                      // YouTube
+                      if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                        const videoId = url.includes('youtu.be') 
+                          ? url.split('youtu.be/')[1]?.split('?')[0]
+                          : new URLSearchParams(url.split('?')[1]).get('v');
+                        embedUrl = `https://www.youtube.com/embed/${videoId}?rel=0`;
+                      }
+                      // Wistia
+                      else if (url.includes('wistia.com')) {
+                        const videoId = url.match(/medias\/([a-zA-Z0-9]+)/)?.[1] || url.split('/').pop();
+                        embedUrl = `https://fast.wistia.net/embed/iframe/${videoId}`;
+                      }
+                      // Google Drive
+                      else if (url.includes('drive.google.com')) {
+                        const fileId = url.match(/[-\w]{25,}/)?.[0];
+                        embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+                      }
+                      
+                      return (
+                        <iframe
+                          src={embedUrl}
+                          className="absolute top-0 left-0 w-full h-full"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                          allowFullScreen
+                          style={{ border: 0 }}
+                        />
+                      );
+                    })()
+                  ) : (
+                    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center text-white">
+                      No video available
+                    </div>
+                  )}
+                </div>
+              </Card>
+            </motion.div>
 
+            {/* Lesson Content */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                <CardTitle>{selectedPage.title}</CardTitle>
+                {(() => {
+                  const pageProgress = moduleProgress.find(p => p.pageId === selectedPage.id);
+                  const isPageComplete = pageProgress?.status === "completed" || false;
+                    
+                    return (
+                      <Button
+                        onClick={handleTogglePageComplete}
+                        variant={isPageComplete ? "outline" : "default"}
+                        className={isPageComplete ? "border-green-600 text-green-600 hover:bg-green-50" : "bg-green-600 hover:bg-green-700 text-white"}
+                      >
+                        <span className="font-medium">{isPageComplete ? "Completed" : "Mark Complete"}</span>
+                        <CheckCircle className="w-4 h-4 ml-2" />
+                      </Button>
+                    );
+                  })()}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div 
+                  className="prose max-w-none" 
+                  dangerouslySetInnerHTML={{ __html: selectedPage.content || '' }}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Next/Complete Actions */}
+            <Card className="bg-gradient-to-br from-pink-50 to-white border-pink-100">
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  {(() => {
+                    const currentIndex = pages.findIndex(p => p.id === selectedPage.id);
+                    const nextPage = pages[currentIndex + 1];
+                    return nextPage ? (
+                      <Button
+                        className="w-full bg-[#6B1B3D] hover:bg-[#4A1228] text-white"
+                        onClick={() => setSelectedPage(nextPage)}
+                      >
+                        Next Lesson →
+                      </Button>
+                    ) : (
+                      <Button
+                        className="w-full bg-gradient-to-r from-[#6B1B3D] to-[#8B2E4D] text-white"
+                        onClick={() => navigate(createPageUrl("Classroom"))}
+                      >
+                        Back to Classroom
+                      </Button>
+                    );
+                  })()}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Comments Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <MessageCircle className="w-5 h-5" />
+                  Questions & Comments
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {/* Add Comment */}
+                  <div className="flex gap-3">
+                    <Textarea
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      placeholder="Ask a question or leave a comment..."
+                      className="flex-1"
+                    />
+                    <Button
+                      onClick={handleAddComment}
+                      className="bg-[#6B1B3D] hover:bg-[#4A1228]"
+                    >
+                      <Send className="w-4 h-4" />
+                    </Button>
+                  </div>
+
+                  <Separator />
+
+                  {/* Comments List */}
+                  <ScrollArea className="h-[300px]">
+                    <div className="space-y-4">
+                      {comments.map((comment) => (
+                        <div key={comment.id} className="p-4 bg-gray-50 rounded-lg">
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="w-8 h-8 bg-[#6B1B3D] rounded-full flex items-center justify-center text-white text-sm">
+                              {comment.created_by?.[0]}
+                            </div>
+                            <span className="text-sm font-medium text-gray-700">
+                              {comment.created_by}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              {new Date(comment.created_date).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <p className="text-gray-700">{comment.comment}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
