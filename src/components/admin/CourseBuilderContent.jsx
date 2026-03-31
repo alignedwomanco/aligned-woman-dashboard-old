@@ -150,32 +150,21 @@ export default function CourseBuilderContent() {
     onSuccess: () => queryClient.invalidateQueries(["coursePages"]),
   });
 
-  // Reorder helpers — assigns explicit numeric order to all items, then swaps two
+  // Reorder helpers — assigns sequential order to ALL items, then swaps the two targets
   const swapOrder = async (items, indexA, indexB, updateFn, queryKey) => {
     if (indexA < 0 || indexB < 0 || indexA >= items.length || indexB >= items.length) return;
-    
-    // First, give every item an explicit order based on its current position
-    const initPromises = [];
-    items.forEach((item, i) => {
-      if (item.order === undefined || item.order === null) {
-        initPromises.push(updateFn({ id: item.id, data: { order: i } }));
-      }
-    });
-    await Promise.all(initPromises);
-    
-    // Now swap the two items
-    const a = items[indexA];
-    const b = items[indexB];
-    
-    // Recalculate based on current state in case order was just set
-    const aWithOrder = { ...a, order: a.order ?? indexA };
-    const bWithOrder = { ...b, order: b.order ?? indexB };
-    
-    await Promise.all([
-      updateFn({ id: a.id, data: { order: bWithOrder.order } }),
-      updateFn({ id: b.id, data: { order: aWithOrder.order } }),
-    ]);
-    
+
+    // Build the desired order: start from current display order, then swap
+    const ordered = items.map((item, i) => ({ id: item.id, order: i }));
+    const tempOrder = ordered[indexA].order;
+    ordered[indexA].order = ordered[indexB].order;
+    ordered[indexB].order = tempOrder;
+
+    // Persist every item's order so the full list is always consistent
+    await Promise.all(
+      ordered.map(({ id, order }) => updateFn({ id, data: { order } }))
+    );
+
     await queryClient.invalidateQueries({ queryKey: [queryKey] });
   };
 
