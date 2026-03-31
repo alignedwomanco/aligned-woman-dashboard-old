@@ -228,12 +228,10 @@ export default function CourseBuilderContent() {
   };
 
   const sortByOrderAndDate = (items) => {
-    return items.sort((a, b) => {
-      const aHasOrder = a.order !== undefined && a.order !== null;
-      const bHasOrder = b.order !== undefined && b.order !== null;
-      if (aHasOrder && bHasOrder) return a.order - b.order;
-      if (aHasOrder) return -1;
-      if (bHasOrder) return 1;
+    return [...items].sort((a, b) => {
+      const aOrder = a.order ?? Infinity;
+      const bOrder = b.order ?? Infinity;
+      if (aOrder !== bOrder) return aOrder - bOrder;
       return (a.created_date || "").localeCompare(b.created_date || "");
     });
   };
