@@ -200,7 +200,7 @@ export default function SectionDetail() {
                                   </span>
                                   <span className="font-semibold">{prog}%</span>
                                 </div>
-                                <Progress value={prog} className="h-1.5" />
+                                <Progress value={prog} className="h-1.5 max-w-[200px]" />
                               </div>
                             )}
 
