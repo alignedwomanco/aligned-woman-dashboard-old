@@ -382,7 +382,7 @@ export default function Layout({ children, currentPageName }) {
       `}</style>
 
       {/* Left Sidebar - Hidden on mobile */}
-      <aside className={`hidden lg:flex fixed left-0 top-0 bottom-0 bg-[#3C224F] text-white flex-col z-50 transition-all duration-300 ${sidebarW}`}>
+      <aside className={`hidden lg:flex fixed left-0 top-0 bottom-0 bg-[#7A1B33] text-white flex-col z-50 transition-all duration-300 ${sidebarW}`}>
         {/* Logo */}
         <div className={`border-b border-white/10 flex items-center justify-center ${sidebarCollapsed ? "p-3" : "p-6"}`}>
           <Link to={createPageUrl("Home")}>
@@ -650,7 +650,7 @@ export default function Layout({ children, currentPageName }) {
         {showMobileMenu && (
           <>
             <div className="lg:hidden fixed inset-0 bg-black/50 z-[60]" onClick={() => setShowMobileMenu(false)} />
-            <div className="lg:hidden fixed top-0 left-0 bottom-0 w-80 bg-[#3C224F] z-[70] shadow-2xl overflow-y-auto">
+            <div className="lg:hidden fixed top-0 left-0 bottom-0 w-80 bg-[#7A1B33] z-[70] shadow-2xl overflow-y-auto">
               <div className="flex flex-col h-full text-white">
                 <div className="flex items-center justify-between p-6 border-b border-white/10">
                   <img
