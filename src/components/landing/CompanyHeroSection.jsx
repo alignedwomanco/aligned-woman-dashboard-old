@@ -29,9 +29,9 @@ export default function CompanyHeroSection() {
           className="w-full h-full object-cover"
         />
         <div 
-          className="absolute inset-0 bg-gradient-to-br from-[#3D2250]/85 via-[#5B2E84]/75 to-[#7340B9]/80 transition-all duration-700 ease-out"
+          className="absolute inset-0 bg-gradient-to-br from-[#6E1D40]/90 via-[#8B3A5C]/80 to-[#943A59]/85 transition-all duration-700 ease-out"
           style={{
-            background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(169, 98, 233, 0.4) 0%, rgba(91, 46, 132, 0.75) 50%, rgba(61, 34, 80, 0.85) 100%)`
+            background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(184, 90, 122, 0.4) 0%, rgba(139, 58, 92, 0.8) 50%, rgba(110, 29, 64, 0.9) 100%)`
           }}
         />
       </div>
@@ -44,7 +44,7 @@ export default function CompanyHeroSection() {
           className="space-y-6 sm:space-y-8"
         >
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 sm:px-6 py-2 mb-2 sm:mb-4">
-            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: '#a861e9' }} />
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: '#E8B4C8' }} />
             <span className="text-white text-xs sm:text-sm font-medium">The Education Women Were Never Given</span>
           </div>
 
@@ -65,7 +65,7 @@ export default function CompanyHeroSection() {
             className="text-base sm:text-lg lg:text-xl text-white/80 max-w-4xl mx-auto leading-relaxed px-4"
           >
             A modern education company for women who want{" "}
-            <span style={{ color: '#a861e9' }} className="font-semibold">clarity, confidence, and success</span>{" "}
+            <span style={{ color: '#E8B4C8' }} className="font-semibold">clarity, confidence, and success</span>{" "}
             without burnout, self-abandonment, or fragmentation.
           </motion.p>
 
@@ -78,7 +78,7 @@ export default function CompanyHeroSection() {
             <Button
               onClick={() => window.location.href = createPageUrl("OnboardingForm")}
               size="lg"
-              className="bg-white text-[#3D2250] hover:bg-white/90 px-8 sm:px-12 py-5 sm:py-7 text-base sm:text-lg font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 group w-full sm:w-auto"
+              className="bg-white text-[#6E1D40] hover:bg-white/90 px-8 sm:px-12 py-5 sm:py-7 text-base sm:text-lg font-bold rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 group w-full sm:w-auto"
             >
               Create Your Free Account
               <ArrowRight className="ml-2 sm:ml-3 w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
@@ -88,7 +88,7 @@ export default function CompanyHeroSection() {
               onClick={() => window.location.href = createPageUrl("AWBlueprint")}
               size="lg"
               variant="outline"
-              className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-[#3D2250] px-8 sm:px-10 py-5 sm:py-7 text-base sm:text-lg font-semibold rounded-full transition-all duration-300 w-full sm:w-auto"
+              className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white hover:text-[#6E1D40] px-8 sm:px-10 py-5 sm:py-7 text-base sm:text-lg font-semibold rounded-full transition-all duration-300 w-full sm:w-auto"
             >
               Explore The Blueprint
             </Button>

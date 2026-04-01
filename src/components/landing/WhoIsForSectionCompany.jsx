@@ -26,12 +26,12 @@ export default function WhoIsForSectionCompany() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl font-light text-[#3B224E] tracking-tight mb-8">
+          <h2 className="text-4xl sm:text-5xl font-light text-[#6E1D40] tracking-tight mb-8">
             Who The Aligned Woman Is For
           </h2>
           <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
             The Aligned Woman is for the woman who knows she is capable of more, but{" "}
-            <span className="font-semibold" style={{ color: '#7340B9' }}>no longer wants to sacrifice herself to get there.</span>
+            <span className="font-semibold" style={{ color: '#6E1D40' }}>no longer wants to sacrifice herself to get there.</span>
           </p>
         </motion.div>
 
@@ -43,8 +43,8 @@ export default function WhoIsForSectionCompany() {
             transition={{ duration: 0.8 }}
             className="space-y-6"
           >
-            <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-3xl p-8 border border-pink-100">
-              <h3 className="text-2xl font-semibold text-[#3B224E] mb-6">This is for you if:</h3>
+            <div className="bg-gradient-to-br from-[#F5E8EE] to-[#DEBECC]/50 rounded-3xl p-8 border border-[#DEBECC]">
+              <h3 className="text-2xl font-semibold text-[#6E1D40] mb-6">This is for you if:</h3>
               <ul className="space-y-4">
                 {qualities.map((quality, index) => (
                   <motion.li
@@ -55,7 +55,7 @@ export default function WhoIsForSectionCompany() {
                     transition={{ duration: 0.4, delay: index * 0.1 }}
                     className="flex items-start gap-3"
                   >
-                    <div className="w-6 h-6 bg-gradient-to-br from-[#A962E9] to-[#8B4FC9] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <div className="w-6 h-6 bg-gradient-to-br from-[#943A59] to-[#6E1D40] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <Check className="w-4 h-4 text-white" />
                     </div>
                     <span className="text-gray-700 leading-relaxed">{quality}</span>
@@ -72,10 +72,10 @@ export default function WhoIsForSectionCompany() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative"
           >
-            <div className="bg-gradient-to-br from-[#3B224E] to-[#4A2B5E] rounded-3xl p-12 text-white">
+            <div className="bg-gradient-to-br from-[#6E1D40] to-[#8B3A5C] rounded-3xl p-12 text-white">
               <h3 className="text-3xl font-light mb-6">Why This Has Never Existed Before</h3>
               <p className="text-xl mb-8 text-white/90">
-                Because <span className="font-semibold text-[#A962E9]">coherence is harder than scale.</span>
+                Because <span className="font-semibold text-[#E8B4C8]">coherence is harder than scale.</span>
               </p>
 
               <div className="space-y-4 mb-8">
@@ -101,7 +101,7 @@ export default function WhoIsForSectionCompany() {
                 </div>
               </div>
 
-              <p className="text-xl font-semibold mt-8 text-[#A962E9]">
+              <p className="text-xl font-semibold mt-8 text-[#E8B4C8]">
                 We chose coherence over hype.
               </p>
             </div>
@@ -115,8 +115,8 @@ export default function WhoIsForSectionCompany() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-center mt-16"
         >
-          <div className="bg-gradient-to-r from-pink-50 via-white to-pink-50 rounded-2xl p-12 border border-pink-100">
-            <h3 className="text-3xl font-light text-[#3B224E] mb-8">Begin With The Blueprint</h3>
+          <div className="bg-gradient-to-r from-[#F5E8EE] via-white to-[#F5E8EE] rounded-2xl p-12 border border-[#DEBECC]">
+            <h3 className="text-3xl font-light text-[#6E1D40] mb-8">Begin With The Blueprint</h3>
             <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
               The Aligned Woman Blueprint™ is where most women begin.
             </p>
@@ -127,7 +127,7 @@ export default function WhoIsForSectionCompany() {
               <Button
                 onClick={() => window.location.href = createPageUrl("OnboardingForm")}
                 size="lg"
-                className="bg-gradient-to-r from-[#7340B9] to-[#8B4FC9] hover:from-[#5B2FA9] hover:to-[#7340B9] text-white px-10 py-7 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group"
+                className="bg-gradient-to-r from-[#6E1D40] to-[#943A59] hover:from-[#5A1633] hover:to-[#6E1D40] text-white px-10 py-7 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group"
               >
                 Create Your Free Account
                 <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -136,7 +136,7 @@ export default function WhoIsForSectionCompany() {
                 onClick={() => window.location.href = createPageUrl("AWBlueprint")}
                 size="lg"
                 variant="outline"
-                className="border-2 border-[#7340B9] text-[#7340B9] hover:bg-[#7340B9] hover:text-white px-10 py-7 text-lg font-semibold rounded-full transition-all duration-300"
+                className="border-2 border-[#6E1D40] text-[#6E1D40] hover:bg-[#6E1D40] hover:text-white px-10 py-7 text-lg font-semibold rounded-full transition-all duration-300"
               >
                 Explore The Blueprint
               </Button>

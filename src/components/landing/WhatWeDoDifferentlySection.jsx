@@ -19,7 +19,7 @@ const pillars = [
     icon: User,
     title: "Woman Centered",
     description: "Authority always remains with you. This is education designed to restore self-trust.",
-    color: "from-[#A962E9] to-[#8B4FC9]",
+    color: "from-[#943A59] to-[#6E1D40]",
   },
 ];
 
@@ -34,14 +34,14 @@ export default function WhatWeDoDifferentlySection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
-          <h2 className="text-4xl sm:text-5xl font-light text-[#3B224E] tracking-tight mb-6">
+          <h2 className="text-4xl sm:text-5xl font-light text-[#6E1D40] tracking-tight mb-6">
             What The Aligned Woman Does Differently
           </h2>
           <div className="max-w-3xl mx-auto space-y-6">
             <p className="text-xl text-gray-600 leading-relaxed">
               The Aligned Woman is built on one core belief:
             </p>
-            <p className="text-2xl font-semibold" style={{ color: '#7340B9' }}>
+            <p className="text-2xl font-semibold" style={{ color: '#6E1D40' }}>
               Women do not need more information.
             </p>
             <p className="text-xl text-gray-700">
@@ -55,12 +55,12 @@ export default function WhatWeDoDifferentlySection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="bg-white rounded-3xl p-8 lg:p-12 shadow-xl mb-16 border border-pink-100"
+          className="bg-white rounded-3xl p-8 lg:p-12 shadow-xl mb-16 border border-[#DEBECC]"
         >
           <p className="text-xl text-gray-700 mb-6 text-center">
-          We bring together <span className="font-semibold" style={{ color: '#7340B9' }}>expert-led education</span>,{" "}
-          <span className="font-semibold" style={{ color: '#7340B9' }}>ethical AI</span>, and{" "}
-          <span className="font-semibold" style={{ color: '#7340B9' }}>nervous system-informed design</span> into one unified learning environment.
+          We bring together <span className="font-semibold" style={{ color: '#6E1D40' }}>expert-led education</span>,{" "}
+          <span className="font-semibold" style={{ color: '#6E1D40' }}>ethical AI</span>, and{" "}
+          <span className="font-semibold" style={{ color: '#6E1D40' }}>nervous system-informed design</span> into one unified learning environment.
           </p>
 
           <div className="grid md:grid-cols-3 gap-6 mt-10">
@@ -76,7 +76,7 @@ export default function WhatWeDoDifferentlySection() {
           </div>
 
           <div className="text-center mt-8">
-            <div className="inline-block bg-gradient-to-r from-[#A962E9] to-[#8B4FC9] rounded-full px-8 py-4">
+            <div className="inline-block bg-gradient-to-r from-[#943A59] to-[#6E1D40] rounded-full px-8 py-4">
               <p className="text-2xl font-semibold text-white">
                 This is an operating system for embodied living
               </p>
@@ -93,12 +93,12 @@ export default function WhatWeDoDifferentlySection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.15 }}
-              className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow border border-pink-100"
+              className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow border border-[#DEBECC]"
             >
               <div className={`w-16 h-16 bg-gradient-to-br ${pillar.color} rounded-2xl flex items-center justify-center mb-6 shadow-lg`}>
                 <pillar.icon className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-[#3B224E] mb-4">{pillar.title}</h3>
+              <h3 className="text-2xl font-bold text-[#6E1D40] mb-4">{pillar.title}</h3>
               <p className="text-gray-600 leading-relaxed">{pillar.description}</p>
             </motion.div>
           ))}
@@ -113,7 +113,7 @@ export default function WhatWeDoDifferentlySection() {
         >
           <p className="text-lg text-gray-600">This is not therapy.</p>
           <p className="text-lg text-gray-600">This is not coaching dependency.</p>
-          <p className="text-xl font-semibold" style={{ color: '#7340B9' }}>
+          <p className="text-xl font-semibold" style={{ color: '#6E1D40' }}>
             This is education designed to restore self-trust.
           </p>
         </motion.div>

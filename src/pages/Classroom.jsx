@@ -81,7 +81,7 @@ export default function Classroom() {
         {/* Courses Grid */}
         {loading ? (
           <div className="flex justify-center py-20">
-            <div className="animate-spin w-8 h-8 border-4 border-[#3B224E] border-t-transparent rounded-full" />
+            <div className="animate-spin w-8 h-8 border-4 border-[#6E1D40] border-t-transparent rounded-full" />
           </div>
         ) : filteredCourses.length === 0 ? (
           <div className="text-center py-20">
@@ -155,7 +155,7 @@ export default function Classroom() {
                         <div className="space-y-2 mb-4">
                           <div className="flex items-center justify-between">
                             <span className="text-xs text-gray-500">Progress</span>
-                            <span className="text-xs font-semibold text-[#3B224E]">{progress}%</span>
+                            <span className="text-xs font-semibold text-[#6E1D40]">{progress}%</span>
                           </div>
                           <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
                             <div
@@ -174,16 +174,16 @@ export default function Classroom() {
                               </span>
                             )}
                             {course.price > 0 ? (
-                              <Badge className="bg-blue-100 text-blue-700 border-0 text-xs">
+                              <Badge className="bg-[#943A59]/20 text-[#6E1D40] border-0 text-xs">
                                 ${course.price}
                               </Badge>
                             ) : (
-                              <Badge className="bg-green-100 text-green-700 border-0 text-xs">
+                              <Badge className="bg-green-100 text-green-800 border-0 text-xs">
                                 Free
                               </Badge>
                             )}
                           </div>
-                          <div className="flex items-center gap-1 text-[#3B224E] text-sm font-medium">
+                          <div className="flex items-center gap-1 text-[#6E1D40] text-sm font-medium">
                             {progress > 0 ? `${progress}% done` : "Start"}
                             <ArrowRight className="w-4 h-4" />
                           </div>

@@ -380,7 +380,7 @@ RESPONSE REQUIREMENTS:
   // If no diagnostic completed, show onboarding prompt
   if (!diagnosticSession) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white p-6">
+      <div className="min-h-screen bg-gradient-to-b from-[#F5E8EE] to-white p-6">
         <div className="max-w-4xl mx-auto pt-12">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -388,10 +388,10 @@ RESPONSE REQUIREMENTS:
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <div className="w-20 h-20 bg-gradient-to-br from-[#3B224E] to-[#4A2B5E] rounded-full flex items-center justify-center mx-auto mb-8">
+            <div className="w-20 h-20 bg-gradient-to-br from-[#6E1D40] to-[#943A59] rounded-full flex items-center justify-center mx-auto mb-8">
               <Sparkles className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-4xl font-bold text-[#3B224E] mb-4">
+            <h1 className="text-4xl font-bold text-[#6E1D40] mb-4">
               Welcome{currentUser?.full_name ? `, ${currentUser.full_name.split(" ")[0]}` : ""}!
             </h1>
             <p className="text-xl text-gray-600 max-w-xl mx-auto mb-8">
@@ -400,7 +400,7 @@ RESPONSE REQUIREMENTS:
             <Link to={createPageUrl("OnboardingForm")}>
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-[#3B224E] to-[#4A2B5E] hover:from-[#1F0B2E] hover:to-[#3B224E] text-white px-10 py-6 text-lg font-semibold rounded-full shadow-xl"
+                className="bg-gradient-to-r from-[#6E1D40] to-[#943A59] hover:from-[#5A1633] hover:to-[#6E1D40] text-white px-10 py-6 text-lg font-semibold rounded-full shadow-xl"
               >
                 Begin Your Diagnostic
                 <ArrowRight className="ml-2 w-5 h-5" />
@@ -413,7 +413,7 @@ RESPONSE REQUIREMENTS:
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50/30 via-pink-50/20 to-indigo-50/30 p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-[#DEBECC] p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
           {/* Left Sidebar - Your Inner Systems */}
@@ -441,7 +441,7 @@ RESPONSE REQUIREMENTS:
                           <span className="font-medium text-gray-700">Current State:</span> {checkIns?.[0]?.nervous_system_state || "Fawn"}
                         </p>
                         <p className="text-xs text-gray-400 leading-relaxed">Your system is prioritizing safety today</p>
-                        <Button variant="link" className="text-xs text-purple-500 p-0 h-auto mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button variant="link" className="text-xs text-[#943A59] p-0 h-auto mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
                           View guidance →
                         </Button>
                       </div>
@@ -454,7 +454,7 @@ RESPONSE REQUIREMENTS:
                   <div className="bg-white/80 backdrop-blur-md rounded-xl p-4 hover:bg-white/90 transition-all duration-300 border-0 shadow-[0_2px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_4px_30px_rgba(0,0,0,0.08)]">
                     <div className="flex items-start gap-3">
                       <motion.div 
-                        className="w-10 h-10 bg-gradient-to-br from-purple-400/90 to-indigo-400/90 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
+                        className="w-10 h-10 bg-gradient-to-br from-[#6E1D40]/90 to-[#943A59]/90 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
                         animate={{ rotate: [0, 360] }}
                         transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
                       >
@@ -469,7 +469,7 @@ RESPONSE REQUIREMENTS:
                           <span className="font-medium text-gray-700">Authority:</span> {diagnosticSession?.humanDesignProfile?.authority || "Emotional"}
                         </p>
                         <p className="text-xs text-gray-400 leading-relaxed">Discernment beats effort today</p>
-                        <Button variant="link" className="text-xs text-purple-500 p-0 h-auto mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button variant="link" className="text-xs text-[#943A59] p-0 h-auto mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
                           View guidance →
                         </Button>
                       </div>
@@ -494,7 +494,7 @@ RESPONSE REQUIREMENTS:
                           <span className="font-medium text-gray-700">Phase:</span> {checkIns?.[0]?.cycle_phase || "Luteal"}
                         </p>
                         <p className="text-xs text-gray-400 leading-relaxed">Turning inward, discernment, and expression.</p>
-                        <Button variant="link" className="text-xs text-purple-500 p-0 h-auto mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button variant="link" className="text-xs text-[#943A59] p-0 h-auto mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
                           View guidance →
                         </Button>
                       </div>
@@ -517,14 +517,14 @@ RESPONSE REQUIREMENTS:
                   <h3 className="font-medium text-gray-900 mb-2 text-sm tracking-tight">Business • Career</h3>
                   <p className="text-xs text-gray-500 mb-1">Current theme:</p>
                   <p className="text-sm text-gray-700 font-light">Clarity before momentum</p>
-                  <Button variant="link" className="text-xs text-purple-500 p-0 h-auto mt-2">
+                  <Button variant="link" className="text-xs text-[#943A59] p-0 h-auto mt-2">
                     View guidance →
                   </Button>
                 </div>
                 <div className="bg-white/80 backdrop-blur-md rounded-xl p-4 border-0 shadow-[0_2px_15px_rgba(0,0,0,0.02)]">
                   <h3 className="font-medium text-gray-900 mb-2 text-sm flex items-center gap-2 tracking-tight">
                     Finance
-                    <Badge variant="secondary" className="text-xs bg-purple-100/80 text-purple-700 border-0 font-normal">Intention</Badge>
+                    <Badge variant="secondary" className="text-xs bg-[#F5E8EE] text-[#6E1D40] border-0 font-normal">Intention</Badge>
                   </h3>
                   <p className="text-xs text-gray-500 mb-3">Resources & visibility progress</p>
                   <Progress value={45} className="h-1.5 mb-2" />
@@ -536,7 +536,7 @@ RESPONSE REQUIREMENTS:
           {/* Main Content - Center */}
           <div className="lg:col-span-6 space-y-4 sm:space-y-6 order-1 lg:order-2">
             {/* Daily ALIVE Snapshot */}
-            <Card className="bg-gradient-to-br from-[#2A1A3C]/95 via-[#3B224E]/95 to-[#4A2B5E]/95 text-white border-0 shadow-[0_20px_60px_rgba(0,0,0,0.12)] backdrop-blur-xl rounded-3xl overflow-hidden">
+            <Card className="bg-gradient-to-br from-[#5A1633]/95 via-[#6E1D40]/95 to-[#8B3A5C]/95 text-white border-0 shadow-[0_20px_60px_rgba(0,0,0,0.12)] backdrop-blur-xl rounded-3xl overflow-hidden">
               <CardHeader className="pb-6 pt-7">
                 <div className="flex items-center justify-center mb-4">
                   <Tabs value={snapshotView} onValueChange={setSnapshotView} className="w-auto">
@@ -603,7 +603,7 @@ RESPONSE REQUIREMENTS:
                             animate={{ rotate: [0, 360] }}
                             transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
                           >
-                            <Target className="w-4 h-4 text-purple-300/90" strokeWidth={1.5} />
+                            <Target className="w-4 h-4 text-[#E8B4C8]" strokeWidth={1.5} />
                           </motion.div>
                           <p className="text-xs text-white/70 font-light">{snapshotData.humanDesign?.type || "Projector"}</p>
                         </div>
@@ -633,7 +633,7 @@ RESPONSE REQUIREMENTS:
                             animate={{ y: [0, -4, 0], opacity: [1, 0.8, 1] }}
                             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                           >
-                            <TrendingUp className="w-4 h-4 text-purple-300/90" strokeWidth={1.5} />
+                            <TrendingUp className="w-4 h-4 text-[#E8B4C8]" strokeWidth={1.5} />
                           </motion.div>
                           <p className="text-xs text-white/70 font-light">{snapshotData.alivePhase}</p>
                         </div>
@@ -684,7 +684,7 @@ RESPONSE REQUIREMENTS:
                     <div className="border-t border-white/10 pt-8 mt-8">
                       <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-8 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
                         <div className="text-center mb-6">
-                          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-400/90 to-purple-500/90 flex items-center justify-center mx-auto mb-4 shadow-lg">
+                          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#943A59]/90 to-[#6E1D40]/90 flex items-center justify-center mx-auto mb-4 shadow-lg">
                             <Sparkles className="w-6 h-6 text-white" strokeWidth={1.5} />
                           </div>
                           <h3 className="text-lg font-light text-gray-900 mb-2 tracking-tight">Ask LaurAI</h3>
@@ -709,13 +709,13 @@ RESPONSE REQUIREMENTS:
                             onChange={(e) => setLauraiQuestion(e.target.value)}
                             onKeyPress={(e) => e.key === 'Enter' && handleCustomQuestion()}
                             placeholder="Or ask your own question..."
-                            className="flex-1 bg-gray-50/80 backdrop-blur-sm border-gray-200/50 text-gray-900 placeholder:text-gray-400 rounded-full px-5 h-12 font-light focus:ring-purple-400/20"
+                            className="flex-1 bg-gray-50/80 backdrop-blur-sm border-gray-200/50 text-gray-900 placeholder:text-gray-400 rounded-full px-5 h-12 font-light focus:ring-[#943A59]/20"
                             disabled={isLauraiThinking}
                           />
                           <Button
                             onClick={handleCustomQuestion}
                             disabled={isLauraiThinking || !lauraiQuestion.trim()}
-                            className="bg-gradient-to-r from-purple-400 to-indigo-500 hover:from-purple-500 hover:to-indigo-600 text-white rounded-full h-12 w-12 p-0 shadow-md"
+                            className="bg-gradient-to-r from-[#6E1D40] to-[#943A59] hover:from-[#5A1633] hover:to-[#6E1D40] text-white rounded-full h-12 w-12 p-0 shadow-md"
                           >
                             {isLauraiThinking ? (
                               <div className="animate-spin w-4 h-4 border border-white/20 border-t-white rounded-full" />
@@ -750,7 +750,7 @@ RESPONSE REQUIREMENTS:
             </Card>
 
             {/* Recommended For You */}
-            <Card className="bg-gradient-to-br from-[#2A1A3C]/95 via-[#3B224E]/95 to-[#4A2B5E]/95 text-white border-0 shadow-[0_20px_60px_rgba(0,0,0,0.12)] backdrop-blur-xl rounded-3xl overflow-hidden">
+            <Card className="bg-gradient-to-br from-[#5A1633]/95 via-[#6E1D40]/95 to-[#8B3A5C]/95 text-white border-0 shadow-[0_20px_60px_rgba(0,0,0,0.12)] backdrop-blur-xl rounded-3xl overflow-hidden">
               <CardHeader className="pb-5 pt-6">
                 <CardTitle className="flex items-center gap-2 text-base font-light tracking-tight">
                   <Sparkles className="w-4 h-4" strokeWidth={1.5} />
@@ -771,7 +771,7 @@ RESPONSE REQUIREMENTS:
                         <Badge variant="secondary" className="text-xs bg-white/15 text-white/90 border-0 h-6 rounded-full font-light">Lowest lift</Badge>
                         <Badge variant="secondary" className="text-xs bg-white/15 text-white/90 border-0 h-6 rounded-full font-light">Manifestation today</Badge>
                       </div>
-                      <Button className="w-full bg-gradient-to-r from-pink-500/90 to-rose-500/90 hover:from-pink-500 hover:to-rose-500 text-white text-sm h-9 rounded-full font-light shadow-lg">
+                      <Button className="w-full bg-gradient-to-r from-[#943A59] to-[#6E1D40] hover:from-[#8B3A5C] hover:to-[#5A1633] text-white text-sm h-9 rounded-full font-light shadow-lg">
                         Start
                       </Button>
                     </div>
@@ -784,15 +784,15 @@ RESPONSE REQUIREMENTS:
           {/* Right Sidebar */}
           <div className="lg:col-span-3 space-y-4 order-3">
             {/* Community */}
-            <Card className="bg-gradient-to-br from-purple-50/60 via-pink-50/40 to-transparent backdrop-blur-xl border-0 shadow-[0_8px_30px_rgba(147,51,234,0.08)] rounded-3xl overflow-hidden">
+            <Card className="bg-gradient-to-br from-[#F5E8EE]/60 via-[#DEBECC]/40 to-transparent backdrop-blur-xl border-0 shadow-[0_8px_30px_rgba(110,29,64,0.08)] rounded-3xl overflow-hidden">
               <CardHeader className="pb-3 pt-7">
                 <div className="flex items-center gap-2 mb-2">
                   <motion.div
                     animate={{ scale: [1, 1.1, 1] }}
                     transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400/20 to-pink-400/20 flex items-center justify-center"
+                    className="w-8 h-8 rounded-full bg-gradient-to-br from-[#943A59]/20 to-[#DEBECC]/20 flex items-center justify-center"
                   >
-                    <svg className="w-4 h-4 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <svg className="w-4 h-4 text-[#943A59]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                   </motion.div>
@@ -810,7 +810,7 @@ RESPONSE REQUIREMENTS:
                   <div className="flex-shrink-0 text-center">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-pink-200 to-rose-200 flex items-center justify-center mb-1 relative">
                       <span className="text-xl">👩🏻</span>
-                      <div className="absolute bottom-0 right-0 w-5 h-5 bg-gradient-to-br from-purple-400 to-indigo-400 rounded-full flex items-center justify-center border-2 border-white">
+                      <div className="absolute bottom-0 right-0 w-5 h-5 bg-gradient-to-br from-[#6E1D40] to-[#943A59] rounded-full flex items-center justify-center border-2 border-white">
                         <span className="text-white text-xs">+</span>
                       </div>
                     </div>
@@ -819,7 +819,7 @@ RESPONSE REQUIREMENTS:
                   <div className="flex-shrink-0 text-center">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-200 to-indigo-200 flex items-center justify-center mb-1 relative">
                       <span className="text-xl">👩🏼</span>
-                      <div className="absolute bottom-0 right-0 w-5 h-5 bg-gradient-to-br from-purple-400 to-indigo-400 rounded-full flex items-center justify-center border-2 border-white">
+                      <div className="absolute bottom-0 right-0 w-5 h-5 bg-gradient-to-br from-[#6E1D40] to-[#943A59] rounded-full flex items-center justify-center border-2 border-white">
                         <span className="text-white text-xs">+</span>
                       </div>
                     </div>
@@ -828,7 +828,7 @@ RESPONSE REQUIREMENTS:
                   <div className="flex-shrink-0 text-center">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-200 to-pink-200 flex items-center justify-center mb-1 relative">
                       <span className="text-xl">👩🏾</span>
-                      <div className="absolute bottom-0 right-0 w-5 h-5 bg-gradient-to-br from-purple-400 to-indigo-400 rounded-full flex items-center justify-center border-2 border-white">
+                      <div className="absolute bottom-0 right-0 w-5 h-5 bg-gradient-to-br from-[#6E1D40] to-[#943A59] rounded-full flex items-center justify-center border-2 border-white">
                         <span className="text-white text-xs">+</span>
                       </div>
                     </div>
@@ -837,7 +837,7 @@ RESPONSE REQUIREMENTS:
                   <div className="flex-shrink-0 text-center">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-rose-200 to-pink-200 flex items-center justify-center mb-1 relative">
                       <span className="text-xl">👩🏻</span>
-                      <div className="absolute bottom-0 right-0 w-5 h-5 bg-gradient-to-br from-purple-400 to-indigo-400 rounded-full flex items-center justify-center border-2 border-white">
+                      <div className="absolute bottom-0 right-0 w-5 h-5 bg-gradient-to-br from-[#6E1D40] to-[#943A59] rounded-full flex items-center justify-center border-2 border-white">
                         <span className="text-white text-xs">+</span>
                       </div>
                     </div>
@@ -859,8 +859,8 @@ RESPONSE REQUIREMENTS:
                 <div className="mb-6">
                   <h3 className="text-sm font-medium text-gray-900 mb-3">Ongoing</h3>
                   <div className="space-y-2">
-                    <button className="w-full group bg-gradient-to-br from-purple-100/80 via-purple-50/60 to-transparent backdrop-blur-sm rounded-2xl px-4 py-3 border border-purple-200/40 hover:border-purple-300/60 transition-all duration-300 hover:shadow-md text-left">
-                      <p className="text-xs text-purple-700 font-medium mb-1">Navigating a breakup</p>
+                    <button className="w-full group bg-gradient-to-br from-[#F5E8EE]/80 via-[#F5E8EE]/60 to-transparent backdrop-blur-sm rounded-2xl px-4 py-3 border border-[#DEBECC]/40 hover:border-[#DEBECC]/60 transition-all duration-300 hover:shadow-md text-left">
+                      <p className="text-xs text-[#6E1D40] font-medium mb-1">Navigating a breakup</p>
                       <div className="flex items-center gap-1">
                         <div className="flex -space-x-2">
                           <div className="w-5 h-5 rounded-full bg-pink-300 border-2 border-white" />
@@ -896,7 +896,7 @@ RESPONSE REQUIREMENTS:
                 </div>
 
                 <Link to={createPageUrl("Community")}>
-                  <Button className="w-full bg-gradient-to-r from-purple-400/90 via-pink-400/90 to-rose-400/90 hover:from-purple-500 hover:via-pink-500 hover:to-rose-500 text-white text-sm h-11 rounded-full font-light shadow-[0_4px_20px_rgba(147,51,234,0.25)] hover:shadow-[0_6px_30px_rgba(147,51,234,0.35)] transition-all duration-300">
+                  <Button className="w-full bg-gradient-to-r from-[#6E1D40] via-[#8B3A5C] to-[#943A59] hover:from-[#5A1633] hover:via-[#6E1D40] hover:to-[#8B3A5C] text-white text-sm h-11 rounded-full font-light shadow-[0_4px_20px_rgba(110,29,64,0.25)] hover:shadow-[0_6px_30px_rgba(110,29,64,0.35)] transition-all duration-300">
                     Find your people
                   </Button>
                 </Link>
@@ -1003,10 +1003,10 @@ RESPONSE REQUIREMENTS:
                                 setSelectedDay({ date: dayDate, checkIn: dayCheckIn });
                               }
                             }}
-                            className={`aspect-square rounded-full ${bgColor} hover:ring-2 hover:ring-purple-300/50 transition-all relative ${dayCheckIn ? 'cursor-pointer' : 'cursor-default'}`}
+                            className={`aspect-square rounded-full ${bgColor} hover:ring-2 hover:ring-[#DEBECC]/50 transition-all relative ${dayCheckIn ? 'cursor-pointer' : 'cursor-default'}`}
                           >
                             {hasEvent && (
-                              <div className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-purple-500" />
+                              <div className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-[#943A59]" />
                             )}
                           </button>
                         );
@@ -1044,7 +1044,7 @@ RESPONSE REQUIREMENTS:
                     animate={{ opacity: 1, y: 0 }}
                     className="mt-4 text-center"
                   >
-                    <p className="text-sm text-purple-600 font-medium">
+                    <p className="text-sm text-[#6E1D40] font-medium">
                       {selectedDay.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} · Noteworthy moment detected
                     </p>
                   </motion.div>
@@ -1055,13 +1055,13 @@ RESPONSE REQUIREMENTS:
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
-                    className="mt-4 bg-gradient-to-br from-purple-50/50 to-pink-50/30 rounded-2xl p-4 border border-purple-100/50"
+                    className="mt-4 bg-gradient-to-br from-[#F5E8EE]/50 to-[#DEBECC]/30 rounded-2xl p-4 border border-[#DEBECC]/50"
                   >
                     <h3 className="text-sm font-medium text-gray-900 mb-2">What showed up on this day</h3>
                     <p className="text-xs text-gray-600 leading-relaxed mb-3 font-light">
                       {selectedDay.checkIn.stress >= 7 ? 'Elevated emotional stress' : 'Moderate tension'} coincided with {selectedDay.checkIn.capacity <= 3 ? 'low capacity' : 'reduced energy'}{selectedDay.checkIn.nervous_system_state && ` and ${selectedDay.checkIn.nervous_system_state} mode`}.
                     </p>
-                    <button className="text-xs text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1">
+                    <button className="text-xs text-[#6E1D40] hover:text-[#6E1D40] font-medium flex items-center gap-1">
                       View details
                       <ArrowRight className="w-3 h-3" strokeWidth={2} />
                     </button>
@@ -1094,7 +1094,7 @@ RESPONSE REQUIREMENTS:
 
                   <div className="p-6 space-y-6">
                     {/* AI Snapshot Summary */}
-                    <div className="bg-gradient-to-br from-purple-50/50 to-pink-50/30 rounded-2xl p-5">
+                    <div className="bg-gradient-to-br from-[#F5E8EE]/50 to-[#DEBECC]/30 rounded-2xl p-5">
                       <p className="text-sm text-gray-700 leading-relaxed font-light">
                         This day showed {selectedDay.checkIn.stress >= 7 ? 'heightened stress' : 'moderate tension'} and {selectedDay.checkIn.capacity <= 3 ? 'low capacity' : 'reduced energy'}. 
                         {selectedDay.checkIn.nervous_system_state && ` Your nervous system was in ${selectedDay.checkIn.nervous_system_state} mode.`}
@@ -1107,7 +1107,7 @@ RESPONSE REQUIREMENTS:
                       <p className="text-xs uppercase tracking-wider text-gray-500 mb-3 font-medium">Context</p>
                       <div className="flex flex-wrap gap-2">
                         {selectedDay.checkIn.cycle_phase && (
-                          <Badge variant="secondary" className="bg-purple-100/80 text-purple-700 border-0 font-light">
+                          <Badge variant="secondary" className="bg-[#F5E8EE] text-[#6E1D40] border-0 font-light">
                             {selectedDay.checkIn.cycle_phase} phase
                           </Badge>
                         )}
@@ -1176,7 +1176,7 @@ RESPONSE REQUIREMENTS:
 
                     {/* Source Reference */}
                     <div className="pt-4 border-t border-gray-100">
-                      <button className="text-xs text-purple-600 hover:text-purple-700 font-light flex items-center gap-1">
+                      <button className="text-xs text-[#6E1D40] hover:text-[#6E1D40] font-light flex items-center gap-1">
                         <span>From today's check-in</span>
                         <ChevronRight className="w-3 h-3" strokeWidth={1.5} />
                       </button>

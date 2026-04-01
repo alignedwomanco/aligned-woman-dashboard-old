@@ -123,12 +123,12 @@ export default function Layout({ children, currentPageName }) {
       <div className="min-h-screen bg-pink-50/30">
         <style>{`
           :root {
-            --burgundy: #3C224F;
-            --burgundy-deep: #1F0B2E;
-            --tertiary: #4B397F;
-            --rose-accent: #C67793;
-            --rose-accent-2: #C4687D;
-            --rose-dark: #8B2E4D;
+            --burgundy: #6E1D40;
+            --burgundy-deep: #5A1633;
+            --tertiary: #943A59;
+            --rose-accent: #B85A7A;
+            --rose-accent-2: #943A59;
+            --rose-dark: #6E1D40;
           }
           .text-burgundy { color: var(--burgundy); }
           .bg-burgundy { background-color: var(--burgundy); }
@@ -149,12 +149,12 @@ export default function Layout({ children, currentPageName }) {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center gap-2 p-1 hover:bg-gray-100 rounded-lg transition-colors">
-                    <div className="w-10 h-10 rounded-full border-2 border-purple-300 overflow-hidden">
+                    <div className="w-10 h-10 rounded-full border-2 border-[#DEBECC] overflow-hidden">
                       {isAuthenticated && user?.profile_picture ? (
                         <img src={user.profile_picture} alt={user.full_name} className="w-full h-full object-cover" />
                       ) : (
-                        <div className="w-full h-full bg-purple-100 flex items-center justify-center">
-                          <User className="w-5 h-5 text-purple-700" />
+                        <div className="w-full h-full bg-[#F5E8EE] flex items-center justify-center">
+                          <User className="w-5 h-5 text-[#6E1D40]" />
                         </div>
                       )}
                     </div>
@@ -235,7 +235,7 @@ export default function Layout({ children, currentPageName }) {
                       window.location.href = createPageUrl("Dashboard");
                     }}
                     className="w-full mb-4 text-white"
-                    style={{ backgroundColor: '#7340B9' }}>
+                    style={{ backgroundColor: '#6E1D40' }}>
 
                         Go to Dashboard
                       </Button>
@@ -248,7 +248,7 @@ export default function Layout({ children, currentPageName }) {
                         <Link
                       to={createPageUrl(item.name)}
                       onClick={() => setShowMobileMenu(false)}
-                      className="block px-4 py-3 text-gray-700 hover:bg-purple-50 hover:text-[#3B224E] rounded-lg transition-colors font-medium">
+                      className="block px-4 py-3 text-gray-700 hover:bg-[#F5E8EE] hover:text-[#6E1D40] rounded-lg transition-colors font-medium">
 
                           {item.label}
                         </Link>
@@ -262,7 +262,7 @@ export default function Layout({ children, currentPageName }) {
                 <Button
                   onClick={handleLogout}
                   className="w-full text-white"
-                  style={{ backgroundColor: '#3B224E' }}>
+                  style={{ backgroundColor: '#6E1D40' }}>
 
                       Sign Out
                     </Button> :
@@ -270,7 +270,7 @@ export default function Layout({ children, currentPageName }) {
                 <Button
                   onClick={() => base44.auth.redirectToLogin(createPageUrl("Dashboard"))}
                   className="w-full text-white"
-                  style={{ backgroundColor: '#3B224E' }}>
+                  style={{ backgroundColor: '#6E1D40' }}>
 
                       Sign In
                     </Button>
@@ -285,7 +285,7 @@ export default function Layout({ children, currentPageName }) {
           {children}
         </main>
 
-        <footer className="bg-[#3B224E] text-white">
+        <footer className="bg-[#6E1D40] text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
               <div className="col-span-1 md:col-span-2">
@@ -376,8 +376,8 @@ export default function Layout({ children, currentPageName }) {
     <div className="min-h-screen flex">
       <style>{`
         :root {
-          --burgundy: #3B224E;
-          --burgundy-deep: #1F0B2E;
+          --burgundy: #6E1D40;
+          --burgundy-deep: #5A1633;
         }
       `}</style>
 

@@ -156,7 +156,7 @@ Respond in 150 words or less. Be warm, supportive, and grounded in their current
             className="fixed bottom-6 right-6 w-[380px] h-[600px] bg-white rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="p-4 flex items-center justify-between" style={{ background: 'linear-gradient(to right, var(--theme-primary, #3C224F), var(--theme-secondary, #5B2E84))' }}>
+            <div className="p-4 flex items-center justify-between" style={{ background: 'linear-gradient(to right, #6E1D40, #943A59)' }}>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white/30">
                   <img
@@ -191,7 +191,7 @@ Respond in 150 words or less. Be warm, supportive, and grounded in their current
                         ? "text-white"
                         : "bg-white text-gray-800 shadow-sm"
                     }`}
-                    style={message.role === "user" ? { backgroundColor: 'var(--theme-primary, #3C224F)' } : {}}
+                    style={message.role === "user" ? { backgroundColor: '#6E1D40' } : {}}
                   >
                     <p className="text-sm leading-relaxed">{message.content}</p>
                   </div>
@@ -226,7 +226,7 @@ Respond in 150 words or less. Be warm, supportive, and grounded in their current
                   onClick={handleSend}
                   disabled={!input.trim() || isLoading}
                   className="rounded-full w-10 h-10 p-0 text-white"
-                  style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }}
+                  style={{ backgroundColor: '#6E1D40' }}
                 >
                   <Send className="w-4 h-4" />
                 </Button>

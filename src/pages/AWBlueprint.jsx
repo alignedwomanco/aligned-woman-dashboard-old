@@ -10,7 +10,7 @@ import FinalCTASection from "@/components/landing/FinalCTASection";
 
 export default function AWBlueprint() {
   return (
-    <div className="bg-gradient-to-br from-purple-50/30 via-pink-50/20 to-indigo-50/30">
+    <div className="bg-[#F5E8EE]">
       <HeroSection />
       <ProblemSection />
       <GapSection />

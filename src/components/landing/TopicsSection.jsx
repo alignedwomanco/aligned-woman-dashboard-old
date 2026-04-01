@@ -27,7 +27,7 @@ const topics = [
 
 export default function TopicsSection() {
   return (
-    <section className="py-24 lg:py-32 bg-purple-50/30">
+    <section className="py-24 lg:py-32 bg-[#F5E8EE]/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -36,14 +36,14 @@ export default function TopicsSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 bg-white border border-purple-200 rounded-full px-5 py-2 mb-6">
-            <Sparkles className="w-4 h-4" style={{ color: '#7340B9' }} />
-            <span style={{ color: '#7340B9' }} className="text-sm font-medium">Comprehensive Curriculum</span>
+          <div className="inline-flex items-center gap-2 bg-white border border-[#DEBECC] rounded-full px-5 py-2 mb-6">
+            <Sparkles className="w-4 h-4" style={{ color: '#6E1D40' }} />
+            <span style={{ color: '#6E1D40' }} className="text-sm font-medium">Comprehensive Curriculum</span>
           </div>
           <h2 className="text-4xl sm:text-5xl font-light text-gray-900 tracking-tight mb-4">
             Comprehensive Education
             <br />
-            <span style={{ color: '#A962E9' }}>For the Whole Woman</span>
+            <span style={{ color: '#943A59' }}>For the Whole Woman</span>
           </h2>
           <p className="text-lg text-gray-500 font-light">
             Evidence-led. Integrated. Built for real lives.
@@ -60,7 +60,7 @@ export default function TopicsSection() {
               transition={{ duration: 0.4, delay: index * 0.05 }}
               className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 flex items-start gap-4 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-shadow duration-300 border-0 shadow-[0_4px_20px_rgba(0,0,0,0.03)]"
             >
-              <div className="w-12 h-12 bg-gradient-to-br from-[#7340B9] to-[#8B4FC9] rounded-xl flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-gradient-to-br from-[#6E1D40] to-[#943A59] rounded-xl flex items-center justify-center flex-shrink-0">
                 <topic.icon className="w-6 h-6 text-white" />
               </div>
               <p className="text-gray-700 font-light leading-snug pt-2">

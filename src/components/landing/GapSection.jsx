@@ -20,7 +20,7 @@ const defaults = [
 
 export default function GapSection() {
   return (
-    <section className="py-24 lg:py-32 bg-gradient-to-br from-[#2A1A3C]/95 via-[#3B224E]/95 to-[#4A2B5E]/95">
+    <section className="py-24 lg:py-32 bg-gradient-to-br from-[#5A1633]/95 via-[#6E1D40]/95 to-[#8B3A5C]/95">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -32,7 +32,7 @@ export default function GapSection() {
           <h2 className="text-4xl sm:text-5xl font-light text-white tracking-tight">
             There Has Never Been One Place
             <br />
-            <span style={{ color: '#a861e9' }}>That Holds the Whole Woman</span>
+            <span style={{ color: '#E8B4C8' }}>That Holds the Whole Woman</span>
           </h2>
         </motion.div>
 
@@ -46,8 +46,8 @@ export default function GapSection() {
             className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border-0 shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'rgba(169, 98, 233, 0.2)' }}>
-                <AlertCircle className="w-5 h-5" style={{ color: '#A962E9' }} />
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'rgba(148, 58, 89, 0.2)' }}>
+                <AlertCircle className="w-5 h-5" style={{ color: '#E8B4C8' }} />
               </div>
               <h3 className="text-xl font-light text-white">There is no single environment where a woman can:</h3>
             </div>
@@ -61,7 +61,7 @@ export default function GapSection() {
                   transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
                   className="flex items-start gap-3"
                 >
-                  <div className="w-2 h-2 rounded-full mt-2.5 flex-shrink-0" style={{ backgroundColor: '#A962E9' }} />
+                  <div className="w-2 h-2 rounded-full mt-2.5 flex-shrink-0" style={{ backgroundColor: '#E8B4C8' }} />
                   <span className="text-white/80 font-light">{gap}</span>
                 </motion.li>
               ))}
@@ -92,7 +92,7 @@ export default function GapSection() {
                 </div>
                 <div className="text-white/40">instead of</div>
                 <div className="flex-1 text-right">
-                  <span className="font-light" style={{ color: '#A962E9' }}>{item.to}</span>
+                  <span className="font-light" style={{ color: '#E8B4C8' }}>{item.to}</span>
                 </div>
               </motion.div>
             ))}

@@ -10,7 +10,7 @@ import WhoIsForSectionCompany from "@/components/landing/WhoIsForSectionCompany"
 
 export default function Home() {
   return (
-    <div className="bg-gradient-to-br from-purple-50/30 via-pink-50/20 to-indigo-50/30">
+    <div className="bg-[#F5E8EE]">
       <CompanyHeroSection />
       <FoundationalEducationSection />
       <ProblemSection />

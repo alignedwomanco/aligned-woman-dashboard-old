@@ -27,7 +27,7 @@ export default function ProblemSection() {
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-light text-gray-900 tracking-tight leading-tight">
             Women Are Not Broken.
             <br />
-            <span style={{ color: '#a861e9' }}>The Systems They're Using Are.</span>
+            <span style={{ color: '#943A59' }}>The Systems They're Using Are.</span>
           </h2>
         </motion.div>
 
@@ -40,7 +40,7 @@ export default function ProblemSection() {
         >
           <p className="text-xl text-gray-600 leading-relaxed font-light">
             Women make up the largest share of the wellness, education, and self-development market.
-            And yet the tools available to them are <span className="font-semibold text-[#3D2250]">fragmented, shallow, and fundamentally misaligned</span> with how women actually live, work, and grow.
+            And yet the tools available to them are <span className="font-semibold text-[#6E1D40]">fragmented, shallow, and fundamentally misaligned</span> with how women actually live, work, and grow.
           </p>
         </motion.div>
 
@@ -75,11 +75,11 @@ export default function ProblemSection() {
                 className="bg-white/60 backdrop-blur-sm border-0 rounded-2xl p-6 text-center hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.03)] cursor-pointer"
               >
                 <motion.div 
-                  className="w-12 h-12 bg-gradient-to-br from-purple-100/50 to-pink-100/50 rounded-xl flex items-center justify-center mx-auto mb-3"
+                  className="w-12 h-12 bg-gradient-to-br from-[#DEBECC]/50 to-[#F5E8EE]/50 rounded-xl flex items-center justify-center mx-auto mb-3"
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.6 }}
                 >
-                  <app.icon className="w-6 h-6 text-[#3D2250]" />
+                  <app.icon className="w-6 h-6 text-[#6E1D40]" />
                 </motion.div>
                 <span className="text-sm font-light text-gray-700">{app.label}</span>
               </motion.div>
@@ -105,7 +105,7 @@ export default function ProblemSection() {
             <p className="text-lg font-light text-gray-900 text-center">
               The result is not growth.
               <br />
-              <span style={{ color: '#a861e9' }}>It is overwhelm disguised as self-improvement.</span>
+              <span style={{ color: '#943A59' }}>It is overwhelm disguised as self-improvement.</span>
             </p>
           </div>
         </motion.div>

@@ -29,9 +29,9 @@ export default function HeroSection() {
           className="w-full h-full object-cover"
         />
         <div 
-          className="absolute inset-0 bg-gradient-to-b from-[#3D2250]/80 via-[#5B2E84]/70 to-[#5B2E84]/90 transition-all duration-700 ease-out"
+          className="absolute inset-0 bg-gradient-to-b from-[#6E1D40]/90 via-[#8B3A5C]/80 to-[#943A59]/90 transition-all duration-700 ease-out"
           style={{
-            background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(169, 98, 233, 0.4) 0%, rgba(91, 46, 132, 0.75) 50%, rgba(61, 34, 80, 0.85) 100%)`
+            background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(184, 90, 122, 0.4) 0%, rgba(139, 58, 92, 0.8) 50%, rgba(110, 29, 64, 0.9) 100%)`
           }}
         />
       </div>
@@ -51,7 +51,7 @@ export default function HeroSection() {
             transition={{ delay: 0.2, duration: 0.5 }}
             className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 sm:px-5 py-2"
           >
-            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: '#a861e9' }} />
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: '#E8B4C8' }} />
             <span className="text-white/90 text-xs sm:text-sm font-medium tracking-wide">Powered by Adaptive Pathway OS</span>
           </motion.div>
 
@@ -64,7 +64,7 @@ export default function HeroSection() {
           >
             THE ALIGNED WOMAN
             <br />
-            <span style={{ color: '#a861e9' }}>BLUEPRINT™</span>
+            <span style={{ color: '#E8B4C8' }}>BLUEPRINT™</span>
           </motion.h1>
 
           {/* Subheadline */}
@@ -76,7 +76,7 @@ export default function HeroSection() {
           >
             Your personal operating system for embodied success
             <br />
-            <span style={{ color: '#a861e9' }}>Powered by the ALIVE Method™</span>
+            <span style={{ color: '#E8B4C8' }}>Powered by the ALIVE Method™</span>
           </motion.p>
 
           {/* Body Copy */}
@@ -99,7 +99,7 @@ export default function HeroSection() {
             <Button
               onClick={() => window.location.href = createPageUrl("OnboardingForm")}
               size="lg"
-              className="bg-white text-[#3D2250] hover:bg-rose-100 px-8 sm:px-10 py-5 sm:py-6 text-base sm:text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group w-full sm:w-auto"
+              className="bg-white text-[#6E1D40] hover:bg-rose-100 px-8 sm:px-10 py-5 sm:py-6 text-base sm:text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group w-full sm:w-auto"
             >
               Create Your Free Account
               <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
