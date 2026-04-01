@@ -575,7 +575,7 @@ export default function Layout({ children, currentPageName }) {
       {/* Main Content Area — deterministic margin class */}
       <div className={`flex-1 transition-all duration-300 ${contentML}`}>
         {/* Top Header */}
-        <header className="sticky top-0 z-40 border-b border-gray-200" style={{ backgroundColor: '#5B2D83' }}>
+        <header className="sticky top-0 z-40 border-b border-gray-200" style={{ backgroundColor: '#933a59' }}>
           <div className="flex items-center justify-between gap-4 px-4 sm:px-8 py-4">
             {/* Greeting */}
             <div className="flex-1">
