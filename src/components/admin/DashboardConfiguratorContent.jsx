@@ -69,7 +69,7 @@ export default function DashboardConfiguratorContent() {
               <Button variant="outline" onClick={resetToDefault}>
                 Reset to Default
               </Button>
-              <Button className="bg-[#6B1B3D] hover:bg-[#4A1228]" onClick={saveConfiguration}>
+              <Button className="bg-[#6E1D40] hover:bg-[#5A1633]" onClick={saveConfiguration}>
                 <Save className="w-4 h-4 mr-2" />
                 Save Configuration
               </Button>
@@ -101,7 +101,7 @@ export default function DashboardConfiguratorContent() {
                               {...provided.draggableProps}
                               className={`flex items-center justify-between p-4 border-2 rounded-lg transition-all ${
                                 snapshot.isDragging
-                                  ? "border-[#6B1B3D] bg-pink-50 shadow-lg"
+                                  ? "border-[#6E1D40] bg-[#F5E8EE] shadow-lg"
                                   : "border-gray-200 bg-white hover:border-gray-300"
                               }`}
                             >
@@ -166,7 +166,7 @@ export default function DashboardConfiguratorContent() {
                             Order: {widget.order + 1}
                           </Badge>
                         </div>
-                        <div className="mt-2 h-12 bg-gradient-to-r from-pink-100 to-purple-100 rounded animate-pulse" />
+                        <div className="mt-2 h-12 bg-gradient-to-r from-[#F5E8EE] to-[#DEBECC] rounded animate-pulse" />
                       </div>
                     ))}
                 </div>
@@ -183,19 +183,19 @@ export default function DashboardConfiguratorContent() {
         <CardContent>
           <ul className="space-y-2 text-gray-600">
             <li className="flex items-start gap-2">
-              <span className="text-[#6B1B3D] mt-1">•</span>
+              <span className="text-[#6E1D40] mt-1">•</span>
               <span>Drag widgets using the grip handle to reorder them</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-[#6B1B3D] mt-1">•</span>
+              <span className="text-[#6E1D40] mt-1">•</span>
               <span>Toggle widgets on/off to customize what users see</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-[#6B1B3D] mt-1">•</span>
+              <span className="text-[#6E1D40] mt-1">•</span>
               <span>Click "Save Configuration" to apply changes</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-[#6B1B3D] mt-1">•</span>
+              <span className="text-[#6E1D40] mt-1">•</span>
               <span>Preview shows the order and enabled widgets in real-time</span>
             </li>
           </ul>

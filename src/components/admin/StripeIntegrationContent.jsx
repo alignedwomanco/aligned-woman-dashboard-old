@@ -133,7 +133,7 @@ export default function StripeIntegrationContent({ currentUser }) {
                 {!showAddKey ? (
                   <Button
                     onClick={() => setShowAddKey(true)}
-                    className="w-full bg-[#6B1B3D] hover:bg-[#4A1228]"
+                    className="w-full bg-[#6E1D40] hover:bg-[#5A1633]"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Connect Stripe Account
@@ -156,7 +156,7 @@ export default function StripeIntegrationContent({ currentUser }) {
                       <Button
                         onClick={() => saveStripeMutation.mutate(apiKey)}
                         disabled={!apiKey}
-                        className="flex-1 bg-[#6B1B3D]"
+                        className="flex-1 bg-[#6E1D40]"
                       >
                         Save API Key
                       </Button>

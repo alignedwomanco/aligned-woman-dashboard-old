@@ -162,7 +162,7 @@ export default function SupportRoomContent({ currentUser }) {
                 <p className="text-sm text-gray-600">Total Tickets</p>
                 <p className="text-2xl font-bold">{stats.total}</p>
               </div>
-              <Ticket className="w-8 h-8 text-[#6B1B3D]" />
+              <Ticket className="w-8 h-8 text-[#6E1D40]" />
             </div>
           </CardContent>
         </Card>
@@ -384,7 +384,7 @@ export default function SupportRoomContent({ currentUser }) {
                   <Button
                     onClick={respondToTicket}
                     disabled={!response.trim()}
-                    className="w-full bg-[#6B1B3D]"
+                    className="w-full bg-[#6E1D40]"
                   >
                     <Send className="w-4 h-4 mr-2" />
                     Send Response

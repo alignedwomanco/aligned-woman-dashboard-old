@@ -165,7 +165,7 @@ export default function LogoManagement() {
 
         <Button
           onClick={() => saveMutation.mutate(logos)}
-          className="w-full bg-[#3D2250] hover:bg-[#5B2E84] text-white"
+          className="w-full bg-[#6E1D40] hover:bg-[#5A1633] text-white"
         >
           <Save className="w-4 h-4 mr-2" />
           Save Logo Settings

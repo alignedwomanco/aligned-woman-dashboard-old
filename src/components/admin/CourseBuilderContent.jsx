@@ -261,8 +261,8 @@ export default function CourseBuilderContent() {
         </div>
 
         {/* Course Banner */}
-        <div className="rounded-2xl overflow-hidden border-2" style={{ borderColor: "var(--theme-secondary, #5B2E84)" }}>
-          <div className="h-40 bg-gradient-to-br from-[#3B224E] to-[#5B2E84] relative">
+        <div className="rounded-2xl overflow-hidden border-2" style={{ borderColor: "#6E1D40" }}>
+          <div className="h-40 bg-gradient-to-br from-[#6E1D40] to-[#943A59] relative">
             {selectedCourse.coverImage && (
               <img src={selectedCourse.coverImage} alt={selectedCourse.title} className="w-full h-full object-cover opacity-60" />
             )}
@@ -272,7 +272,7 @@ export default function CourseBuilderContent() {
                 {selectedCourse.isComingSoon && <Badge className="bg-amber-400 text-amber-900 border-0">Coming Soon</Badge>}
                 {selectedCourse.isFeatured && <Badge className="bg-yellow-300 text-yellow-900 border-0"><Star className="w-3 h-3 mr-1" />Featured</Badge>}
                 {selectedCourse.price > 0 && <Badge className="bg-blue-400 text-blue-900 border-0">${selectedCourse.price}</Badge>}
-                {selectedCourse.category && <Badge className="bg-purple-200 text-purple-900 border-0">{selectedCourse.category}</Badge>}
+                {selectedCourse.category && <Badge className="bg-[#F5E8EE] text-[#6E1D40] border-0">{selectedCourse.category}</Badge>}
               </div>
               <h2 className="text-2xl font-bold text-white">{selectedCourse.title}</h2>
               {selectedCourse.description && <p className="text-white/80 text-sm mt-1 line-clamp-2">{selectedCourse.description}</p>}
@@ -284,7 +284,7 @@ export default function CourseBuilderContent() {
             <Button size="sm" variant="outline" onClick={() => { setEditingCourse(selectedCourse); setCourseForm(selectedCourse); setCourseDialogOpen(true); }}>
               <Edit className="w-4 h-4 mr-1" /> Edit Course
             </Button>
-            <Button size="sm" className="text-white" style={{ backgroundColor: "var(--theme-secondary, #5B2E84)" }} onClick={() => { resetSectionForm(); setSectionDialogOpen(true); }}>
+            <Button size="sm" className="text-white" style={{ backgroundColor: "#6E1D40" }} onClick={() => { resetSectionForm(); setSectionDialogOpen(true); }}>
               <Plus className="w-4 h-4 mr-1" /> Add Section
             </Button>
           </div>
@@ -300,7 +300,7 @@ export default function CourseBuilderContent() {
               <div className="p-4 bg-white flex items-center gap-3">
                 <button onClick={() => toggleSectionExpanded(section.id)} className="flex items-center gap-2 flex-1 text-left">
                   {expandedSections.has(section.id) ? <ChevronDown className="w-5 h-5 text-gray-500" /> : <ChevronRight className="w-5 h-5 text-gray-500" />}
-                  <BookOpen className="w-5 h-5" style={{ color: "var(--theme-primary, #3C224F)" }} />
+                  <BookOpen className="w-5 h-5" style={{ color: "#6E1D40" }} />
                   <span className="font-semibold">{section.title}</span>
                   <Badge variant="outline" className="text-xs">{getSectionModules(section.id).length} modules</Badge>
                   {section.isComingSoon && <Badge className="bg-amber-100 text-amber-700 text-xs">Coming Soon</Badge>}
@@ -332,7 +332,7 @@ export default function CourseBuilderContent() {
                       <div className="p-3 flex items-center gap-2">
                         <button onClick={() => toggleModuleExpanded(module.id)} className="flex items-center gap-2 flex-1 text-left">
                           {expandedModules.has(module.id) ? <ChevronDown className="w-4 h-4 text-gray-500" /> : <ChevronRight className="w-4 h-4 text-gray-500" />}
-                          <span className="inline-block px-2.5 py-1 bg-[#3B224E] text-white rounded-md text-xs font-semibold mr-2">{mIdx + 1}</span>
+                          <span className="inline-block px-2.5 py-1 bg-[#6E1D40] text-white rounded-md text-xs font-semibold mr-2">{mIdx + 1}</span>
                           <span className="font-medium text-sm">{module.title}</span>
                           <Badge variant="outline" className="text-xs">{getModulePages(module.id).length} pages</Badge>
                           {module.durationMinutes > 0 && <Badge variant="outline" className="text-xs"><Clock className="w-3 h-3 mr-1" />{module.durationMinutes}m</Badge>}
@@ -408,7 +408,7 @@ export default function CourseBuilderContent() {
     const sectionCount = sections.filter((s) => s.courseId === course.id).length;
     const moduleCount = modules.filter((m) => m.courseId === course.id).length;
     return (
-      <div key={course.id} className="flex items-center gap-3 p-4 bg-white border-2 border-gray-200 rounded-xl hover:border-purple-200 transition-colors">
+      <div key={course.id} className="flex items-center gap-3 p-4 bg-white border-2 border-gray-200 rounded-xl hover:border-[#DEBECC] transition-colors">
         {/* Reorder */}
         <div className="flex flex-col gap-1 flex-shrink-0">
           <button disabled={idx === 0} onClick={() => moveCourse(course, "up")} className="p-1 hover:bg-gray-100 rounded disabled:opacity-30" title="Move up">
@@ -420,7 +420,7 @@ export default function CourseBuilderContent() {
         </div>
 
         {/* Cover thumbnail */}
-        <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-[#3B224E] to-[#5B2E84] flex-shrink-0 overflow-hidden">
+        <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-[#6E1D40] to-[#943A59] flex-shrink-0 overflow-hidden">
           {course.coverImage
             ? <img src={course.coverImage} alt={course.title} className="w-full h-full object-cover" />
             : <div className="w-full h-full flex items-center justify-center"><BookOpen className="w-6 h-6 text-white/40" /></div>}
@@ -428,7 +428,7 @@ export default function CourseBuilderContent() {
 
         {/* Info — clickable */}
         <button className="flex-1 text-left min-w-0" onClick={() => setSelectedCourse(course)}>
-          <h3 className="font-bold text-[#3B224E] truncate">{course.title}</h3>
+          <h3 className="font-bold text-[#6E1D40] truncate">{course.title}</h3>
           {course.description && <p className="text-xs text-gray-500 truncate">{course.description}</p>}
           <div className="flex items-center gap-2 flex-wrap mt-1">
             {course.isPublished
@@ -515,7 +515,7 @@ export default function CourseBuilderContent() {
                   <Label>Featured</Label>
                 </div>
               </div>
-              <Button onClick={handleSaveCourse} disabled={!courseForm.title} className="w-full text-white" style={{ backgroundColor: "var(--theme-secondary, #5B2E84)" }}>
+              <Button onClick={handleSaveCourse} disabled={!courseForm.title} className="w-full text-white" style={{ backgroundColor: "#6E1D40" }}>
                 {editingCourse ? "Update Course" : "Create Course"}
               </Button>
             </div>
@@ -565,7 +565,7 @@ export default function CourseBuilderContent() {
                   <Label>Coming Soon</Label>
                 </div>
               </div>
-              <Button onClick={handleSaveSection} disabled={!sectionForm.title} className="w-full text-white" style={{ backgroundColor: "var(--theme-secondary, #5B2E84)" }}>
+              <Button onClick={handleSaveSection} disabled={!sectionForm.title} className="w-full text-white" style={{ backgroundColor: "#6E1D40" }}>
                 {editingSection ? "Update Section" : "Create Section"}
               </Button>
             </div>
@@ -597,7 +597,7 @@ export default function CourseBuilderContent() {
                   <Label>Coming Soon</Label>
                 </div>
               </div>
-              <Button onClick={handleSaveModule} disabled={!moduleForm.title} className="w-full text-white" style={{ backgroundColor: "var(--theme-secondary, #5B2E84)" }}>
+              <Button onClick={handleSaveModule} disabled={!moduleForm.title} className="w-full text-white" style={{ backgroundColor: "#6E1D40" }}>
                 {editingModule ? "Update Module" : "Create Module"}
               </Button>
             </div>
@@ -626,7 +626,7 @@ export default function CourseBuilderContent() {
                 <div><Label>Video URL</Label><Input value={pageForm.videoUrl} onChange={(e) => setPageForm({ ...pageForm, videoUrl: e.target.value })} placeholder="https://..." /></div>
               )}
               <div><Label>Content</Label><Textarea value={pageForm.content} onChange={(e) => setPageForm({ ...pageForm, content: e.target.value })} placeholder="Page content (HTML supported)" className="min-h-[150px]" /></div>
-              <Button onClick={handleSavePage} disabled={!pageForm.title} className="w-full text-white" style={{ backgroundColor: "var(--theme-secondary, #5B2E84)" }}>
+              <Button onClick={handleSavePage} disabled={!pageForm.title} className="w-full text-white" style={{ backgroundColor: "#6E1D40" }}>
                 {editingPage ? "Update Page" : "Create Page"}
               </Button>
             </div>
@@ -641,10 +641,10 @@ export default function CourseBuilderContent() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold" style={{ color: "var(--theme-primary, #3C224F)" }}>Course Builder</h2>
+          <h2 className="text-2xl font-bold" style={{ color: "#6E1D40" }}>Course Builder</h2>
           <p className="text-gray-600">Click a course to manage its sections and modules</p>
         </div>
-        <Button onClick={() => { resetCourseForm(); setCourseDialogOpen(true); }} className="text-white" style={{ backgroundColor: "var(--theme-secondary, #5B2E84)" }}>
+        <Button onClick={() => { resetCourseForm(); setCourseDialogOpen(true); }} className="text-white" style={{ backgroundColor: "#6E1D40" }}>
           <Plus className="w-4 h-4 mr-2" /> Create Course
         </Button>
       </div>

@@ -53,7 +53,7 @@ const phaseIcons = {
 
 const phaseColors = {
   Awareness: "bg-blue-100 text-blue-700",
-  Liberation: "bg-purple-100 text-purple-700",
+  Liberation: "bg-[#F5E8EE] text-[#6E1D40]",
   Intention: "bg-pink-100 text-[#6B1B3D]",
   VisionEmbodiment: "bg-rose-100 text-rose-700",
 };
@@ -119,7 +119,7 @@ Provide a brief, supportive reflection (2-3 sentences). Do not give advice. Do n
   const PhaseIcon = phaseIcons[selectedPhase];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50/30 via-pink-50/20 to-indigo-50/30 p-4 sm:p-6">
+    <div className="min-h-screen bg-[#F5E8EE]/50 p-4 sm:p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <motion.div
@@ -127,7 +127,7 @@ Provide a brief, supportive reflection (2-3 sentences). Do not give advice. Do n
           animate={{ opacity: 1, y: 0 }}
           className="mb-10"
         >
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#3B224E] mb-2">Journal</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#6E1D40] mb-2">Journal</h1>
           <p className="text-gray-600">
             Reflect, process, and integrate with AI-supported journaling.
           </p>
@@ -143,7 +143,7 @@ Provide a brief, supportive reflection (2-3 sentences). Do not give advice. Do n
           <Card className="shadow-lg">
             <CardHeader className="pb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-[#7340B9] to-[#5B2D83] rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-br from-[#6E1D40] to-[#943A59] rounded-xl flex items-center justify-center">
                   <PenLine className="w-5 h-5 text-white" />
                 </div>
                 <CardTitle>New Entry</CardTitle>
@@ -167,7 +167,7 @@ Provide a brief, supportive reflection (2-3 sentences). Do not give advice. Do n
                         }}
                         className={`flex items-center gap-2 px-4 py-2 rounded-full border-2 transition-all ${
                           selectedPhase === phase
-                            ? "border-[#7340B9] bg-purple-50"
+                            ? "border-[#6E1D40] bg-[#F5E8EE]"
                             : "border-gray-200 hover:border-gray-300"
                         }`}
                       >
@@ -193,7 +193,7 @@ Provide a brief, supportive reflection (2-3 sentences). Do not give advice. Do n
                       onClick={() => setSelectedPrompt(prompt)}
                       className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
                         selectedPrompt === prompt
-                          ? "border-[#7340B9] bg-purple-50"
+                          ? "border-[#6E1D40] bg-[#F5E8EE]"
                           : "border-gray-200 hover:border-gray-300"
                       }`}
                     >
@@ -212,7 +212,7 @@ Provide a brief, supportive reflection (2-3 sentences). Do not give advice. Do n
                   value={entry}
                   onChange={(e) => setEntry(e.target.value)}
                   placeholder="Write freely. This is your space..."
-                  className="min-h-[200px] rounded-xl border-gray-200 focus:border-[#7340B9] focus:ring-[#7340B9]"
+                  className="min-h-[200px] rounded-xl border-gray-200 focus:border-[#6E1D40] focus:ring-[#6E1D40]"
                 />
               </div>
 
@@ -223,11 +223,11 @@ Provide a brief, supportive reflection (2-3 sentences). Do not give advice. Do n
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-6 border border-purple-100"
+                    className="bg-gradient-to-r from-[#F5E8EE] to-[#DEBECC]/30 rounded-xl p-6 border border-[#DEBECC]"
                   >
                     <div className="flex items-center gap-2 mb-3">
-                      <Sparkles className="w-5 h-5 text-[#7340B9]" />
-                      <span className="font-medium text-[#3B224E]">Reflection</span>
+                      <Sparkles className="w-5 h-5 text-[#6E1D40]" />
+                      <span className="font-medium text-[#6E1D40]">Reflection</span>
                     </div>
                     <p className="text-gray-700 leading-relaxed">{aiResponse}</p>
                   </motion.div>
@@ -238,7 +238,7 @@ Provide a brief, supportive reflection (2-3 sentences). Do not give advice. Do n
               <Button
                 onClick={handleSubmit}
                 disabled={!entry.trim() || isProcessing}
-                className="w-full bg-gradient-to-r from-[#7340B9] to-[#5B2D83] text-white py-6"
+                className="w-full bg-gradient-to-r from-[#6E1D40] to-[#943A59] text-white py-6"
               >
                 {isProcessing ? (
                   <>
@@ -262,7 +262,7 @@ Provide a brief, supportive reflection (2-3 sentences). Do not give advice. Do n
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <h2 className="text-xl font-bold text-[#3B224E] mb-6">Past Entries</h2>
+          <h2 className="text-xl font-bold text-[#6E1D40] mb-6">Past Entries</h2>
           <div className="space-y-4">
             {entries.map((journalEntry, index) => {
               const Icon = phaseIcons[journalEntry.phase] || Eye;
@@ -309,10 +309,10 @@ Provide a brief, supportive reflection (2-3 sentences). Do not give advice. Do n
                       </p>
 
                       {isExpanded && journalEntry.aiResponse && (
-                        <div className="mt-4 bg-purple-50 rounded-lg p-4">
+                        <div className="mt-4 bg-[#F5E8EE] rounded-lg p-4">
                           <div className="flex items-center gap-2 mb-2">
-                            <Sparkles className="w-4 h-4 text-[#7340B9]" />
-                            <span className="text-sm font-medium text-[#3B224E]">Reflection</span>
+                            <Sparkles className="w-4 h-4 text-[#6E1D40]" />
+                            <span className="text-sm font-medium text-[#6E1D40]">Reflection</span>
                           </div>
                           <p className="text-sm text-gray-600">{journalEntry.aiResponse}</p>
                         </div>

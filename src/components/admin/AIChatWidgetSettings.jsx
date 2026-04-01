@@ -31,7 +31,7 @@ export default function AIChatWidgetSettings() {
     temperature: 0.7,
     max_tokens: 500,
     is_enabled: true,
-    theme_color: "#6B1B3D",
+    theme_color: "#6E1D40",
     allowed_pages: [],
   });
 
@@ -131,15 +131,15 @@ export default function AIChatWidgetSettings() {
               <div className="flex items-center gap-6">
                 <Avatar className="w-20 h-20 border-4 border-white shadow-lg">
                   <AvatarImage src={settings.chatbot_profile_picture} />
-                  <AvatarFallback className="bg-[#6B1B3D] text-white text-2xl">
+                  <AvatarFallback className="bg-[#6E1D40] text-white text-2xl">
                     {settings.chatbot_name?.[0] || "AI"}
                   </AvatarFallback>
                 </Avatar>
                 <div>
                   <Label htmlFor="avatar-upload" className="cursor-pointer">
                     <div className="flex items-center gap-2 px-4 py-2 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors">
-                      <Upload className="w-4 h-4 text-[#6B1B3D]" />
-                      <span className="text-sm font-medium text-[#6B1B3D]">
+                      <Upload className="w-4 h-4 text-[#6E1D40]" />
+                      <span className="text-sm font-medium text-[#6E1D40]">
                         Change Avatar
                       </span>
                     </div>
@@ -189,7 +189,7 @@ export default function AIChatWidgetSettings() {
                   <Input
                     value={settings.theme_color}
                     onChange={(e) => setSettings({ ...settings, theme_color: e.target.value })}
-                    placeholder="#6B1B3D"
+                    placeholder="#6E1D40"
                   />
                 </div>
               </div>
@@ -406,7 +406,7 @@ export default function AIChatWidgetSettings() {
       <div className="flex justify-end">
         <Button
           onClick={handleSave}
-          className="bg-[#6B1B3D] hover:bg-[#4A1228]"
+          className="bg-[#6E1D40] hover:bg-[#5A1633]"
           disabled={saveSettingsMutation.isLoading}
         >
           <Save className="w-4 h-4 mr-2" />

@@ -99,7 +99,7 @@ export default function AdminMetricsContent() {
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-[#4A1228]">Course Analytics</h2>
+        <h2 className="text-2xl font-bold text-[#6E1D40]">Course Analytics</h2>
         <p className="text-gray-600">Track user engagement and module performance</p>
       </div>
 
@@ -112,7 +112,7 @@ export default function AdminMetricsContent() {
                 <Users className="w-6 h-6 text-blue-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-[#4A1228]">{regularUsers.length}</div>
+                <div className="text-2xl font-bold text-[#6E1D40]">{regularUsers.length}</div>
                 <div className="text-sm text-gray-600">Total Students</div>
               </div>
             </div>
@@ -126,7 +126,7 @@ export default function AdminMetricsContent() {
                 <CheckCircle className="w-6 h-6 text-green-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-[#4A1228]">
+                <div className="text-2xl font-bold text-[#6E1D40]">
                   {allProgress.filter(p => p.status === "Complete").length}
                 </div>
                 <div className="text-sm text-gray-600">Total Completions</div>
@@ -138,11 +138,11 @@ export default function AdminMetricsContent() {
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                <Clock className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-[#F5E8EE] rounded-xl flex items-center justify-center">
+                <Clock className="w-6 h-6 text-[#6E1D40]" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-[#4A1228]">
+                <div className="text-2xl font-bold text-[#6E1D40]">
                   {formatTime(allEngagement.reduce((sum, e) => sum + (e.sessionDuration || 0), 0))}
                 </div>
                 <div className="text-sm text-gray-600">Total Watch Time</div>
@@ -158,7 +158,7 @@ export default function AdminMetricsContent() {
                 <Activity className="w-6 h-6 text-orange-600" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-[#4A1228]">{allSessions.length}</div>
+                <div className="text-2xl font-bold text-[#6E1D40]">{allSessions.length}</div>
                 <div className="text-sm text-gray-600">Total Sessions</div>
               </div>
             </div>
@@ -200,7 +200,7 @@ export default function AdminMetricsContent() {
                           <div className="flex items-center gap-3">
                             <Avatar>
                               <AvatarImage src={user.profile_picture} />
-                              <AvatarFallback className="bg-[#6B1B3D] text-white">
+                              <AvatarFallback className="bg-[#6E1D40] text-white">
                                 {user.full_name?.[0] || user.email?.[0]}
                               </AvatarFallback>
                             </Avatar>
@@ -302,7 +302,7 @@ export default function AdminMetricsContent() {
                     >
                       <Avatar>
                         <AvatarImage src={user?.profile_picture} />
-                        <AvatarFallback className="bg-[#6B1B3D] text-white">
+                        <AvatarFallback className="bg-[#6E1D40] text-white">
                           {user?.full_name?.[0] || user?.email?.[0]}
                         </AvatarFallback>
                       </Avatar>

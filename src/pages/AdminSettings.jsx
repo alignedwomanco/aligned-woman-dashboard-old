@@ -179,7 +179,7 @@ export default function AdminSettings() {
 
   // Apply background
   useEffect(() => {
-    const bg = currentUser?.background_image || '#FBF4FD';
+    const bg = currentUser?.background_image || '#F5E8EE';
     if (bg.startsWith('#')) {
       document.body.style.backgroundColor = bg;
       document.body.style.backgroundImage = "none";
@@ -222,7 +222,7 @@ export default function AdminSettings() {
   const getRoleBadgeColor = (role) => {
     const colors = {
       owner: "text-white",
-      master_admin: "bg-purple-100 text-purple-800",
+      master_admin: "bg-[#F5E8EE] text-[#6E1D40]",
       admin: "bg-blue-100 text-blue-800",
       moderator: "bg-green-100 text-green-800",
       educator: "bg-orange-100 text-orange-800",
@@ -246,7 +246,7 @@ export default function AdminSettings() {
   if (!currentUser) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-t-transparent rounded-full" style={{ borderColor: 'var(--theme-primary, #3C224F)', borderTopColor: 'transparent' }} />
+        <div className="animate-spin w-8 h-8 border-4 border-t-transparent rounded-full" style={{ borderColor: '#6E1D40', borderTopColor: 'transparent' }} />
       </div>
     );
   }
@@ -260,7 +260,7 @@ export default function AdminSettings() {
     <div className="min-h-screen p-12">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
-          <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--theme-primary, #3C224F)' }}>Admin Settings</h1>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: '#6E1D40' }}>Admin Settings</h1>
           <p className="text-gray-600">Manage system settings and configurations</p>
         </div>
 
@@ -269,63 +269,63 @@ export default function AdminSettings() {
             <TabsTrigger 
               value="users" 
               className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "users" ? 'var(--theme-secondary, #5B2E84)' : '' }}
+              style={{ backgroundColor: activeTab === "users" ? '#6E1D40' : '' }}
             >
               Users
             </TabsTrigger>
             <TabsTrigger 
               value="courses" 
               className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "courses" ? 'var(--theme-secondary, #5B2E84)' : '' }}
+              style={{ backgroundColor: activeTab === "courses" ? '#6E1D40' : '' }}
             >
               Course Builder
             </TabsTrigger>
             <TabsTrigger 
               value="experts" 
               className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "experts" ? 'var(--theme-secondary, #5B2E84)' : '' }}
+              style={{ backgroundColor: activeTab === "experts" ? '#6E1D40' : '' }}
             >
               Experts
             </TabsTrigger>
             <TabsTrigger 
               value="dashboard" 
               className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "dashboard" ? 'var(--theme-secondary, #5B2E84)' : '' }}
+              style={{ backgroundColor: activeTab === "dashboard" ? '#6E1D40' : '' }}
             >
               Dashboard Configurator
             </TabsTrigger>
             <TabsTrigger 
               value="integrations" 
               className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "integrations" ? 'var(--theme-secondary, #5B2E84)' : '' }}
+              style={{ backgroundColor: activeTab === "integrations" ? '#6E1D40' : '' }}
             >
               Integrations
             </TabsTrigger>
             <TabsTrigger 
               value="analytics" 
               className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "analytics" ? 'var(--theme-secondary, #5B2E84)' : '' }}
+              style={{ backgroundColor: activeTab === "analytics" ? '#6E1D40' : '' }}
             >
               Analytics
             </TabsTrigger>
             <TabsTrigger 
               value="ai-chat" 
               className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "ai-chat" ? 'var(--theme-secondary, #5B2E84)' : '' }}
+              style={{ backgroundColor: activeTab === "ai-chat" ? '#6E1D40' : '' }}
             >
               AI Chat Widget
             </TabsTrigger>
             <TabsTrigger 
               value="support" 
               className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "support" ? 'var(--theme-secondary, #5B2E84)' : '' }}
+              style={{ backgroundColor: activeTab === "support" ? '#6E1D40' : '' }}
             >
               Support Room
             </TabsTrigger>
             <TabsTrigger 
               value="logos" 
               className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "logos" ? 'var(--theme-secondary, #5B2E84)' : '' }}
+              style={{ backgroundColor: activeTab === "logos" ? '#6E1D40' : '' }}
             >
               Logos
             </TabsTrigger>
@@ -345,7 +345,7 @@ export default function AdminSettings() {
                       <DialogTrigger asChild>
                         <Button 
                           className="text-white"
-                          style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)' }}
+                          style={{ backgroundColor: '#6E1D40' }}
                           onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
                           onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                         >
@@ -393,7 +393,7 @@ export default function AdminSettings() {
                             onClick={() => sendInviteMutation.mutate({ email: inviteEmail, role: inviteRole })}
                             disabled={!inviteEmail || sendInviteMutation.isPending}
                             className="w-full text-white"
-                            style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)' }}
+                            style={{ backgroundColor: '#6E1D40' }}
                           >
                             {sendInviteMutation.isPending ? "Sending..." : "Send Invitation"}
                           </Button>
@@ -420,7 +420,7 @@ export default function AdminSettings() {
                             <div className="relative group">
                               <Avatar className="cursor-pointer">
                                 <AvatarImage src={user.profile_picture} />
-                                <AvatarFallback style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }} className="text-white">
+                                <AvatarFallback style={{ backgroundColor: '#6E1D40' }} className="text-white">
                                  {user.full_name?.[0] || user.email?.[0]}
                                 </AvatarFallback>
                               </Avatar>
@@ -524,7 +524,7 @@ export default function AdminSettings() {
                     <Button 
                       onClick={() => setActiveTab("experts")}
                       className="text-white"
-                      style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)' }}
+                      style={{ backgroundColor: '#6E1D40' }}
                     >
                       Go to Experts →
                     </Button>
@@ -558,7 +558,7 @@ export default function AdminSettings() {
                             <div className="relative group">
                               <Avatar className="cursor-pointer">
                                 <AvatarImage src={user.profile_picture} />
-                                <AvatarFallback style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }} className="text-white">
+                                <AvatarFallback style={{ backgroundColor: '#6E1D40' }} className="text-white">
                                  {user.full_name?.[0] || user.email?.[0]}
                                 </AvatarFallback>
                               </Avatar>
@@ -687,7 +687,7 @@ export default function AdminSettings() {
                       <div className="flex items-center gap-4">
                         <Avatar className="w-16 h-16">
                           <AvatarImage src={editData.profile_picture} />
-                          <AvatarFallback className="bg-[#6B1B3D] text-white">
+                          <AvatarFallback className="bg-[#6E1D40] text-white">
                             {editingUser?.full_name?.[0] || "U"}
                           </AvatarFallback>
                         </Avatar>
@@ -755,7 +755,7 @@ export default function AdminSettings() {
                         data: editData 
                       })}
                       className="w-full text-white"
-                      style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)' }}
+                      style={{ backgroundColor: '#6E1D40' }}
                     >
                       <Save className="w-4 h-4 mr-2" />
                       Save Changes

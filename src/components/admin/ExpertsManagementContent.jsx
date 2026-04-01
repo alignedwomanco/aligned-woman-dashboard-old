@@ -227,7 +227,7 @@ export default function ExpertsManagementContent() {
               <CardTitle className="text-2xl mb-2">Experts</CardTitle>
               <p className="text-gray-600">Manage expert profiles shown on the Experts page</p>
             </div>
-            <Button onClick={() => openEditDialog()} className="bg-[#3D2250] hover:bg-[#5B2E84]">
+            <Button onClick={() => openEditDialog()} className="bg-[#6E1D40] hover:bg-[#5A1633]">
               <Plus className="w-4 h-4 mr-2" />
               Add Expert Profile
             </Button>
@@ -244,7 +244,7 @@ export default function ExpertsManagementContent() {
                     className="w-16 h-16 rounded-full object-cover"
                   />
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-[#3D2250] truncate">{expert.name}</h3>
+                    <h3 className="font-semibold text-[#6E1D40] truncate">{expert.name}</h3>
                     <p className="text-sm text-gray-600 truncate">{expert.title}</p>
                     {expert.services && expert.services.length > 0 && (
                       <Badge className="mt-1 bg-green-100 text-green-800 text-xs">
@@ -291,7 +291,7 @@ export default function ExpertsManagementContent() {
             </div>
             <Dialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-[#6B1B3D] hover:bg-[#4A1228]">
+                <Button className="bg-[#6E1D40] hover:bg-[#5A1633]">
                   <UserPlus className="w-4 h-4 mr-2" />
                   Invite Expert
                 </Button>
@@ -325,7 +325,7 @@ export default function ExpertsManagementContent() {
                   <Button
                     onClick={() => sendInviteMutation.mutate({ email: inviteEmail, role: inviteRole })}
                     disabled={!inviteEmail}
-                    className="w-full bg-[#6B1B3D]"
+                    className="w-full bg-[#6E1D40]"
                   >
                     Send Invitation
                   </Button>
@@ -355,7 +355,7 @@ export default function ExpertsManagementContent() {
                     <TableCell className="flex items-center gap-3">
                       <Avatar>
                         <AvatarImage src={expert.profile_picture} />
-                        <AvatarFallback className="bg-[#6B1B3D] text-white">
+                        <AvatarFallback className="bg-[#6E1D40] text-white">
                           {expert.full_name?.[0] || expert.email?.[0]}
                         </AvatarFallback>
                       </Avatar>
@@ -507,7 +507,7 @@ export default function ExpertsManagementContent() {
                 )}
                 <div className="flex-1 space-y-2">
                   <label htmlFor="expert-pic-upload" className="cursor-pointer">
-                    <div className="flex items-center gap-2 px-4 py-2 rounded-lg text-white transition-colors" style={{ backgroundColor: 'var(--theme-secondary, #5B2E84)' }}>
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-lg text-white transition-colors" style={{ backgroundColor: '#6E1D40' }}>
                       <Upload className="w-4 h-4" />
                       <span className="text-sm font-medium">
                         {expertForm.profile_picture ? 'Change Picture' : 'Upload Picture'}
@@ -607,7 +607,7 @@ export default function ExpertsManagementContent() {
               <Button
                 onClick={handleSaveExpert}
                 disabled={!expertForm.name || !expertForm.title}
-                className="flex-1 bg-[#3D2250] hover:bg-[#5B2E84]"
+                className="flex-1 bg-[#6E1D40] hover:bg-[#5A1633]"
               >
                 {currentExpert ? "Update Expert" : "Create Expert"}
               </Button>
