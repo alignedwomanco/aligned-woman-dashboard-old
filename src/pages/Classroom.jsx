@@ -139,7 +139,7 @@ export default function Classroom() {
 
                       <CardContent className="p-5">
                         {course.category && (
-                          <Badge className="bg-purple-100 text-purple-700 border-purple-200 border text-xs mb-3">
+                          <Badge className="bg-[#943A59]/20 text-[#6E1D40] border-[#943A59]/30 border text-xs mb-3">
                             {course.category}
                           </Badge>
                         )}
