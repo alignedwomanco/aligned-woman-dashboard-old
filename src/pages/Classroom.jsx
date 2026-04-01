@@ -56,7 +56,7 @@ export default function Classroom() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#3B224E] mb-2">Classroom</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#6E1D40] mb-2">Classroom</h1>
           <p className="text-gray-600">Explore your courses and continue your learning journey.</p>
         </motion.div>
 
