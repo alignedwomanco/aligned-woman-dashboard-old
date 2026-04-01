@@ -136,7 +136,7 @@ Respond in 150 words or less. Be warm, supportive, and grounded in their current
             exit={{ scale: 0 }}
             onClick={() => setIsOpen(true)}
             className="fixed bottom-6 right-6 w-16 h-16 rounded-full shadow-2xl flex items-center justify-center z-50 transition-colors"
-            style={{ backgroundColor: 'var(--theme-primary, #3C224F)' }}
+            style={{ backgroundColor: '#6E1D40' }}
             onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
             onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
           >
