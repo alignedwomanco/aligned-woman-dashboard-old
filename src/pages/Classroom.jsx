@@ -109,7 +109,7 @@ export default function Classroom() {
                   <Link to={createPageUrl("CourseDetail") + `?courseId=${course.id}`}>
                     <Card className="h-full hover:shadow-xl transition-all duration-300 cursor-pointer bg-white overflow-hidden group">
                       {/* Cover Image */}
-                      <div className="h-44 bg-gradient-to-br from-[#3B224E] to-[#5B2E84] relative overflow-hidden">
+                      <div className="h-44 bg-gradient-to-br from-[#6E1D40] to-[#9B3A6A] relative overflow-hidden">
                         {course.coverImage ? (
                           <img
                             src={course.coverImage}
