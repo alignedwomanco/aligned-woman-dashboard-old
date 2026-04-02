@@ -174,7 +174,7 @@ export default function SectionDetail() {
 
                       {/* Card */}
                       <div className={`bg-white rounded-2xl border overflow-hidden hover:shadow-lg transition-all cursor-pointer ml-3 ${isCompleted ? "border-green-200" : "border-[#DEBECC]/60"}`}>
-                        <div className="pl-10 pr-5 pt-4 pb-3 flex items-start gap-3">
+                        <div className="pl-10 pr-5 pt-5 pb-2 flex items-start gap-3">
                           {/* Content */}
                           <div className="flex-1 min-w-0">
                             <h3 className={`font-bold text-base leading-snug ${isCompleted ? "text-gray-500 line-through" : "text-[#6E1D40]"}`}>
@@ -187,26 +187,26 @@ export default function SectionDetail() {
                               </div>
                             )}
                             {module.description && (
-                              <p className="text-sm text-gray-500 mt-1.5 line-clamp-1">
+                              <p className="text-sm text-gray-500 mt-2 line-clamp-1">
                                 {module.description}
                               </p>
                             )}
                           </div>
 
                           {/* Play / Status Icon */}
-                          <div className="flex-shrink-0 mt-0.5">
+                          <div className="flex-shrink-0">
                             {isCompleted ? (
-                              <CheckCircle className="w-6 h-6 text-green-500" />
+                              <CheckCircle className="w-8 h-8 text-green-500" />
                             ) : (
-                              <Play className="w-6 h-6 text-[#6E1D40]" />
+                              <Play className="w-8 h-8 text-[#6E1D40]" />
                             )}
                           </div>
                         </div>
 
                         {/* Progress Bar */}
-                        <div className="pl-10 pr-5 pb-3">
+                        <div className="pl-10 pr-5 pb-4 pt-3">
                           <div className="flex items-center gap-3">
-                            <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
                               <div
                                 className="h-full rounded-full transition-all duration-500"
                                 style={{
@@ -216,14 +216,14 @@ export default function SectionDetail() {
                                     : `repeating-linear-gradient(
                                         -45deg,
                                         #6E1D40,
-                                        #6E1D40 4px,
-                                        #943A59 4px,
-                                        #943A59 8px
+                                        #6E1D40 5px,
+                                        #943A59 5px,
+                                        #943A59 10px
                                       )`,
                                 }}
                               />
                             </div>
-                            <span className={`text-sm font-bold flex-shrink-0 ${isCompleted ? "text-green-600" : "text-[#6E1D40]"}`}>
+                            <span className={`text-base font-bold flex-shrink-0 ${isCompleted ? "text-green-600" : "text-[#6E1D40]"}`}>
                               {prog}%
                             </span>
                           </div>
