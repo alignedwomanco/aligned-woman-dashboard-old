@@ -237,7 +237,7 @@ export default function ModulePlayer() {
               </Link>
               <div>
                 {course && (
-                  <Badge className="bg-purple-100 text-purple-700 border-purple-200 border mb-1">
+                  <Badge className="bg-[#F5E8EE] text-[#6E1D40] border-[#DEBECC] border mb-1">
                     <Eye className="w-3 h-3 mr-1" />
                     {course.title}
                   </Badge>
