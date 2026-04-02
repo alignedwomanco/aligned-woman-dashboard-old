@@ -12,6 +12,7 @@ export default function Classroom() {
   const [searchQuery, setSearchQuery] = useState("");
   const [courses, setCourses] = useState([]);
   const [enrollment, setEnrollment] = useState([]);
+  const [allModules, setAllModules] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,6 +21,10 @@ export default function Classroom() {
         // Load published courses, sorted by created_date (oldest first)
         const allCourses = await base44.entities.Course.filter({ isPublished: true }, "created_date");
         setCourses(allCourses);
+
+        // Load all course modules to know total counts
+        const modules = await base44.entities.CourseModule.filter({});
+        setAllModules(modules);
 
         // Load user's enrollment/progress
         const prog = await base44.entities.CourseProgress.filter({});
@@ -34,10 +39,13 @@ export default function Classroom() {
   }, []);
 
   const getCourseProgress = (courseId) => {
-    const courseProgress = enrollment.filter((p) => p.courseId === courseId);
-    if (courseProgress.length === 0) return 0;
-    const completed = courseProgress.filter((p) => p.status === "completed").length;
-    return Math.round((completed / courseProgress.length) * 100);
+    const courseModules = allModules.filter((m) => m.courseId === courseId);
+    if (courseModules.length === 0) return 0;
+    const completedModules = courseModules.filter((m) => {
+      const p = enrollment.find((pr) => pr.moduleId === m.id && pr.status === "completed");
+      return !!p;
+    }).length;
+    return Math.round((completedModules / courseModules.length) * 100);
   };
 
   const filteredCourses = courses.filter((course) =>
