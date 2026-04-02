@@ -130,7 +130,7 @@ export default function CourseDetail() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-[#3B224E] border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-4 border-[#6E1D40] border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -153,8 +153,8 @@ export default function CourseDetail() {
           </Button>
         </Link>
         
-        <div className="rounded-2xl overflow-hidden border-2" style={{ borderColor: "var(--theme-secondary, #5B2E84)" }}>
-          <div className="h-48 bg-gradient-to-br from-[#3B224E] to-[#5B2E84] relative">
+        <div className="rounded-2xl overflow-hidden border-2" style={{ borderColor: "#6E1D40" }}>
+          <div className="h-48 bg-gradient-to-br from-[#6E1D40] to-[#943A59] relative">
             {course.coverImage && (
               <img src={course.coverImage} alt={course.title} className="w-full h-full object-cover opacity-60" />
             )}
@@ -172,7 +172,7 @@ export default function CourseDetail() {
           <div className="bg-white px-6 py-4 space-y-3">
            <div className="flex items-center justify-between">
              <span className="text-sm text-gray-600">{sections.length} sections · {modules.length} modules</span>
-             <span className="text-sm font-semibold text-[#3B224E]">{getCourseProgress()}% Complete</span>
+             <span className="text-sm font-semibold text-[#6E1D40]">{getCourseProgress()}% Complete</span>
            </div>
            <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
              <div
@@ -199,7 +199,7 @@ export default function CourseDetail() {
            <>
              {/* Sections Grid */}
              <div className="mb-8">
-               <h2 className="text-lg font-semibold text-[#3B224E] mb-4">Course Sections</h2>
+               <h2 className="text-lg font-semibold text-[#6E1D40] mb-4">Course Sections</h2>
                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                  {sections.map((section, idx) => {
                    const sectionProg = getSectionProgress(section.id);
@@ -241,7 +241,7 @@ export default function CourseDetail() {
 
                            <CardContent className="p-5 flex flex-col gap-4">
                              <div>
-                               <h3 className="font-bold text-[#3B224E] text-lg leading-snug mb-2 group-hover:text-[#5B2E84] transition-colors">
+                               <h3 className="font-bold text-[#6E1D40] text-lg leading-snug mb-2 group-hover:text-[#943A59] transition-colors">
                                  {section.title}
                                </h3>
                                {section.description && (
@@ -254,7 +254,7 @@ export default function CourseDetail() {
                              <div className="space-y-2">
                                <div className="flex items-center justify-between">
                                  <span className="text-xs text-gray-500">{modulesInSection} modules</span>
-                                 <span className="text-xs font-semibold text-[#3B224E]">{sectionProg}%</span>
+                                 <span className="text-xs font-semibold text-[#6E1D40]">{sectionProg}%</span>
                                </div>
                                <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
                                  <div
@@ -269,7 +269,7 @@ export default function CourseDetail() {
                                </div>
                              </div>
 
-                             <div className="flex items-center gap-1 text-[#3B224E] text-sm font-medium mt-auto">
+                             <div className="flex items-center gap-1 text-[#6E1D40] text-sm font-medium mt-auto">
                                {sectionProg > 0 ? `Continue` : "Start"}
                                <ArrowRight className="w-4 h-4" />
                              </div>
