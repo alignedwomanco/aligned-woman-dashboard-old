@@ -128,7 +128,15 @@ export default function SectionDetail() {
               <div className="flex items-center gap-2">
                 <span className="text-sm font-semibold text-[#6E1D40]">{sectionProgress}% Complete</span>
                 <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
-                  <div className="h-full bg-green-400 transition-all" style={{ width: `${sectionProgress}%` }} />
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      width: `${sectionProgress}%`,
+                      background: sectionProgress >= 100
+                        ? '#22c55e'
+                        : `repeating-linear-gradient(-45deg, #6E1D40, #6E1D40 4px, #943A59 4px, #943A59 8px)`,
+                    }}
+                  />
                 </div>
               </div>
             </div>

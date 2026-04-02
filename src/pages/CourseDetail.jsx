@@ -176,8 +176,13 @@ export default function CourseDetail() {
            </div>
            <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
              <div
-               className="h-full bg-green-400 transition-all duration-300"
-               style={{ width: `${getCourseProgress()}%` }}
+               className="h-full rounded-full transition-all duration-500"
+               style={{
+                 width: `${getCourseProgress()}%`,
+                 background: getCourseProgress() >= 100
+                   ? '#22c55e'
+                   : `repeating-linear-gradient(-45deg, #6E1D40, #6E1D40 4px, #943A59 4px, #943A59 8px)`,
+               }}
              />
            </div>
           </div>
