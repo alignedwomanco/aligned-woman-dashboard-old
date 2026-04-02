@@ -6,7 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { base44 } from "@/api/base44Client";
-import { Search, BookOpen, Clock, Users, ArrowRight, Star } from "lucide-react";
+import { Search, BookOpen, Clock, Users, ArrowRight, Star, Play } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function Classroom() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -48,6 +49,38 @@ export default function Classroom() {
     return Math.round((completedModules / courseModules.length) * 100);
   };
 
+  // Find most recently accessed module to resume
+  const getResumeInfo = () => {
+    if (enrollment.length === 0) return null;
+    // Sort by lastAccessedAt or updated_date, most recent first
+    const sorted = [...enrollment]
+      .filter(p => p.moduleId && p.status !== "completed")
+      .sort((a, b) => {
+        const dateA = a.lastAccessedAt || a.updated_date || a.created_date || "";
+        const dateB = b.lastAccessedAt || b.updated_date || b.created_date || "";
+        return dateB.localeCompare(dateA);
+      });
+    const latest = sorted[0];
+    if (!latest) {
+      // All completed — find most recently touched
+      const allSorted = [...enrollment]
+        .filter(p => p.moduleId)
+        .sort((a, b) => {
+          const dateA = a.lastAccessedAt || a.updated_date || a.created_date || "";
+          const dateB = b.lastAccessedAt || b.updated_date || b.created_date || "";
+          return dateB.localeCompare(dateA);
+        });
+      if (allSorted.length === 0) return null;
+      const mod = allModules.find(m => m.id === allSorted[0].moduleId);
+      const course = courses.find(c => c.id === allSorted[0].courseId);
+      return { moduleId: allSorted[0].moduleId, courseId: allSorted[0].courseId, moduleTitle: mod?.title, courseTitle: course?.title };
+    }
+    const mod = allModules.find(m => m.id === latest.moduleId);
+    const course = courses.find(c => c.id === latest.courseId);
+    return { moduleId: latest.moduleId, courseId: latest.courseId, moduleTitle: mod?.title, courseTitle: course?.title };
+  };
+  const resumeInfo = getResumeInfo();
+
   const filteredCourses = courses.filter((course) =>
     !searchQuery ||
     course.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -64,8 +97,21 @@ export default function Classroom() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#6E1D40] mb-2">Classroom</h1>
-          <p className="text-gray-600">Explore your courses and continue your learning journey.</p>
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-[#6E1D40] mb-2">Classroom</h1>
+              <p className="text-gray-600">Explore your courses and continue your learning journey.</p>
+            </div>
+            {resumeInfo && (
+              <Link to={createPageUrl("ModulePlayer") + `?moduleId=${resumeInfo.moduleId}&courseId=${resumeInfo.courseId}`}>
+                <Button className="bg-[#6E1D40] hover:bg-[#5A1633] text-white gap-2 shadow-lg">
+                  <Play className="w-4 h-4" />
+                  <span className="hidden sm:inline">Resume: </span>
+                  <span className="max-w-[150px] truncate">{resumeInfo.moduleTitle || "Continue"}</span>
+                </Button>
+              </Link>
+            )}
+          </div>
         </motion.div>
 
         {/* Search */}

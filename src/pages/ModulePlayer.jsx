@@ -230,11 +230,11 @@ export default function ModulePlayer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-              <Link to={createPageUrl("Classroom")} className="flex-shrink-0">
+              <button onClick={() => navigate(-1)} className="flex-shrink-0">
                 <Button variant="ghost" size="icon">
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
-              </Link>
+              </button>
               <div className="min-w-0">
                 {course && (
                   <Badge className="bg-[#F5E8EE] text-[#6E1D40] border-[#DEBECC] border mb-1 max-w-full">
