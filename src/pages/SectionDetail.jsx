@@ -168,7 +168,7 @@ export default function SectionDetail() {
                   <Link to={createPageUrl("ModulePlayer") + `?moduleId=${module.id}&courseId=${courseId}`}>
                     <div className="relative">
                       {/* Number badge - overlapping left edge */}
-                      <div className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-xl bg-[#6E1D40] text-white flex items-center justify-center font-bold text-lg shadow-md">
+                      <div className="absolute top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-xl bg-[#6E1D40] text-white flex items-center justify-center font-bold text-lg shadow-md" style={{ left: '18px' }}>
                         {idx + 1}
                       </div>
 
