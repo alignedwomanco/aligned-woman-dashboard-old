@@ -392,9 +392,9 @@ export default function ModulePlayer() {
                         }
                       }
                       
-                      // Google Drive
+                      // Google Drive (only drive.google.com, NOT docs.google.com)
                       let embedUrl = url;
-                      if (url.includes('drive.google.com')) {
+                      if (url.includes('drive.google.com') && !url.includes('docs.google.com')) {
                         const fileId = url.match(/\/d\/([a-zA-Z0-9_-]+)/)?.[1] || url.match(/[-\w]{25,}/)?.[0];
                         if (fileId) embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
                       }
@@ -404,8 +404,8 @@ export default function ModulePlayer() {
                         embedUrl = `https://fast.wistia.net/embed/iframe/${videoId}`;
                       }
                       
-                      // Check if it's a direct video file (mp4, webm, mov, ogg, etc.)
-                      const isDirectVideo = /\.(mp4|webm|mov|ogg|m4v|avi|mkv)(\?|$)/i.test(embedUrl) || embedUrl.includes('supabase.co/storage');
+                      // Check if it's a direct video file (mp4, webm, mov, ogg, etc.) or hosted upload
+                      const isDirectVideo = /\.(mp4|webm|mov|ogg|m4v|avi|mkv)(\?|$)/i.test(embedUrl) || embedUrl.includes('supabase.co/storage') || embedUrl.includes('base44.app/api/apps') || embedUrl.includes('docs.google.com/videos');
                       if (isDirectVideo) {
                         return (
                           <video
