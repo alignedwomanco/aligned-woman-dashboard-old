@@ -336,7 +336,7 @@ export default function CourseBuilderContent() {
                           <span className="font-medium text-sm">{module.title}</span>
                           <Badge variant="outline" className="text-xs">{getModulePages(module.id).length} pages</Badge>
                           {module.durationMinutes > 0 && <Badge variant="outline" className="text-xs"><Clock className="w-3 h-3 mr-1" />{module.durationMinutes}m</Badge>}
-                          {module.expertId && <Badge className="bg-pink-100 text-pink-700 text-xs"><Users className="w-3 h-3 mr-1" />Expert</Badge>}
+                          {module.expertId && (() => { const expert = experts.find(e => e.id === module.expertId); return <Badge className="bg-[#F5E8EE] text-[#6E1D40] text-xs">{expert?.name || "Expert"}</Badge>; })()}
                           {module.isComingSoon && <Badge className="bg-amber-100 text-amber-700 text-xs">Coming Soon</Badge>}
                           {!module.isPublished && <Badge className="bg-gray-100 text-gray-500 text-xs">Draft</Badge>}
                         </button>

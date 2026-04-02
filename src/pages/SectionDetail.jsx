@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Clock, CheckCircle, Play, Zap, Award } from "lucide-react";
+import { ArrowLeft, Clock, CheckCircle, Play, Zap, Award, User } from "lucide-react";
 
 export default function SectionDetail() {
   const [searchParams] = useSearchParams();
@@ -19,6 +19,7 @@ export default function SectionDetail() {
   const [course, setCourse] = useState(null);
   const [modules, setModules] = useState([]);
   const [progress, setProgress] = useState([]);
+  const [experts, setExperts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -46,6 +47,10 @@ export default function SectionDetail() {
           return (a.created_date || "").localeCompare(b.created_date || "");
         });
         setModules(sorted);
+
+        // Load experts
+        const allExperts = await base44.entities.Expert.list();
+        setExperts(allExperts);
 
         // Load progress
         const prog = await base44.entities.CourseProgress.filter({});
@@ -77,7 +82,7 @@ export default function SectionDetail() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-[#3B224E] border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-4 border-[#6E1D40] border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -91,7 +96,7 @@ export default function SectionDetail() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#E4CAFB" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#DEBECC" }}>
       {/* Header */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
         <button onClick={() => navigate(-1)} className="inline-block mb-4">
@@ -101,12 +106,12 @@ export default function SectionDetail() {
         </button>
 
         {/* Section Banner */}
-        <div className="rounded-2xl overflow-hidden border-2" style={{ borderColor: "var(--theme-secondary, #5B2E84)" }}>
-          <div className="h-48 bg-gradient-to-br from-[#3B224E] to-[#5B2E84] relative">
+        <div className="rounded-2xl overflow-hidden border-2" style={{ borderColor: "#6E1D40" }}>
+          <div className="h-48 bg-gradient-to-br from-[#6E1D40] to-[#943A59] relative">
             {section.coverImage ? (
               <img src={section.coverImage} alt={section.title} className="w-full h-full object-cover opacity-70" />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-purple-400 to-purple-600" />
+              <div className="w-full h-full bg-gradient-to-br from-[#6E1D40] to-[#943A59]" />
             )}
             <div className="absolute inset-0 p-6 flex flex-col justify-end">
               <h1 className="text-3xl font-bold text-white">{section.title}</h1>
@@ -121,7 +126,7 @@ export default function SectionDetail() {
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">{modules.length} modules</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-[#3B224E]">{sectionProgress}% Complete</span>
+                <span className="text-sm font-semibold text-[#6E1D40]">{sectionProgress}% Complete</span>
                 <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
                   <div className="h-full bg-green-400 transition-all" style={{ width: `${sectionProgress}%` }} />
                 </div>
@@ -156,7 +161,7 @@ export default function SectionDetail() {
                       <CardContent className="p-4">
                         <div className="flex items-center gap-4">
                           {/* Number Badge */}
-                          <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#3B224E] text-white flex items-center justify-center font-bold">
+                          <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#6E1D40] text-white flex items-center justify-center font-bold">
                             {idx + 1}
                           </div>
 
@@ -164,7 +169,7 @@ export default function SectionDetail() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-start justify-between gap-2">
                               <div className="flex-1">
-                                <h3 className={`font-semibold leading-snug ${isCompleted ? "text-gray-600 line-through" : "text-[#3B224E]"}`}>
+                                <h3 className={`font-semibold leading-snug ${isCompleted ? "text-gray-600 line-through" : "text-[#6E1D40]"}`}>
                                   {module.title}
                                 </h3>
                                 {module.description && (
@@ -172,6 +177,15 @@ export default function SectionDetail() {
                                     {module.description}
                                   </p>
                                 )}
+                                {module.expertId && (() => {
+                                  const expert = experts.find(e => e.id === module.expertId);
+                                  return expert ? (
+                                    <div className="mt-1.5 inline-flex items-center gap-1.5 px-2 py-0.5 bg-[#F5E8EE] rounded-md border border-[#DEBECC]">
+                                      <User className="w-3 h-3 text-[#6E1D40]" />
+                                      <span className="text-xs font-medium text-[#6E1D40]">{expert.name}</span>
+                                    </div>
+                                  ) : null;
+                                })()}
                               </div>
 
                               {/* Status Icon */}
@@ -179,7 +193,7 @@ export default function SectionDetail() {
                                 {isCompleted ? (
                                   <CheckCircle className="w-5 h-5 text-green-500" />
                                 ) : status === "InProgress" ? (
-                                  <Zap className="w-5 h-5 text-purple-500" />
+                                  <Zap className="w-5 h-5 text-[#943A59]" />
                                 ) : (
                                   <Play className="w-5 h-5 text-gray-400" />
                                 )}
