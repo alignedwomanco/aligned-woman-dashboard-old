@@ -100,7 +100,7 @@ export default function SectionDetail() {
       {/* Header */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
         <button onClick={() => navigate(-1)} className="inline-block mb-4">
-          <Button variant="ghost" size="sm" className="text-white hover:text-white/80">
+          <Button variant="ghost" size="sm" className="text-[#6E1D40] hover:text-[#6E1D40]/80">
             <ArrowLeft className="w-4 h-4 mr-2" /> Back
           </Button>
         </button>
