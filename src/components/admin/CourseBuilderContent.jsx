@@ -634,6 +634,7 @@ export default function CourseBuilderContent() {
                     <div className="relative rounded-lg overflow-hidden bg-gray-900" style={{ paddingTop: '56.25%' }}>
                       {(() => {
                         const url = pageForm.videoUrl.trim();
+                        // YouTube — playable embed
                         if (url.includes('youtube.com') || url.includes('youtu.be')) {
                           let videoId = null;
                           try {
@@ -644,21 +645,21 @@ export default function CourseBuilderContent() {
                             videoId = match ? match[1] : null;
                           }
                           if (videoId) return (
-                            <>
-                              <img src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`} alt="YouTube" className="absolute top-0 left-0 w-full h-full object-cover" />
-                              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                                <div className="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center">
-                                  <svg className="w-7 h-7 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                                </div>
-                              </div>
-                              <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs px-2 py-1 rounded">YouTube</div>
-                            </>
+                            <iframe
+                              src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0`}
+                              className="absolute top-0 left-0 w-full h-full"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                              allowFullScreen
+                              style={{ border: 0 }}
+                            />
                           );
                         }
-                        if (url.includes('drive.google.com')) {
+                        // Google Drive / Docs — playable embed
+                        if (url.includes('drive.google.com') || url.includes('docs.google.com')) {
                           const fileId = url.match(/\/d\/([a-zA-Z0-9_-]+)/)?.[1] || url.match(/[-\w]{25,}/)?.[0];
                           if (fileId) return <iframe src={`https://drive.google.com/file/d/${fileId}/preview`} className="absolute top-0 left-0 w-full h-full" allow="autoplay; fullscreen" allowFullScreen style={{ border: 0 }} />;
                         }
+                        // Direct video file
                         return <video src={url} controls className="absolute top-0 left-0 w-full h-full" />;
                       })()}
                       <button onClick={() => setPageForm({ ...pageForm, videoUrl: "" })} className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white rounded-full p-1 z-10">
