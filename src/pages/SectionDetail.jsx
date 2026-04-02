@@ -172,11 +172,6 @@ export default function SectionDetail() {
                                 <h3 className={`font-semibold leading-snug ${isCompleted ? "text-gray-600 line-through" : "text-[#6E1D40]"}`}>
                                   {module.title}
                                 </h3>
-                                {module.description && (
-                                  <p className="text-sm text-gray-500 mt-1 line-clamp-1">
-                                    {module.description}
-                                  </p>
-                                )}
                                 {module.expertId && (() => {
                                   const expert = experts.find(e => e.id === module.expertId);
                                   return expert ? (
@@ -186,6 +181,11 @@ export default function SectionDetail() {
                                     </div>
                                   ) : null;
                                 })()}
+                                {module.description && (
+                                  <p className="text-sm text-gray-500 mt-1 line-clamp-1">
+                                    {module.description}
+                                  </p>
+                                )}
                               </div>
 
                               {/* Status Icon */}
