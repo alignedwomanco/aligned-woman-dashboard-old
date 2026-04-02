@@ -227,38 +227,38 @@ export default function ModulePlayer() {
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
       {/* Header */}
       <div className="bg-white border-b sticky top-20 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link to={createPageUrl("Classroom")}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+              <Link to={createPageUrl("Classroom")} className="flex-shrink-0">
                 <Button variant="ghost" size="icon">
                   <ArrowLeft className="w-5 h-5" />
                 </Button>
               </Link>
-              <div>
+              <div className="min-w-0">
                 {course && (
-                  <Badge className="bg-[#F5E8EE] text-[#6E1D40] border-[#DEBECC] border mb-1">
-                    <Eye className="w-3 h-3 mr-1" />
-                    {course.title}
+                  <Badge className="bg-[#F5E8EE] text-[#6E1D40] border-[#DEBECC] border mb-1 max-w-full">
+                    <Eye className="w-3 h-3 mr-1 flex-shrink-0" />
+                    <span className="truncate">{course.title}</span>
                   </Badge>
                 )}
-                <h1 className="text-xl font-bold text-[#4A1228]">{module?.title}</h1>
+                <h1 className="text-base sm:text-xl font-bold text-[#4A1228] break-words">{module?.title}</h1>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-500 flex items-center gap-1">
+            <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+              <span className="text-sm text-gray-500 items-center gap-1 hidden sm:flex">
                 <Clock className="w-4 h-4" />
                 {module.durationMinutes} min
               </span>
-              <Progress value={overallProgress} className="w-32" />
+              <Progress value={overallProgress} className="w-20 sm:w-32" />
               <span className="text-sm font-medium text-[#6B1B3D]">{overallProgress}%</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="grid lg:grid-cols-[320px_1fr] gap-6">
+      <div className="max-w-7xl mx-auto p-4 sm:p-6 overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 overflow-hidden">
           {/* Left Sidebar - Pages List & Resources */}
           <div className="space-y-6">
             <Card>
@@ -293,7 +293,7 @@ export default function ModulePlayer() {
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="text-sm font-medium text-[#4A1228] truncate">
+                              <div className="text-sm font-medium text-[#4A1228] break-words">
                                 {page.title}
                               </div>
                               {page.videoDuration && (
@@ -364,10 +364,16 @@ export default function ModulePlayer() {
                       
                       // YouTube
                       if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                        const videoId = url.includes('youtu.be') 
-                          ? url.split('youtu.be/')[1]?.split('?')[0]
-                          : new URLSearchParams(url.split('?')[1]).get('v');
-                        embedUrl = `https://www.youtube.com/embed/${videoId}?rel=0`;
+                        let videoId = null;
+                        if (url.includes('youtu.be')) {
+                          videoId = url.split('youtu.be/')[1]?.split(/[?&#]/)[0];
+                        } else {
+                          const urlObj = new URL(url);
+                          videoId = urlObj.searchParams.get('v');
+                        }
+                        if (videoId) {
+                          embedUrl = `https://www.youtube.com/embed/${videoId}?rel=0`;
+                        }
                       }
                       // Wistia
                       else if (url.includes('wistia.com')) {
