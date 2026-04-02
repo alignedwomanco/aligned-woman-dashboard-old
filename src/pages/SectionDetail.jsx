@@ -166,67 +166,65 @@ export default function SectionDetail() {
                   transition={{ delay: idx * 0.05 }}
                 >
                   <Link to={createPageUrl("ModulePlayer") + `?moduleId=${module.id}&courseId=${courseId}`}>
-                    <div className="relative">
-                      {/* Number badge - overlapping left edge */}
-                      <div className="absolute top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-xl bg-[#6E1D40] text-white flex items-center justify-center font-bold text-lg shadow-md" style={{ left: '18px' }}>
-                        {idx + 1}
-                      </div>
-
-                      {/* Card */}
-                      <div className={`bg-white rounded-2xl border overflow-hidden hover:shadow-lg transition-all cursor-pointer ${isCompleted ? "border-green-200" : "border-[#DEBECC]/60"}`}>
-                        <div className="pl-16 pr-5 pt-5 pb-2 flex items-start gap-3">
-                          {/* Content */}
-                          <div className="flex-1 min-w-0">
-                            <h3 className={`font-bold text-base leading-snug ${isCompleted ? "text-gray-500 line-through" : "text-[#6E1D40]"}`}>
-                              {module.title}
-                            </h3>
-                            {expert && (
-                              <div className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-[#F5E8EE] rounded-md border border-[#DEBECC]">
-                                <User className="w-3 h-3 text-[#6E1D40]" />
-                                <span className="text-xs font-medium text-[#6E1D40]">{expert.name}</span>
-                              </div>
-                            )}
-                            {module.description && (
-                              <p className="text-sm text-gray-500 mt-2 line-clamp-1">
-                                {module.description}
-                              </p>
-                            )}
-                          </div>
-
-                          {/* Play / Status Icon */}
-                          <div className="flex-shrink-0">
-                            {isCompleted ? (
-                              <CheckCircle className="w-8 h-8 text-green-500" />
-                            ) : (
-                              <Play className="w-8 h-8 text-[#6E1D40]" />
-                            )}
-                          </div>
+                    <div className={`bg-white rounded-2xl border overflow-hidden hover:shadow-lg transition-all cursor-pointer ${isCompleted ? "border-green-200" : "border-[#DEBECC]/60"}`}>
+                      {/* Top row: number + content + play icon */}
+                      <div className="flex items-start gap-4 p-4 pb-2">
+                        {/* Number badge */}
+                        <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-[#6E1D40] text-white flex items-center justify-center font-bold text-lg shadow-md mt-0.5">
+                          {idx + 1}
                         </div>
 
-                        {/* Progress Bar */}
-                        <div className="pl-16 pr-5 pb-4 pt-3">
-                          <div className="flex items-center gap-3">
-                            <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
-                              <div
-                                className="h-full rounded-full transition-all duration-500"
-                                style={{
-                                  width: `${Math.max(prog, 2)}%`,
-                                  background: isCompleted
-                                    ? '#22c55e'
-                                    : `repeating-linear-gradient(
-                                        -45deg,
-                                        #6E1D40,
-                                        #6E1D40 5px,
-                                        #943A59 5px,
-                                        #943A59 10px
-                                      )`,
-                                }}
-                              />
+                        {/* Content */}
+                        <div className="flex-1 min-w-0">
+                          <h3 className={`font-bold text-base leading-snug ${isCompleted ? "text-gray-500 line-through" : "text-[#6E1D40]"}`}>
+                            {module.title}
+                          </h3>
+                          {expert && (
+                            <div className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-[#F5E8EE] rounded-md border border-[#DEBECC]">
+                              <User className="w-3 h-3 text-[#6E1D40]" />
+                              <span className="text-xs font-medium text-[#6E1D40]">{expert.name}</span>
                             </div>
-                            <span className={`text-base font-bold flex-shrink-0 ${isCompleted ? "text-green-600" : "text-[#6E1D40]"}`}>
-                              {prog}%
-                            </span>
+                          )}
+                          {module.description && (
+                            <p className="text-sm text-gray-500 mt-2 line-clamp-1">
+                              {module.description}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Play / Status Icon */}
+                        <div className="flex-shrink-0 mt-1">
+                          {isCompleted ? (
+                            <CheckCircle className="w-8 h-8 text-green-500" />
+                          ) : (
+                            <Play className="w-8 h-8 text-[#6E1D40]" />
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Progress Bar */}
+                      <div className="px-4 pb-4 pt-2">
+                        <div className="flex items-center gap-3">
+                          <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+                            <div
+                              className="h-full rounded-full transition-all duration-500"
+                              style={{
+                                width: `${Math.max(prog, 2)}%`,
+                                background: isCompleted
+                                  ? '#22c55e'
+                                  : `repeating-linear-gradient(
+                                      -45deg,
+                                      #6E1D40,
+                                      #6E1D40 5px,
+                                      #943A59 5px,
+                                      #943A59 10px
+                                    )`,
+                              }}
+                            />
                           </div>
+                          <span className={`text-base font-bold flex-shrink-0 ${isCompleted ? "text-green-600" : "text-[#6E1D40]"}`}>
+                            {prog}%
+                          </span>
                         </div>
                       </div>
                     </div>
