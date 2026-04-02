@@ -293,15 +293,18 @@ export default function ModulePlayer() {
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="text-sm font-medium text-[#4A1228] break-words">
-                                {page.title}
-                              </div>
-                              {page.videoDuration && (
-                                <div className="text-xs text-gray-500 mt-1">
-                                  <Clock className="w-3 h-3 inline mr-1" />
-                                  {Math.round(page.videoDuration / 60)} min
+                              <div className="flex items-start justify-between gap-2">
+                                <div className="text-sm font-medium text-[#4A1228] break-words">
+                                  {page.title}
                                 </div>
-                              )}
+                                {(page.estimatedMinutes || page.videoDuration) && (
+                                  <span className="text-xs text-gray-400 whitespace-nowrap flex-shrink-0 mt-0.5">
+                                    {page.estimatedMinutes
+                                      ? `${page.estimatedMinutes} min`
+                                      : `${Math.round(page.videoDuration / 60)} min`}
+                                  </span>
+                                )}
+                              </div>
                             </div>
                           </div>
                         </button>
@@ -361,7 +364,7 @@ export default function ModulePlayer() {
                     (() => {
                       const url = selectedPage.videoUrl.trim();
                       
-                      // YouTube — use thumbnail + link (iframe embeds get Error 153 in sandboxed environments)
+                      // YouTube — embed directly
                       if (url.includes('youtube.com') || url.includes('youtu.be')) {
                         let videoId = null;
                         try {
@@ -376,27 +379,13 @@ export default function ModulePlayer() {
                         }
                         if (videoId) {
                           return (
-                            <a
-                              href={`https://www.youtube.com/watch?v=${videoId}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="absolute top-0 left-0 w-full h-full group"
-                            >
-                              <img
-                                src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
-                                alt="Video thumbnail"
-                                className="w-full h-full object-cover"
-                                onError={(e) => { e.target.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`; }}
-                              />
-                              <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/40 transition-colors">
-                                <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                                  <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                                </div>
-                              </div>
-                              <div className="absolute bottom-4 left-4 bg-black/60 text-white text-xs px-3 py-1.5 rounded-full">
-                                ▶ Watch on YouTube
-                              </div>
-                            </a>
+                            <iframe
+                              src={`https://www.youtube.com/embed/${videoId}?rel=0`}
+                              className="absolute top-0 left-0 w-full h-full"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                              allowFullScreen
+                              style={{ border: 0 }}
+                            />
                           );
                         }
                       }
@@ -413,7 +402,20 @@ export default function ModulePlayer() {
                         embedUrl = `https://fast.wistia.net/embed/iframe/${videoId}`;
                       }
                       
-                      // For Google Drive, Wistia, and other URLs — use iframe
+                      // Check if it's a direct video file (mp4, webm, mov, ogg, etc.)
+                      const isDirectVideo = /\.(mp4|webm|mov|ogg|m4v|avi|mkv)(\?|$)/i.test(embedUrl) || embedUrl.includes('supabase.co/storage');
+                      if (isDirectVideo) {
+                        return (
+                          <video
+                            src={embedUrl}
+                            controls
+                            className="absolute top-0 left-0 w-full h-full"
+                            style={{ backgroundColor: '#000' }}
+                          />
+                        );
+                      }
+
+                      // For Google Drive, Wistia, Vimeo, and other embed URLs — use iframe
                       return (
                         <iframe
                           src={embedUrl}
