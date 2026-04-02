@@ -228,8 +228,13 @@ export default function CourseDetail() {
                              )}
                              <div className="absolute bottom-0 left-0 right-0 h-2 bg-white/20">
                                <div
-                                 className="h-full bg-green-400 transition-all duration-300"
-                                 style={{ width: `${sectionProg}%` }}
+                                 className="h-full transition-all duration-300"
+                                 style={{
+                                   width: `${sectionProg}%`,
+                                   background: sectionProg >= 100
+                                     ? '#22c55e'
+                                     : `repeating-linear-gradient(-45deg, #6E1D40, #6E1D40 4px, #943A59 4px, #943A59 8px)`,
+                                 }}
                                />
                              </div>
                            </div>
@@ -253,8 +258,13 @@ export default function CourseDetail() {
                                </div>
                                <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
                                  <div
-                                   className="h-full bg-green-400 transition-all duration-300"
-                                   style={{ width: `${sectionProg}%` }}
+                                   className="h-full rounded-full transition-all duration-300"
+                                   style={{
+                                     width: `${sectionProg}%`,
+                                     background: sectionProg >= 100
+                                       ? '#22c55e'
+                                       : `repeating-linear-gradient(-45deg, #6E1D40, #6E1D40 4px, #943A59 4px, #943A59 8px)`,
+                                   }}
                                  />
                                </div>
                              </div>
