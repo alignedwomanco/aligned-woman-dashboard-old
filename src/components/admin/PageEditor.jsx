@@ -132,29 +132,42 @@ export default function PageEditor({ open, onOpenChange, page, moduleId }) {
             <div className="mt-1">
               {formData.videoUrl && (() => {
                 const url = formData.videoUrl.trim();
-                const isExternal = url.includes('youtube.com') || url.includes('youtu.be') || url.includes('drive.google.com') || url.includes('wistia.com');
-                if (isExternal) {
-                  let previewUrl = url;
-                  if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                    let videoId = null;
-                    try {
-                      if (url.includes('youtu.be')) videoId = url.split('youtu.be/')[1]?.split(/[?&#]/)[0];
-                      else videoId = new URL(url).searchParams.get('v');
-                    } catch (e) {
-                      const match = url.match(/[?&]v=([^&#]+)/);
-                      videoId = match ? match[1] : null;
-                    }
-                    if (videoId) previewUrl = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0`;
-                  } else if (url.includes('drive.google.com')) {
-                    const fileId = url.match(/\/d\/([a-zA-Z0-9_-]+)/)?.[1] || url.match(/[-\w]{25,}/)?.[0];
-                    if (fileId) previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+                // YouTube — show thumbnail preview
+                if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                  let videoId = null;
+                  try {
+                    if (url.includes('youtu.be')) videoId = url.split('youtu.be/')[1]?.split(/[?&#]/)[0];
+                    else videoId = new URL(url).searchParams.get('v');
+                  } catch (e) {
+                    const match = url.match(/[?&]v=([^&#]+)/);
+                    videoId = match ? match[1] : null;
                   }
-                  return (
-                    <div className="relative w-full mb-2 rounded-lg overflow-hidden bg-gray-900" style={{ paddingTop: '56.25%' }}>
-                      <iframe src={previewUrl} className="absolute top-0 left-0 w-full h-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen style={{ border: 0 }} />
-                    </div>
-                  );
+                  if (videoId) {
+                    return (
+                      <div className="relative w-full mb-2 rounded-lg overflow-hidden bg-gray-900" style={{ paddingTop: '56.25%' }}>
+                        <img src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`} alt="YouTube thumbnail" className="absolute top-0 left-0 w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                          <div className="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center">
+                            <svg className="w-7 h-7 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                          </div>
+                        </div>
+                        <div className="absolute bottom-3 left-3 bg-black/60 text-white text-xs px-2 py-1 rounded">YouTube Video</div>
+                      </div>
+                    );
+                  }
                 }
+                // Google Drive — iframe preview
+                if (url.includes('drive.google.com')) {
+                  const fileId = url.match(/\/d\/([a-zA-Z0-9_-]+)/)?.[1] || url.match(/[-\w]{25,}/)?.[0];
+                  if (fileId) {
+                    return (
+                      <div className="relative w-full mb-2 rounded-lg overflow-hidden bg-gray-900" style={{ paddingTop: '56.25%' }}>
+                        <iframe src={`https://drive.google.com/file/d/${fileId}/preview`} className="absolute top-0 left-0 w-full h-full" allow="autoplay; fullscreen" allowFullScreen style={{ border: 0 }} />
+                      </div>
+                    );
+                  }
+                }
+                // Direct video file
                 return <video src={url} controls className="w-full h-64 rounded-lg mb-2" />;
               })()}
               <div className="flex gap-2">

@@ -360,38 +360,60 @@ export default function ModulePlayer() {
                   {selectedPage.videoUrl ? (
                     (() => {
                       const url = selectedPage.videoUrl.trim();
-                      let embedUrl = url;
                       
-                      // YouTube
+                      // YouTube — use thumbnail + link (iframe embeds get Error 153 in sandboxed environments)
                       if (url.includes('youtube.com') || url.includes('youtu.be')) {
                         let videoId = null;
                         try {
                           if (url.includes('youtu.be')) {
                             videoId = url.split('youtu.be/')[1]?.split(/[?&#]/)[0];
                           } else {
-                            const urlObj = new URL(url);
-                            videoId = urlObj.searchParams.get('v');
+                            videoId = new URL(url).searchParams.get('v');
                           }
                         } catch (e) {
-                          // fallback regex
                           const match = url.match(/[?&]v=([^&#]+)/);
                           videoId = match ? match[1] : null;
                         }
                         if (videoId) {
-                          embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0`;
+                          return (
+                            <a
+                              href={`https://www.youtube.com/watch?v=${videoId}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="absolute top-0 left-0 w-full h-full group"
+                            >
+                              <img
+                                src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+                                alt="Video thumbnail"
+                                className="w-full h-full object-cover"
+                                onError={(e) => { e.target.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`; }}
+                              />
+                              <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/40 transition-colors">
+                                <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                  <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </div>
+                              </div>
+                              <div className="absolute bottom-4 left-4 bg-black/60 text-white text-xs px-3 py-1.5 rounded-full">
+                                ▶ Watch on YouTube
+                              </div>
+                            </a>
+                          );
                         }
+                      }
+                      
+                      // Google Drive
+                      let embedUrl = url;
+                      if (url.includes('drive.google.com')) {
+                        const fileId = url.match(/\/d\/([a-zA-Z0-9_-]+)/)?.[1] || url.match(/[-\w]{25,}/)?.[0];
+                        if (fileId) embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
                       }
                       // Wistia
                       else if (url.includes('wistia.com')) {
                         const videoId = url.match(/medias\/([a-zA-Z0-9]+)/)?.[1] || url.split('/').pop();
                         embedUrl = `https://fast.wistia.net/embed/iframe/${videoId}`;
                       }
-                      // Google Drive
-                      else if (url.includes('drive.google.com')) {
-                        const fileId = url.match(/\/d\/([a-zA-Z0-9_-]+)/)?.[1] || url.match(/[-\w]{25,}/)?.[0];
-                        embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
-                      }
                       
+                      // For Google Drive, Wistia, and other URLs — use iframe
                       return (
                         <iframe
                           src={embedUrl}
