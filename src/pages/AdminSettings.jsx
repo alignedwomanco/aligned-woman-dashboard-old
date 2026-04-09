@@ -259,86 +259,41 @@ export default function AdminSettings() {
   const regularUsers = allUsers.filter(u => ["user", "member"].includes(u.role));
 
   return (
-    <div className="min-h-screen p-12">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-12">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-16">
-          <h1 className="text-3xl font-bold mb-2" style={{ color: '#6E1D40' }}>Admin Settings</h1>
-          <p className="text-gray-600">Manage system settings and configurations</p>
+        <div className="mb-6 sm:mb-10 lg:mb-16">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: '#6E1D40' }}>Admin Settings</h1>
+          <p className="text-gray-600 text-sm sm:text-base">Manage system settings and configurations</p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-white border border-gray-200">
-            <TabsTrigger 
-              value="members" 
-              className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "members" ? '#6E1D40' : '' }}
-            >
-              Members
-            </TabsTrigger>
-            <TabsTrigger 
-              value="users" 
-              className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "users" ? '#6E1D40' : '' }}
-            >
-              Users
-            </TabsTrigger>
-            <TabsTrigger 
-              value="courses" 
-              className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "courses" ? '#6E1D40' : '' }}
-            >
-              Course Builder
-            </TabsTrigger>
-            <TabsTrigger 
-              value="experts" 
-              className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "experts" ? '#6E1D40' : '' }}
-            >
-              Experts
-            </TabsTrigger>
-            <TabsTrigger 
-              value="payments" 
-              className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "payments" ? '#6E1D40' : '' }}
-            >
-              Payment Settings
-            </TabsTrigger>
-            <TabsTrigger 
-              value="integrations" 
-              className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "integrations" ? '#6E1D40' : '' }}
-            >
-              Integrations
-            </TabsTrigger>
-            <TabsTrigger 
-              value="analytics" 
-              className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "analytics" ? '#6E1D40' : '' }}
-            >
-              Analytics
-            </TabsTrigger>
-            <TabsTrigger 
-              value="ai-chat" 
-              className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "ai-chat" ? '#6E1D40' : '' }}
-            >
-              AI Chat Widget
-            </TabsTrigger>
-            <TabsTrigger 
-              value="support" 
-              className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "support" ? '#6E1D40' : '' }}
-            >
-              Support Room
-            </TabsTrigger>
-            <TabsTrigger 
-              value="logos" 
-              className="data-[state=active]:text-white hover:bg-gray-100"
-              style={{ backgroundColor: activeTab === "logos" ? '#6E1D40' : '' }}
-            >
-              Logos
-            </TabsTrigger>
-          </TabsList>
+          <div className="flex flex-wrap gap-2 p-3 bg-white rounded-xl border border-gray-200 shadow-sm">
+            {[
+              { value: "members", label: "Members" },
+              { value: "users", label: "Users" },
+              { value: "courses", label: "Courses" },
+              { value: "experts", label: "Experts" },
+              { value: "payments", label: "Payments" },
+              { value: "integrations", label: "Integrations" },
+              { value: "analytics", label: "Analytics" },
+              { value: "ai-chat", label: "AI Chat" },
+              { value: "support", label: "Support" },
+              { value: "logos", label: "Logos" },
+            ].map((tab) => (
+              <button
+                key={tab.value}
+                onClick={() => setActiveTab(tab.value)}
+                className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
+                  activeTab === tab.value
+                    ? "text-white shadow-md"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                }`}
+                style={activeTab === tab.value ? { backgroundColor: '#6E1D40' } : {}}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
 
           {/* Members Tab */}
           <TabsContent value="members" className="space-y-6">
@@ -417,48 +372,53 @@ export default function AdminSettings() {
                     </Dialog>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="overflow-x-auto">
                   <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead>User</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Role / Title</TableHead>
-                        <TableHead>Change Role</TableHead>
+                        <TableHead className="hidden sm:table-cell">Email</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead className="hidden md:table-cell">Change Role</TableHead>
                         <TableHead>Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {adminUsers.map((user) => (
                         <TableRow key={user.id}>
-                          <TableCell className="flex items-center gap-3">
-                            <div className="relative group">
-                              <Avatar className="cursor-pointer">
-                                <AvatarImage src={user.profile_picture} />
-                                <AvatarFallback style={{ backgroundColor: '#6E1D40' }} className="text-white">
-                                 {user.full_name?.[0] || user.email?.[0]}
-                                </AvatarFallback>
-                              </Avatar>
-                              <label 
-                                htmlFor={`profile-pic-admin-${user.id}`}
-                                className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                              >
-                                <Camera className="w-4 h-4 text-white" />
-                              </label>
-                              <input
-                                id={`profile-pic-admin-${user.id}`}
-                                type="file"
-                                accept="image/*"
-                                className="hidden"
-                                onChange={(e) => handleProfilePictureForUser(e, user.id)}
-                              />
+                          <TableCell>
+                            <div className="flex items-center gap-2 sm:gap-3">
+                              <div className="relative group">
+                                <Avatar className="cursor-pointer w-8 h-8 sm:w-10 sm:h-10">
+                                  <AvatarImage src={user.profile_picture} />
+                                  <AvatarFallback style={{ backgroundColor: '#6E1D40' }} className="text-white text-xs sm:text-sm">
+                                   {user.full_name?.[0] || user.email?.[0]}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <label 
+                                  htmlFor={`profile-pic-admin-${user.id}`}
+                                  className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                                >
+                                  <Camera className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                                </label>
+                                <input
+                                  id={`profile-pic-admin-${user.id}`}
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={(e) => handleProfilePictureForUser(e, user.id)}
+                                />
+                              </div>
+                              <div className="min-w-0">
+                                <span className="font-medium text-sm block truncate">{user.full_name || "User"}</span>
+                                <span className="text-xs text-gray-500 sm:hidden block truncate">{user.email}</span>
+                              </div>
                             </div>
-                            <span className="font-medium">{user.full_name || "User"}</span>
                           </TableCell>
-                          <TableCell>{user.email}</TableCell>
+                          <TableCell className="hidden sm:table-cell text-sm">{user.email}</TableCell>
                           <TableCell>
                             <div className="space-y-1">
-                              <Badge className={getRoleBadgeColor(user.role)}>
+                              <Badge className={getRoleBadgeColor(user.role) + " text-xs"}>
                                 {user.role?.replace("_", " ")}
                               </Badge>
                               {user.custom_title && (
@@ -466,7 +426,7 @@ export default function AdminSettings() {
                               )}
                             </div>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden md:table-cell">
                             <Select
                               value={user.role}
                               onValueChange={(role) =>
@@ -474,7 +434,7 @@ export default function AdminSettings() {
                               }
                               disabled={user.id === currentUser.id}
                             >
-                              <SelectTrigger className="w-48">
+                              <SelectTrigger className="w-36 lg:w-48">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
@@ -495,12 +455,12 @@ export default function AdminSettings() {
                             </Select>
                           </TableCell>
                           <TableCell>
-                            <div className="flex gap-2">
+                            <div className="flex gap-1 sm:gap-2">
                               <Button
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => handleEditUser(user)}
-                                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 w-8 p-0"
                               >
                                 <Edit className="w-4 h-4" />
                               </Button>
@@ -509,7 +469,7 @@ export default function AdminSettings() {
                                 size="sm"
                                 onClick={() => deleteUserMutation.mutate(user.id)}
                                 disabled={user.id === currentUser.id}
-                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                className="text-red-600 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0"
                               >
                                 <Trash2 className="w-4 h-4" />
                               </Button>
@@ -525,20 +485,20 @@ export default function AdminSettings() {
               {/* Experts & Educators Quick Link */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
                     <Users className="w-5 h-5" />
                     Experts & Educators
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between p-4 bg-pink-50 rounded-lg border border-pink-200">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-pink-50 rounded-lg border border-pink-200">
                     <div>
-                      <p className="font-medium text-gray-900">Manage Expert & Educator Profiles</p>
-                      <p className="text-sm text-gray-600">View metrics, content, and manage expert/educator accounts</p>
+                      <p className="font-medium text-gray-900 text-sm sm:text-base">Manage Expert & Educator Profiles</p>
+                      <p className="text-xs sm:text-sm text-gray-600">View metrics, content, and manage expert/educator accounts</p>
                     </div>
                     <Button 
                       onClick={() => setActiveTab("experts")}
-                      className="text-white"
+                      className="text-white w-full sm:w-auto"
                       style={{ backgroundColor: '#6E1D40' }}
                     >
                       Go to Experts →
@@ -627,7 +587,7 @@ export default function AdminSettings() {
                         className="min-h-[100px]"
                       />
                     </div>
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div>
                         <Label>Years Experience</Label>
                         <Input
