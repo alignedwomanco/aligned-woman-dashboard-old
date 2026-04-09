@@ -424,7 +424,7 @@ export default function ModulePlayer() {
                       }
                       
                       // Check if it's a direct video file (mp4, webm, mov, ogg, etc.) or hosted upload
-                      const isDirectVideo = /\.(mp4|webm|mov|ogg|m4v|avi|mkv)(\?|$)/i.test(embedUrl) || embedUrl.includes('supabase.co/storage') || embedUrl.includes('base44.app/api/apps') || embedUrl.includes('docs.google.com/videos');
+                      const isDirectVideo = /\.(mp4|webm|mov|ogg|m4v|avi|mkv)(\?|$)/i.test(embedUrl) || embedUrl.includes('supabase.co/storage') || embedUrl.includes('base44.app/api/apps');
                       if (isDirectVideo) {
                         return (
                           <video
