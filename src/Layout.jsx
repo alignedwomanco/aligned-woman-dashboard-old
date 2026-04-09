@@ -573,34 +573,35 @@ export default function Layout({ children, currentPageName }) {
       </aside>
 
       {/* Main Content Area — deterministic margin class */}
-      <div className={`flex-1 transition-all duration-300 ${contentML}`}>
+      <div className={`flex-1 transition-all duration-300 ${contentML} overflow-x-hidden`}>
         {/* Top Header */}
         <header className="sticky top-0 z-40 border-b border-gray-200" style={{ backgroundColor: '#933a59' }}>
-          <div className="flex items-center justify-between gap-4 px-4 sm:px-8 py-4">
-            {/* Greeting */}
-            <div className="flex-1">
-              {/* Mobile Menu Button */}
+          <div className="flex items-center justify-between gap-2 sm:gap-4 px-3 sm:px-8 py-3 sm:py-4">
+            {/* Left: Hamburger + Greeting */}
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
               <button
                 onClick={() => setShowMobileMenu(true)}
-                className="lg:hidden p-2 hover:bg-white/10 rounded-lg transition-colors mb-2"
+                className="lg:hidden p-1.5 hover:bg-white/10 rounded-lg transition-colors flex-shrink-0"
               >
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
-              <h1 className="text-xl font-bold text-white flex items-center gap-2">
-                {(() => {
-                  const hour = new Date().getHours();
-                  if (hour < 12) return "Good Morning";
-                  if (hour < 18) return "Good Afternoon";
-                  return "Good Evening";
-                })()}, {user?.full_name?.split(" ")[0] || "there"} 👋
-              </h1>
-              <p className="text-white/80 text-sm">Hope you feel centered today.</p>
+              <div className="min-w-0">
+                <h1 className="text-sm sm:text-xl font-bold text-white truncate">
+                  {(() => {
+                    const hour = new Date().getHours();
+                    if (hour < 12) return "Good Morning";
+                    if (hour < 18) return "Good Afternoon";
+                    return "Good Evening";
+                  })()}, {user?.full_name?.split(" ")[0] || "there"} 👋
+                </h1>
+                <p className="text-white/80 text-xs sm:text-sm hidden sm:block">Hope you feel centered today.</p>
+              </div>
             </div>
 
             {/* Right Actions */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
               <button onClick={() => setShowMessages(!showMessages)} className="relative p-2 hover:bg-white/10 rounded-lg transition-colors">
                 <MessageCircle className="w-5 h-5 text-white" />
               </button>
@@ -609,8 +610,8 @@ export default function Layout({ children, currentPageName }) {
               </button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="flex items-center gap-2 p-1 hover:bg-white/10 rounded-lg transition-colors">
-                    <div className="w-10 h-10 rounded-full border-2 border-white/30 overflow-hidden">
+                  <button className="flex items-center gap-1.5 sm:gap-2 p-1 hover:bg-white/10 rounded-lg transition-colors">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white/30 overflow-hidden flex-shrink-0">
                       {user?.profile_picture ? (
                         <img src={user.profile_picture} alt={user.full_name} className="w-full h-full object-cover" />
                       ) : (

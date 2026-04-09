@@ -259,19 +259,19 @@ export default function AdminSettings() {
   const regularUsers = allUsers.filter(u => ["user", "member"].includes(u.role));
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-12">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-6 sm:mb-10 lg:mb-16">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: '#6E1D40' }}>Admin Settings</h1>
-          <p className="text-gray-600 text-sm sm:text-base">Manage system settings and configurations</p>
+    <div className="min-h-screen p-3 sm:p-6 lg:p-12 overflow-x-hidden">
+      <div className="max-w-7xl mx-auto w-full">
+        <div className="mb-4 sm:mb-10 lg:mb-16">
+          <h1 className="text-xl sm:text-3xl font-bold mb-1" style={{ color: '#6E1D40' }}>Admin Settings</h1>
+          <p className="text-gray-600 text-xs sm:text-base">Manage system settings and configurations</p>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <div className="space-y-3">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
+          <div className="space-y-2 sm:space-y-3 overflow-x-auto scrollbar-hide -mx-3 px-3 sm:mx-0 sm:px-0">
             {/* People & Content */}
             <div>
-              <p className="text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">People & Content</p>
-              <div className="flex flex-wrap gap-1.5 sm:gap-2">
+              <p className="text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5 sm:mb-2 px-1">People & Content</p>
+              <div className="flex flex-nowrap sm:flex-wrap gap-1.5 sm:gap-2 pb-1">
                 {[
                   { value: "members", label: "Members", icon: "👥" },
                   { value: "users", label: "Users", icon: "🛡️" },
@@ -283,22 +283,22 @@ export default function AdminSettings() {
                   <button
                     key={tab.value}
                     onClick={() => setActiveTab(tab.value)}
-                    className={`px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all border ${
+                    className={`px-2.5 py-1.5 sm:px-4 sm:py-2.5 rounded-xl text-[11px] sm:text-sm font-medium transition-all border whitespace-nowrap flex-shrink-0 ${
                       activeTab === tab.value
                         ? "text-white shadow-lg border-transparent"
                         : "text-gray-600 bg-white hover:bg-gray-50 hover:text-gray-900 border-gray-200 shadow-sm"
                     }`}
                     style={activeTab === tab.value ? { backgroundColor: '#6E1D40' } : {}}
                   >
-                    <span className="mr-1.5">{tab.icon}</span>{tab.label}
+                    <span className="mr-1">{tab.icon}</span>{tab.label}
                   </button>
                 ))}
               </div>
             </div>
             {/* System & Config */}
             <div>
-              <p className="text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">System & Config</p>
-              <div className="flex flex-wrap gap-1.5 sm:gap-2">
+              <p className="text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5 sm:mb-2 px-1">System & Config</p>
+              <div className="flex flex-nowrap sm:flex-wrap gap-1.5 sm:gap-2 pb-1">
                 {[
                   { value: "integrations", label: "Integrations", icon: "🔗" },
                   { value: "ai-chat", label: "AI Chat", icon: "🤖" },
@@ -308,14 +308,14 @@ export default function AdminSettings() {
                   <button
                     key={tab.value}
                     onClick={() => setActiveTab(tab.value)}
-                    className={`px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all border ${
+                    className={`px-2.5 py-1.5 sm:px-4 sm:py-2.5 rounded-xl text-[11px] sm:text-sm font-medium transition-all border whitespace-nowrap flex-shrink-0 ${
                       activeTab === tab.value
                         ? "text-white shadow-lg border-transparent"
                         : "text-gray-600 bg-white hover:bg-gray-50 hover:text-gray-900 border-gray-200 shadow-sm"
                     }`}
                     style={activeTab === tab.value ? { backgroundColor: '#6E1D40' } : {}}
                   >
-                    <span className="mr-1.5">{tab.icon}</span>{tab.label}
+                    <span className="mr-1">{tab.icon}</span>{tab.label}
                   </button>
                 ))}
               </div>

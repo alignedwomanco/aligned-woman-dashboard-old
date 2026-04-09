@@ -93,23 +93,23 @@ export default function MembersManager({ allUsers }) {
   return (
     <div className="space-y-6">
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-3 sm:gap-4">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
         <Card>
-          <CardContent className="p-3 sm:p-4 text-center">
-            <p className="text-xl sm:text-2xl font-bold text-[#6E1D40]">{members.length}</p>
-            <p className="text-xs sm:text-sm text-gray-500">Total</p>
+          <CardContent className="p-2.5 sm:p-4 text-center">
+            <p className="text-lg sm:text-2xl font-bold text-[#6E1D40]">{members.length}</p>
+            <p className="text-[10px] sm:text-sm text-gray-500">Total Members</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-3 sm:p-4 text-center">
-            <p className="text-xl sm:text-2xl font-bold text-green-600">{paidCount}</p>
-            <p className="text-xs sm:text-sm text-gray-500">Paid</p>
+          <CardContent className="p-2.5 sm:p-4 text-center">
+            <p className="text-lg sm:text-2xl font-bold text-green-600">{paidCount}</p>
+            <p className="text-[10px] sm:text-sm text-gray-500">Paid Members</p>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-3 sm:p-4 text-center">
-            <p className="text-xl sm:text-2xl font-bold text-gray-500">{freeCount}</p>
-            <p className="text-xs sm:text-sm text-gray-500">Free</p>
+          <CardContent className="p-2.5 sm:p-4 text-center">
+            <p className="text-lg sm:text-2xl font-bold text-gray-500">{freeCount}</p>
+            <p className="text-[10px] sm:text-sm text-gray-500">Free</p>
           </CardContent>
         </Card>
       </div>
@@ -143,17 +143,18 @@ export default function MembersManager({ allUsers }) {
             Members ({filtered.length})
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-0 overflow-x-auto">
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="min-w-[180px]">Member</TableHead>
-                <TableHead className="hidden md:table-cell min-w-[180px]">Email</TableHead>
-                <TableHead className="min-w-[80px]">Status</TableHead>
-                <TableHead className="hidden lg:table-cell min-w-[180px]">Access Tags</TableHead>
-                <TableHead className="hidden sm:table-cell min-w-[60px]">Level</TableHead>
-                <TableHead className="hidden sm:table-cell min-w-[60px]">Points</TableHead>
-                <TableHead className="min-w-[100px]">Actions</TableHead>
+                <TableHead>Member</TableHead>
+                <TableHead className="hidden md:table-cell">Email</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="hidden lg:table-cell">Access Tags</TableHead>
+                <TableHead className="hidden sm:table-cell">Level</TableHead>
+                <TableHead className="hidden sm:table-cell">Points</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -231,6 +232,7 @@ export default function MembersManager({ allUsers }) {
               )}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
 
