@@ -13,7 +13,8 @@
         "expert",
         "moderator",
         "facilitator",
-        "support"
+        "support",
+        "member"
       ],
       "default": "user",
       "description": "User role with different permissions"
@@ -105,6 +106,15 @@
         "type": "string"
       },
       "description": "Course/product access tags e.g. ['blueprint_paid', 'course_xyz']"
+    },
+    "membership_type": {
+      "type": "string",
+      "enum": [
+        "free",
+        "paid"
+      ],
+      "default": "free",
+      "description": "Whether the member is a free or paid member"
     }
   },
   "required": []

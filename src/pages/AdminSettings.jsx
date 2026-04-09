@@ -44,6 +44,8 @@ import StripeIntegrationContent from "@/components/admin/StripeIntegrationConten
 import SupportRoomContent from "@/components/admin/SupportRoomContent";
 import EducatorAnalyticsContent from "@/components/admin/EducatorAnalyticsContent";
 import LogoManagement from "@/components/admin/LogoManagement";
+import MembersManager from "@/components/admin/MembersManager";
+import AccessTagManager from "@/components/admin/AccessTagManager";
 
 export default function AdminSettings() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -254,7 +256,7 @@ export default function AdminSettings() {
   const canAccessAdmin = ["owner", "admin", "master_admin", "moderator", "expert", "educator", "facilitator", "support"].includes(currentUser.role);
 
   const adminUsers = allUsers.filter(u => ["owner", "admin", "master_admin", "moderator", "educator", "facilitator", "expert", "support"].includes(u.role));
-  const regularUsers = allUsers.filter(u => u.role === "user");
+  const regularUsers = allUsers.filter(u => ["user", "member"].includes(u.role));
 
   return (
     <div className="min-h-screen p-12">
@@ -321,6 +323,13 @@ export default function AdminSettings() {
               style={{ backgroundColor: activeTab === "support" ? '#6E1D40' : '' }}
             >
               Support Room
+            </TabsTrigger>
+            <TabsTrigger 
+              value="access-tags" 
+              className="data-[state=active]:text-white hover:bg-gray-100"
+              style={{ backgroundColor: activeTab === "access-tags" ? '#6E1D40' : '' }}
+            >
+              Access Tags
             </TabsTrigger>
             <TabsTrigger 
               value="logos" 
@@ -532,116 +541,8 @@ export default function AdminSettings() {
                 </CardContent>
               </Card>
 
-              {/* Regular Users Section */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Users className="w-5 h-5" />
-                    Users
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>User</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Role / Title</TableHead>
-                        <TableHead>Change Role</TableHead>
-                        <TableHead>Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {regularUsers.map((user) => (
-                        <TableRow key={user.id}>
-                          <TableCell className="flex items-center gap-3">
-                            <div className="relative group">
-                              <Avatar className="cursor-pointer">
-                                <AvatarImage src={user.profile_picture} />
-                                <AvatarFallback style={{ backgroundColor: '#6E1D40' }} className="text-white">
-                                 {user.full_name?.[0] || user.email?.[0]}
-                                </AvatarFallback>
-                              </Avatar>
-                              <label 
-                                htmlFor={`profile-pic-regular-${user.id}`}
-                                className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                              >
-                                <Camera className="w-4 h-4 text-white" />
-                              </label>
-                              <input
-                                id={`profile-pic-regular-${user.id}`}
-                                type="file"
-                                accept="image/*"
-                                className="hidden"
-                                onChange={(e) => handleProfilePictureForUser(e, user.id)}
-                              />
-                            </div>
-                            <span className="font-medium">{user.full_name || "User"}</span>
-                          </TableCell>
-                          <TableCell>{user.email}</TableCell>
-                          <TableCell>
-                            <div className="space-y-1">
-                              <Badge className={getRoleBadgeColor(user.role)}>
-                                {user.role?.replace("_", " ")}
-                              </Badge>
-                              {user.custom_title && (
-                                <div className="text-xs text-gray-600">{user.custom_title}</div>
-                              )}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Select
-                              value={user.role}
-                              onValueChange={(role) =>
-                                updateUserRoleMutation.mutate({ userId: user.id, role })
-                              }
-                            >
-                              <SelectTrigger className="w-48">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="user">User</SelectItem>
-                                <SelectItem value="expert">Expert</SelectItem>
-                                <SelectItem value="educator">Educator</SelectItem>
-                                <SelectItem value="facilitator">Facilitator</SelectItem>
-                                <SelectItem value="support">Support</SelectItem>
-                                <SelectItem value="moderator">Moderator</SelectItem>
-                                <SelectItem value="admin">Admin</SelectItem>
-                                {(currentUser.role === "master_admin" || currentUser.role === "owner") && (
-                                  <SelectItem value="master_admin">Master Admin</SelectItem>
-                                )}
-                                {currentUser.role === "owner" && (
-                                  <SelectItem value="owner">Owner</SelectItem>
-                                )}
-                              </SelectContent>
-                            </Select>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-2">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleEditUser(user)}
-                                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                              >
-                                <Edit className="w-4 h-4" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => deleteUserMutation.mutate(user.id)}
-                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
+              {/* Members Section */}
+              <MembersManager allUsers={allUsers} />
 
               {/* Edit User Dialog */}
               <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
@@ -802,6 +703,11 @@ export default function AdminSettings() {
           {/* Support Room Tab */}
           <TabsContent value="support">
             <SupportRoomContent currentUser={currentUser} />
+          </TabsContent>
+
+          {/* Access Tags Tab */}
+          <TabsContent value="access-tags">
+            <AccessTagManager />
           </TabsContent>
 
           {/* Logos Tab */}

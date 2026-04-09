@@ -1,0 +1,35 @@
+{
+  "name": "AccessTag",
+  "type": "object",
+  "properties": {
+    "tag_key": {
+      "type": "string",
+      "description": "Machine-friendly key e.g. blueprint_paid, course_alive"
+    },
+    "label": {
+      "type": "string",
+      "description": "Human-friendly label e.g. Blueprint Course, ALIVE Method"
+    },
+    "description": {
+      "type": "string"
+    },
+    "tag_type": {
+      "type": "string",
+      "enum": [
+        "course",
+        "product",
+        "feature",
+        "other"
+      ],
+      "default": "course"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "tag_key",
+    "label"
+  ]
+}
