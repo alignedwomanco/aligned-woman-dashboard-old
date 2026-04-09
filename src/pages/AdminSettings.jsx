@@ -267,32 +267,59 @@ export default function AdminSettings() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <div className="flex flex-wrap gap-2 p-3 bg-white rounded-xl border border-gray-200 shadow-sm">
-            {[
-              { value: "members", label: "Members" },
-              { value: "users", label: "Users" },
-              { value: "courses", label: "Courses" },
-              { value: "experts", label: "Experts" },
-              { value: "payments", label: "Payments" },
-              { value: "integrations", label: "Integrations" },
-              { value: "analytics", label: "Analytics" },
-              { value: "ai-chat", label: "AI Chat" },
-              { value: "support", label: "Support" },
-              { value: "logos", label: "Logos" },
-            ].map((tab) => (
-              <button
-                key={tab.value}
-                onClick={() => setActiveTab(tab.value)}
-                className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
-                  activeTab === tab.value
-                    ? "text-white shadow-md"
-                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                }`}
-                style={activeTab === tab.value ? { backgroundColor: '#6E1D40' } : {}}
-              >
-                {tab.label}
-              </button>
-            ))}
+          <div className="space-y-3">
+            {/* People & Content */}
+            <div>
+              <p className="text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">People & Content</p>
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                {[
+                  { value: "members", label: "Members", icon: "👥" },
+                  { value: "users", label: "Users", icon: "🛡️" },
+                  { value: "courses", label: "Courses", icon: "📚" },
+                  { value: "experts", label: "Experts", icon: "⭐" },
+                  { value: "payments", label: "Payments", icon: "💳" },
+                  { value: "analytics", label: "Analytics", icon: "📊" },
+                ].map((tab) => (
+                  <button
+                    key={tab.value}
+                    onClick={() => setActiveTab(tab.value)}
+                    className={`px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all border ${
+                      activeTab === tab.value
+                        ? "text-white shadow-lg border-transparent"
+                        : "text-gray-600 bg-white hover:bg-gray-50 hover:text-gray-900 border-gray-200 shadow-sm"
+                    }`}
+                    style={activeTab === tab.value ? { backgroundColor: '#6E1D40' } : {}}
+                  >
+                    <span className="mr-1.5">{tab.icon}</span>{tab.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {/* System & Config */}
+            <div>
+              <p className="text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">System & Config</p>
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                {[
+                  { value: "integrations", label: "Integrations", icon: "🔗" },
+                  { value: "ai-chat", label: "AI Chat", icon: "🤖" },
+                  { value: "support", label: "Support", icon: "🎧" },
+                  { value: "logos", label: "Logos", icon: "🎨" },
+                ].map((tab) => (
+                  <button
+                    key={tab.value}
+                    onClick={() => setActiveTab(tab.value)}
+                    className={`px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all border ${
+                      activeTab === tab.value
+                        ? "text-white shadow-lg border-transparent"
+                        : "text-gray-600 bg-white hover:bg-gray-50 hover:text-gray-900 border-gray-200 shadow-sm"
+                    }`}
+                    style={activeTab === tab.value ? { backgroundColor: '#6E1D40' } : {}}
+                  >
+                    <span className="mr-1.5">{tab.icon}</span>{tab.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Members Tab */}
@@ -302,332 +329,265 @@ export default function AdminSettings() {
           </TabsContent>
 
           {/* User Management Tab */}
-            <TabsContent value="users" className="space-y-6">
-              {/* Administrators Section */}
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="flex items-center gap-2">
-                      <Shield className="w-5 h-5" />
-                      Administrators & Team
-                    </CardTitle>
-                    <Dialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
-                      <DialogTrigger asChild>
-                        <Button 
-                          className="text-white"
-                          style={{ backgroundColor: '#6E1D40' }}
-                          onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
-                          onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                        >
-                          <UserPlus className="w-4 h-4 mr-2" />
-                          Invite Admin
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Invite Administrator or Team Member</DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-4">
-                          <div>
-                            <Label>Email Address</Label>
-                            <Input
-                              type="email"
-                              value={inviteEmail}
-                              onChange={(e) => setInviteEmail(e.target.value)}
-                              placeholder="email@example.com"
-                            />
-                          </div>
-                          <div>
-                            <Label>Role</Label>
-                            <Select value={inviteRole} onValueChange={setInviteRole}>
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="expert">Expert</SelectItem>
-                                <SelectItem value="educator">Educator</SelectItem>
-                                <SelectItem value="facilitator">Facilitator</SelectItem>
-                                <SelectItem value="support">Support</SelectItem>
-                                <SelectItem value="moderator">Moderator</SelectItem>
-                                <SelectItem value="admin">Admin</SelectItem>
-                                {(currentUser.role === "master_admin" || currentUser.role === "owner") && (
-                                  <SelectItem value="master_admin">Master Admin</SelectItem>
-                                )}
-                                {currentUser.role === "owner" && (
-                                  <SelectItem value="owner">Owner</SelectItem>
-                                )}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <Button
-                            onClick={() => sendInviteMutation.mutate({ email: inviteEmail, role: inviteRole })}
-                            disabled={!inviteEmail || sendInviteMutation.isPending}
-                            className="w-full text-white"
-                            style={{ backgroundColor: '#6E1D40' }}
-                          >
-                            {sendInviteMutation.isPending ? "Sending..." : "Send Invitation"}
-                          </Button>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                </CardHeader>
-                <CardContent className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>User</TableHead>
-                        <TableHead className="hidden sm:table-cell">Email</TableHead>
-                        <TableHead>Role</TableHead>
-                        <TableHead className="hidden md:table-cell">Change Role</TableHead>
-                        <TableHead>Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {adminUsers.map((user) => (
-                        <TableRow key={user.id}>
-                          <TableCell>
-                            <div className="flex items-center gap-2 sm:gap-3">
-                              <div className="relative group">
-                                <Avatar className="cursor-pointer w-8 h-8 sm:w-10 sm:h-10">
-                                  <AvatarImage src={user.profile_picture} />
-                                  <AvatarFallback style={{ backgroundColor: '#6E1D40' }} className="text-white text-xs sm:text-sm">
-                                   {user.full_name?.[0] || user.email?.[0]}
-                                  </AvatarFallback>
-                                </Avatar>
-                                <label 
-                                  htmlFor={`profile-pic-admin-${user.id}`}
-                                  className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                                >
-                                  <Camera className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-                                </label>
-                                <input
-                                  id={`profile-pic-admin-${user.id}`}
-                                  type="file"
-                                  accept="image/*"
-                                  className="hidden"
-                                  onChange={(e) => handleProfilePictureForUser(e, user.id)}
-                                />
-                              </div>
-                              <div className="min-w-0">
-                                <span className="font-medium text-sm block truncate">{user.full_name || "User"}</span>
-                                <span className="text-xs text-gray-500 sm:hidden block truncate">{user.email}</span>
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell text-sm">{user.email}</TableCell>
-                          <TableCell>
-                            <div className="space-y-1">
-                              <Badge className={getRoleBadgeColor(user.role) + " text-xs"}>
-                                {user.role?.replace("_", " ")}
-                              </Badge>
-                              {user.custom_title && (
-                                <div className="text-xs text-gray-600">{user.custom_title}</div>
-                              )}
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            <Select
-                              value={user.role}
-                              onValueChange={(role) =>
-                                updateUserRoleMutation.mutate({ userId: user.id, role })
-                              }
-                              disabled={user.id === currentUser.id}
-                            >
-                              <SelectTrigger className="w-36 lg:w-48">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="user">User</SelectItem>
-                                <SelectItem value="expert">Expert</SelectItem>
-                                <SelectItem value="educator">Educator</SelectItem>
-                                <SelectItem value="facilitator">Facilitator</SelectItem>
-                                <SelectItem value="support">Support</SelectItem>
-                                <SelectItem value="moderator">Moderator</SelectItem>
-                                <SelectItem value="admin">Admin</SelectItem>
-                                {(currentUser.role === "master_admin" || currentUser.role === "owner") && (
-                                  <SelectItem value="master_admin">Master Admin</SelectItem>
-                                )}
-                                {currentUser.role === "owner" && (
-                                  <SelectItem value="owner">Owner</SelectItem>
-                                )}
-                              </SelectContent>
-                            </Select>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-1 sm:gap-2">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleEditUser(user)}
-                                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 w-8 p-0"
-                              >
-                                <Edit className="w-4 h-4" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => deleteUserMutation.mutate(user.id)}
-                                disabled={user.id === currentUser.id}
-                                className="text-red-600 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
-
-              {/* Experts & Educators Quick Link */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-                    <Users className="w-5 h-5" />
-                    Experts & Educators
+          <TabsContent value="users" className="space-y-6">
+            {/* Administrators Section */}
+            <Card>
+              <CardHeader>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <CardTitle className="flex items-center gap-2">
+                    <Shield className="w-5 h-5" />
+                    Administrators & Team
                   </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-pink-50 rounded-lg border border-pink-200">
-                    <div>
-                      <p className="font-medium text-gray-900 text-sm sm:text-base">Manage Expert & Educator Profiles</p>
-                      <p className="text-xs sm:text-sm text-gray-600">View metrics, content, and manage expert/educator accounts</p>
-                    </div>
-                    <Button 
-                      onClick={() => setActiveTab("experts")}
-                      className="text-white w-full sm:w-auto"
-                      style={{ backgroundColor: '#6E1D40' }}
-                    >
-                      Go to Experts →
-                    </Button>
+                  <Dialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button
+                        className="text-white w-full sm:w-auto"
+                        style={{ backgroundColor: '#6E1D40' }}
+                      >
+                        <UserPlus className="w-4 h-4 mr-2" />
+                        Invite Admin
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Invite Administrator or Team Member</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div>
+                          <Label>Email Address</Label>
+                          <Input
+                            type="email"
+                            value={inviteEmail}
+                            onChange={(e) => setInviteEmail(e.target.value)}
+                            placeholder="email@example.com"
+                          />
+                        </div>
+                        <div>
+                          <Label>Role</Label>
+                          <Select value={inviteRole} onValueChange={setInviteRole}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="member">Member</SelectItem>
+                              <SelectItem value="expert">Expert</SelectItem>
+                              <SelectItem value="educator">Educator</SelectItem>
+                              <SelectItem value="facilitator">Facilitator</SelectItem>
+                              <SelectItem value="support">Support</SelectItem>
+                              <SelectItem value="moderator">Moderator</SelectItem>
+                              <SelectItem value="admin">Admin</SelectItem>
+                              {(currentUser.role === "master_admin" || currentUser.role === "owner") && (
+                                <SelectItem value="master_admin">Master Admin</SelectItem>
+                              )}
+                              {currentUser.role === "owner" && (
+                                <SelectItem value="owner">Owner</SelectItem>
+                              )}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <Button
+                          onClick={() => sendInviteMutation.mutate({ email: inviteEmail, role: inviteRole })}
+                          disabled={!inviteEmail || sendInviteMutation.isPending}
+                          className="w-full text-white"
+                          style={{ backgroundColor: '#6E1D40' }}
+                        >
+                          {sendInviteMutation.isPending ? "Sending..." : "Send Invitation"}
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardHeader>
+              <CardContent className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>User</TableHead>
+                      <TableHead className="hidden sm:table-cell">Email</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead className="hidden md:table-cell">Change Role</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {adminUsers.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-2 sm:gap-3">
+                            <div className="relative group">
+                              <Avatar className="cursor-pointer w-8 h-8 sm:w-10 sm:h-10">
+                                <AvatarImage src={user.profile_picture} />
+                                <AvatarFallback style={{ backgroundColor: '#6E1D40' }} className="text-white text-xs sm:text-sm">
+                                  {user.full_name?.[0] || user.email?.[0]}
+                                </AvatarFallback>
+                              </Avatar>
+                              <label
+                                htmlFor={`profile-pic-admin-${user.id}`}
+                                className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                              >
+                                <Camera className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                              </label>
+                              <input
+                                id={`profile-pic-admin-${user.id}`}
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => handleProfilePictureForUser(e, user.id)}
+                              />
+                            </div>
+                            <div className="min-w-0">
+                              <span className="font-medium text-sm block truncate">{user.full_name || "User"}</span>
+                              <span className="text-xs text-gray-500 sm:hidden block truncate">{user.email}</span>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell text-sm">{user.email}</TableCell>
+                        <TableCell>
+                          <div className="space-y-1">
+                            <Badge className={getRoleBadgeColor(user.role) + " text-xs"}>
+                              {user.role?.replace("_", " ")}
+                            </Badge>
+                            {user.custom_title && (
+                              <div className="text-xs text-gray-600">{user.custom_title}</div>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          <Select
+                            value={user.role}
+                            onValueChange={(role) =>
+                              updateUserRoleMutation.mutate({ userId: user.id, role })
+                            }
+                            disabled={user.id === currentUser.id}
+                          >
+                            <SelectTrigger className="w-36 lg:w-48">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="user">User</SelectItem>
+                              <SelectItem value="member">Member</SelectItem>
+                              <SelectItem value="expert">Expert</SelectItem>
+                              <SelectItem value="educator">Educator</SelectItem>
+                              <SelectItem value="facilitator">Facilitator</SelectItem>
+                              <SelectItem value="support">Support</SelectItem>
+                              <SelectItem value="moderator">Moderator</SelectItem>
+                              <SelectItem value="admin">Admin</SelectItem>
+                              {(currentUser.role === "master_admin" || currentUser.role === "owner") && (
+                                <SelectItem value="master_admin">Master Admin</SelectItem>
+                              )}
+                              {currentUser.role === "owner" && (
+                                <SelectItem value="owner">Owner</SelectItem>
+                              )}
+                            </SelectContent>
+                          </Select>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-1 sm:gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleEditUser(user)}
+                              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 w-8 p-0"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => deleteUserMutation.mutate(user.id)}
+                              disabled={user.id === currentUser.id}
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+
+            {/* Experts & Educators Quick Link */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <Users className="w-5 h-5" />
+                  Experts & Educators
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-pink-50 rounded-lg border border-pink-200">
+                  <div>
+                    <p className="font-medium text-gray-900 text-sm sm:text-base">Manage Expert & Educator Profiles</p>
+                    <p className="text-xs sm:text-sm text-gray-600">View metrics, content, and manage expert/educator accounts</p>
                   </div>
-                </CardContent>
-              </Card>
+                  <Button
+                    onClick={() => setActiveTab("experts")}
+                    className="text-white w-full sm:w-auto"
+                    style={{ backgroundColor: '#6E1D40' }}
+                  >
+                    Go to Experts →
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
 
-              {/* Edit User Dialog */}
-              <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-                <DialogContent className="max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle>Edit User: {editingUser?.full_name}</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div>
-                      <Label>Custom Title (e.g., "Lead Coach", "Senior Expert")</Label>
-                      <Input
-                        value={editData.custom_title || ""}
-                        onChange={(e) => setEditData({ ...editData, custom_title: e.target.value })}
-                        placeholder="Custom title or designation"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          id="is_expert"
-                          checked={editData.is_expert || false}
-                          onChange={(e) => setEditData({ ...editData, is_expert: e.target.checked })}
-                          className="w-4 h-4"
-                        />
-                        <Label htmlFor="is_expert" className="cursor-pointer">Mark as Expert</Label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          id="is_educator"
-                          checked={editData.is_educator || false}
-                          onChange={(e) => setEditData({ ...editData, is_educator: e.target.checked })}
-                          className="w-4 h-4"
-                        />
-                        <Label htmlFor="is_educator" className="cursor-pointer">Mark as Educator</Label>
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label>Profile Picture</Label>
-                      <div className="flex items-center gap-4">
-                        <Avatar className="w-16 h-16">
-                          <AvatarImage src={editData.profile_picture} />
-                          <AvatarFallback className="bg-[#6E1D40] text-white">
-                            {editingUser?.full_name?.[0] || "U"}
-                          </AvatarFallback>
-                        </Avatar>
-                        <label htmlFor="edit-profile-pic" className="cursor-pointer">
-                          <Button type="button" variant="outline" size="sm" asChild>
-                            <span>
-                              <Upload className="w-4 h-4 mr-2" />
-                              Change Picture
-                            </span>
-                          </Button>
-                        </label>
-                        <input
-                          id="edit-profile-pic"
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={async (e) => {
-                            const file = e.target.files[0];
-                            if (!file) return;
-                            const { file_url } = await base44.integrations.Core.UploadFile({ file });
-                            setEditData({ ...editData, profile_picture: file_url });
-                          }}
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label>Bio</Label>
-                      <Textarea
-                        value={editData.bio || ""}
-                        onChange={(e) => setEditData({ ...editData, bio: e.target.value })}
-                        placeholder="User bio"
-                        className="min-h-[100px]"
-                      />
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <div>
-                        <Label>Years Experience</Label>
-                        <Input
-                          value={editData.years_experience || ""}
-                          onChange={(e) => setEditData({ ...editData, years_experience: e.target.value })}
-                          placeholder="5+"
-                        />
-                      </div>
-                      <div>
-                        <Label>Clients Served</Label>
-                        <Input
-                          value={editData.clients_served || ""}
-                          onChange={(e) => setEditData({ ...editData, clients_served: e.target.value })}
-                          placeholder="100+"
-                        />
-                      </div>
-                      <div>
-                        <Label>Rating</Label>
-                        <Input
-                          value={editData.rating || ""}
-                          onChange={(e) => setEditData({ ...editData, rating: e.target.value })}
-                          placeholder="5.0"
-                        />
-                      </div>
-                    </div>
-                    <Button
-                      onClick={() => updateUserDataMutation.mutate({ 
-                        userId: editingUser.id, 
-                        data: editData 
-                      })}
-                      className="w-full text-white"
-                      style={{ backgroundColor: '#6E1D40' }}
-                    >
-                      <Save className="w-4 h-4 mr-2" />
-                      Save Changes
-                    </Button>
+            {/* Edit User Dialog */}
+            <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Edit User: {editingUser?.full_name}</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <Label>Custom Title (e.g., "Lead Coach", "Senior Expert")</Label>
+                    <Input
+                      value={editData.custom_title || ""}
+                      onChange={(e) => setEditData({ ...editData, custom_title: e.target.value })}
+                      placeholder="Custom title or designation"
+                    />
                   </div>
-                </DialogContent>
-              </Dialog>
-            </TabsContent>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center gap-2">
+                      <input type="checkbox" id="is_expert" checked={editData.is_expert || false} onChange={(e) => setEditData({ ...editData, is_expert: e.target.checked })} className="w-4 h-4" />
+                      <Label htmlFor="is_expert" className="cursor-pointer">Mark as Expert</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input type="checkbox" id="is_educator" checked={editData.is_educator || false} onChange={(e) => setEditData({ ...editData, is_educator: e.target.checked })} className="w-4 h-4" />
+                      <Label htmlFor="is_educator" className="cursor-pointer">Mark as Educator</Label>
+                    </div>
+                  </div>
+                  <div>
+                    <Label>Profile Picture</Label>
+                    <div className="flex items-center gap-4">
+                      <Avatar className="w-16 h-16">
+                        <AvatarImage src={editData.profile_picture} />
+                        <AvatarFallback className="bg-[#6E1D40] text-white">{editingUser?.full_name?.[0] || "U"}</AvatarFallback>
+                      </Avatar>
+                      <label htmlFor="edit-profile-pic" className="cursor-pointer">
+                        <Button type="button" variant="outline" size="sm" asChild><span><Upload className="w-4 h-4 mr-2" />Change Picture</span></Button>
+                      </label>
+                      <input id="edit-profile-pic" type="file" accept="image/*" className="hidden" onChange={async (e) => { const file = e.target.files[0]; if (!file) return; const { file_url } = await base44.integrations.Core.UploadFile({ file }); setEditData({ ...editData, profile_picture: file_url }); }} />
+                    </div>
+                  </div>
+                  <div>
+                    <Label>Bio</Label>
+                    <Textarea value={editData.bio || ""} onChange={(e) => setEditData({ ...editData, bio: e.target.value })} placeholder="User bio" className="min-h-[100px]" />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div><Label>Years Experience</Label><Input value={editData.years_experience || ""} onChange={(e) => setEditData({ ...editData, years_experience: e.target.value })} placeholder="5+" /></div>
+                    <div><Label>Clients Served</Label><Input value={editData.clients_served || ""} onChange={(e) => setEditData({ ...editData, clients_served: e.target.value })} placeholder="100+" /></div>
+                    <div><Label>Rating</Label><Input value={editData.rating || ""} onChange={(e) => setEditData({ ...editData, rating: e.target.value })} placeholder="5.0" /></div>
+                  </div>
+                  <Button onClick={() => updateUserDataMutation.mutate({ userId: editingUser.id, data: editData })} className="w-full text-white" style={{ backgroundColor: '#6E1D40' }}>
+                    <Save className="w-4 h-4 mr-2" /> Save Changes
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </TabsContent>
 
           {/* Course Builder Tab */}
           <TabsContent value="courses">

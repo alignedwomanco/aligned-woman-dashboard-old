@@ -102,6 +102,11 @@ export default function CourseBuilderContent() {
     queryFn: () => base44.entities.Expert.list(),
   });
 
+  const { data: accessTags = [] } = useQuery({
+    queryKey: ["accessTagsForCourses"],
+    queryFn: () => base44.entities.AccessTag.filter({ is_active: true }),
+  });
+
   // Mutations
   const createCourseMutation = useMutation({
     mutationFn: (data) => base44.entities.Course.create(data),
@@ -207,7 +212,7 @@ export default function CourseBuilderContent() {
     await swapOrder(sorted, idx, targetIdx, ({ id, data }) => base44.entities.CoursePage.update(id, data), "coursePages");
   };
 
-  const resetCourseForm = () => { setCourseForm({ title: "", description: "", coverImage: "", category: "", expertId: "", price: 0, isPublished: false, isComingSoon: false, isFeatured: false }); setEditingCourse(null); };
+  const resetCourseForm = () => { setCourseForm({ title: "", description: "", coverImage: "", category: "", expertId: "", price: 0, isPublished: false, isComingSoon: false, isFeatured: false, tags: [] }); setEditingCourse(null); };
   const resetSectionForm = () => { setSectionForm({ title: "", description: "", coverImage: "", order: 0, isPublished: false, isComingSoon: false }); setEditingSection(null); };
   const resetModuleForm = () => { setModuleForm({ title: "", description: "", expertId: "", durationMinutes: 0, isPublished: false, isComingSoon: false }); setEditingModule(null); };
   const resetPageForm = () => { setPageForm({ title: "", pageType: "text", content: "", videoUrl: "" }); setEditingPage(null); };
@@ -506,6 +511,34 @@ export default function CourseBuilderContent() {
                   <SelectContent>{experts.map((e) => <SelectItem key={e.id} value={e.id}>{e.name}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
+              {/* Access Tags */}
+              <div>
+                <Label>Access Tags</Label>
+                <p className="text-xs text-gray-500 mb-2">Assign tags to control who can access this course</p>
+                <div className="flex flex-wrap gap-2">
+                  {accessTags.map((tag) => (
+                    <button
+                      key={tag.id}
+                      type="button"
+                      onClick={() => {
+                        const current = courseForm.tags || [];
+                        const updated = current.includes(tag.tag_key)
+                          ? current.filter(t => t !== tag.tag_key)
+                          : [...current, tag.tag_key];
+                        setCourseForm({ ...courseForm, tags: updated });
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+                        (courseForm.tags || []).includes(tag.tag_key)
+                          ? "bg-[#6E1D40] text-white border-[#6E1D40]"
+                          : "bg-white text-gray-600 border-gray-200 hover:border-[#DEBECC]"
+                      }`}
+                    >
+                      {tag.label}
+                    </button>
+                  ))}
+                  {accessTags.length === 0 && <p className="text-xs text-gray-400">No access tags created yet. Create them in Members tab.</p>}
+                </div>
+              </div>
               <div className="flex items-center gap-6 flex-wrap">
                 <div className="flex items-center gap-2">
                   <Switch checked={courseForm.isPublished} onCheckedChange={(checked) => setCourseForm({ ...courseForm, isPublished: checked })} />
@@ -522,56 +555,6 @@ export default function CourseBuilderContent() {
               </div>
               <Button onClick={handleSaveCourse} disabled={!courseForm.title} className="w-full text-white" style={{ backgroundColor: "#6E1D40" }}>
                 {editingCourse ? "Update Course" : "Create Course"}
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        {/* Section Dialog */}
-        <Dialog open={sectionDialogOpen} onOpenChange={setSectionDialogOpen}>
-          <DialogContent>
-            <DialogHeader><DialogTitle>{editingSection ? "Edit Section" : "Add Section"}</DialogTitle></DialogHeader>
-            <div className="space-y-4">
-              <div><Label>Section Title *</Label><Input value={sectionForm.title} onChange={(e) => setSectionForm({ ...sectionForm, title: e.target.value })} placeholder="e.g., Introduction to ALIVE Method" /></div>
-              <div><Label>Description</Label><Textarea value={sectionForm.description} onChange={(e) => setSectionForm({ ...sectionForm, description: e.target.value })} placeholder="Section description" /></div>
-              <div>
-                <Label>Cover Image</Label>
-                <div className="space-y-3">
-                  {sectionForm.coverImage && (
-                    <div className="relative w-full h-32 rounded-lg overflow-hidden border border-gray-200">
-                      <img src={sectionForm.coverImage} alt="Preview" className="w-full h-full object-cover" />
-                    </div>
-                  )}
-                  <label className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors cursor-pointer text-sm font-medium text-gray-700">
-                    <Upload className="w-4 h-4" />
-                    {sectionForm.coverImage ? "Change Image" : "Upload Image"}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={async (e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          const { file_url } = await base44.integrations.Core.UploadFile({ file });
-                          setSectionForm({ ...sectionForm, coverImage: file_url });
-                        }
-                      }}
-                    />
-                  </label>
-                </div>
-              </div>
-              <div className="flex items-center gap-6 flex-wrap">
-                <div className="flex items-center gap-2">
-                  <Switch checked={sectionForm.isPublished} onCheckedChange={(checked) => setSectionForm({ ...sectionForm, isPublished: checked })} />
-                  <Label>Published</Label>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Switch checked={sectionForm.isComingSoon} onCheckedChange={(checked) => setSectionForm({ ...sectionForm, isComingSoon: checked })} />
-                  <Label>Coming Soon</Label>
-                </div>
-              </div>
-              <Button onClick={handleSaveSection} disabled={!sectionForm.title} className="w-full text-white" style={{ backgroundColor: "#6E1D40" }}>
-                {editingSection ? "Update Section" : "Create Section"}
               </Button>
             </div>
           </DialogContent>
