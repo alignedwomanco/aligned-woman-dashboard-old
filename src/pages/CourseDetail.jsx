@@ -38,7 +38,7 @@ export default function CourseDetail() {
         if (email) {
           const myEnrollments = await base44.entities.CourseEnrollment.filter({ userEmail: email, isPaid: true });
           const paidIds = myEnrollments.map(e => e.courseId);
-          if (paidIds.includes(courseId) || adminUser) {
+          if (paidIds.includes(courseId)) {
             setHasPaidAccess(true);
           }
         }

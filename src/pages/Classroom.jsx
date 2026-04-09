@@ -26,12 +26,16 @@ export default function Classroom() {
         const me = await base44.auth.me();
         const email = me?.email?.toLowerCase();
         setUserEmail(email);
+        const userAccessTags = me?.access_tags || [];
         setIsAdmin(['owner', 'admin', 'master_admin'].includes(me?.role));
 
         // Load paid enrollments for this user
         if (email) {
           const myEnrollments = await base44.entities.CourseEnrollment.filter({ userEmail: email, isPaid: true });
-          setPaidCourseIds(myEnrollments.map(e => e.courseId));
+          const enrolledIds = myEnrollments.map(e => e.courseId);
+          // Also check access tags — load all courses to match tags
+          // We'll match after courses load
+          setPaidCourseIds(enrolledIds);
         }
 
         // Load published courses, sorted by created_date (oldest first)
@@ -190,7 +194,7 @@ export default function Classroom() {
                             <BookOpen className="w-12 h-12 text-white/40" />
                           </div>
                         )}
-                        {course.isFeatured && !(paidCourseIds.includes(course.id) || isAdmin) && (
+                        {course.isFeatured && !paidCourseIds.includes(course.id) && (
                           <div className="absolute top-3 left-3">
                             <Badge className="bg-amber-400 text-amber-900 border-0 text-xs font-semibold">
                               <Star className="w-3 h-3 mr-1" />
@@ -252,12 +256,12 @@ export default function Classroom() {
                                 {course.enrollmentCount}
                               </span>
                             )}
-                            {course.price > 0 && !paidCourseIds.includes(course.id) && !isAdmin ? (
+                            {course.price > 0 && !paidCourseIds.includes(course.id) ? (
                               <Badge className="bg-amber-100 text-amber-800 border-0 text-xs flex items-center gap-1">
                                 <Lock className="w-3 h-3" />
                                 ${course.price}
                               </Badge>
-                            ) : course.price > 0 ? (
+                            ) : course.price > 0 && paidCourseIds.includes(course.id) ? (
                               <Badge className="bg-green-100 text-green-800 border-0 text-xs">
                                 Purchased
                               </Badge>
