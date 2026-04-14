@@ -589,15 +589,15 @@ RESPONSE REQUIREMENTS:
                         </div>
                         <div className="flex flex-col items-center">
                           <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg">
-                            <Moon className="w-4 h-4 text-indigo-300/90" strokeWidth={1.5} />
-                          </div>
-                          <p className="text-xs text-white/70 font-light text-center leading-tight">{snapshotData.cyclePhase}</p>
-                        </div>
-                        <div className="flex flex-col items-center">
-                          <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg">
                             <Heart className="w-4 h-4 text-pink-300/90" strokeWidth={1.5} />
                           </div>
                           <p className="text-xs text-white/70 font-light text-center leading-tight">{snapshotData.nervousSystemState}</p>
+                        </div>
+                        <div className="flex flex-col items-center">
+                          <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg">
+                            <Moon className="w-4 h-4 text-indigo-300/90" strokeWidth={1.5} />
+                          </div>
+                          <p className="text-xs text-white/70 font-light text-center leading-tight">{snapshotData.cyclePhase}</p>
                         </div>
                         <div className="flex flex-col items-center">
                           <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg">
