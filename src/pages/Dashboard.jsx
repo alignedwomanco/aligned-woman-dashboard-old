@@ -572,7 +572,7 @@ RESPONSE REQUIREMENTS:
                     {/* Above the Fold - Always Visible */}
                     <div className="space-y-6">
                       {/* System Icons */}
-                      <div className="flex flex-wrap justify-center gap-2 sm:gap-4 max-w-sm mx-auto">
+                      <div className="flex flex-wrap justify-center gap-2 sm:gap-4 max-w-[260px] sm:max-w-[280px] mx-auto">
                         {snapshotData.astrology?.sunSign && (
                           <div className="flex flex-col items-center">
                             <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg">
