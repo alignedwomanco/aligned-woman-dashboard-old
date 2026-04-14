@@ -573,14 +573,6 @@ RESPONSE REQUIREMENTS:
                     <div className="space-y-6">
                       {/* System Icons */}
                       <div className="flex flex-wrap justify-center gap-2 sm:gap-4 max-w-[260px] sm:max-w-[280px] mx-auto">
-                        {snapshotData.astrology?.sunSign && (
-                          <div className="flex flex-col items-center">
-                            <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg">
-                              <Sparkles className="w-4 h-4 text-amber-300/90" strokeWidth={1.5} />
-                            </div>
-                            <p className="text-xs text-white/70 font-light text-center leading-tight">{snapshotData.astrology.sunSign}</p>
-                          </div>
-                        )}
                         <div className="flex flex-col items-center">
                           <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg">
                             <Target className="w-4 h-4 text-[#E8B4C8]" strokeWidth={1.5} />
@@ -599,6 +591,14 @@ RESPONSE REQUIREMENTS:
                           </div>
                           <p className="text-xs text-white/70 font-light text-center leading-tight">{snapshotData.cyclePhase}</p>
                         </div>
+                        {snapshotData.astrology?.sunSign && (
+                          <div className="flex flex-col items-center">
+                            <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg">
+                              <Sparkles className="w-4 h-4 text-amber-300/90" strokeWidth={1.5} />
+                            </div>
+                            <p className="text-xs text-white/70 font-light text-center leading-tight">{snapshotData.astrology.sunSign}</p>
+                          </div>
+                        )}
                         <div className="flex flex-col items-center">
                           <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg">
                             <TrendingUp className="w-4 h-4 text-[#E8B4C8]" strokeWidth={1.5} />
