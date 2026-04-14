@@ -428,13 +428,9 @@ RESPONSE REQUIREMENTS:
                 <Link to={createPageUrl("CheckIn")} className="block group">
                   <div className="bg-white/80 backdrop-blur-md rounded-xl p-4 hover:bg-white/90 transition-all duration-300 border-0 shadow-[0_2px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_4px_30px_rgba(0,0,0,0.08)]">
                     <div className="flex items-start gap-3">
-                      <motion.div 
-                        className="w-10 h-10 bg-gradient-to-br from-pink-400/90 to-rose-400/90 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
-                        animate={{ scale: [1, 1.15, 1] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                      >
+                      <div className="w-10 h-10 bg-gradient-to-br from-pink-400/90 to-rose-400/90 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
                         <Heart className="w-4 h-4 text-white" strokeWidth={1.5} />
-                      </motion.div>
+                      </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-medium text-gray-900 mb-1 text-sm tracking-tight">My Nervous System</h3>
                         <p className="text-xs text-gray-500 mb-1">
@@ -453,13 +449,9 @@ RESPONSE REQUIREMENTS:
                 <Link to={createPageUrl("MyHumanDesign")} className="block group">
                   <div className="bg-white/80 backdrop-blur-md rounded-xl p-4 hover:bg-white/90 transition-all duration-300 border-0 shadow-[0_2px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_4px_30px_rgba(0,0,0,0.08)]">
                     <div className="flex items-start gap-3">
-                      <motion.div 
-                        className="w-10 h-10 bg-gradient-to-br from-[#6E1D40]/90 to-[#943A59]/90 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
-                        animate={{ rotate: [0, 360] }}
-                        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                      >
+                      <div className="w-10 h-10 bg-gradient-to-br from-[#6E1D40]/90 to-[#943A59]/90 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
                         <Target className="w-4 h-4 text-white" strokeWidth={1.5} />
-                      </motion.div>
+                      </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-medium text-gray-900 mb-1 text-sm tracking-tight">My Human Design</h3>
                         <p className="text-xs text-gray-500 mb-0.5">
@@ -481,13 +473,9 @@ RESPONSE REQUIREMENTS:
                 <Link to={createPageUrl("MyCycle")} className="block group">
                   <div className="bg-white/80 backdrop-blur-md rounded-xl p-4 hover:bg-white/90 transition-all duration-300 border-0 shadow-[0_2px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_4px_30px_rgba(0,0,0,0.08)]">
                     <div className="flex items-start gap-3">
-                      <motion.div 
-                        className="w-10 h-10 bg-gradient-to-br from-indigo-400/90 to-blue-400/90 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
-                        animate={{ y: [0, -6, 0] }}
-                        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                      >
+                      <div className="w-10 h-10 bg-gradient-to-br from-indigo-400/90 to-blue-400/90 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
                         <Moon className="w-4 h-4 text-white" strokeWidth={1.5} />
-                      </motion.div>
+                      </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-medium text-gray-900 mb-1 text-sm tracking-tight">My Cycle</h3>
                         <p className="text-xs text-gray-500 mb-1">
@@ -587,54 +575,34 @@ RESPONSE REQUIREMENTS:
                       <div className="grid grid-cols-5 gap-2 sm:gap-4 max-w-sm mx-auto">
                         {snapshotData.astrology?.sunSign && (
                           <div className="flex flex-col items-center">
-                            <motion.div 
-                              className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg"
-                              animate={{ rotate: [0, 360] }}
-                              transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                            >
+                            <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg">
                               <Sparkles className="w-4 h-4 text-amber-300/90" strokeWidth={1.5} />
-                            </motion.div>
+                            </div>
                             <p className="text-xs text-white/70 font-light text-center leading-tight">{snapshotData.astrology.sunSign}</p>
                           </div>
                         )}
                         <div className="flex flex-col items-center">
-                          <motion.div 
-                            className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg"
-                            animate={{ rotate: [0, 360] }}
-                            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                          >
+                          <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg">
                             <Target className="w-4 h-4 text-[#E8B4C8]" strokeWidth={1.5} />
-                          </motion.div>
+                          </div>
                           <p className="text-xs text-white/70 font-light text-center leading-tight">{snapshotData.humanDesign?.type || "Projector"}</p>
                         </div>
                         <div className="flex flex-col items-center">
-                          <motion.div 
-                            className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg"
-                            animate={{ y: [0, -6, 0] }}
-                            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                          >
+                          <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg">
                             <Moon className="w-4 h-4 text-indigo-300/90" strokeWidth={1.5} />
-                          </motion.div>
+                          </div>
                           <p className="text-xs text-white/70 font-light text-center leading-tight">{snapshotData.cyclePhase}</p>
                         </div>
                         <div className="flex flex-col items-center">
-                          <motion.div 
-                            className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg"
-                            animate={{ scale: [1, 1.15, 1] }}
-                            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                          >
+                          <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg">
                             <Heart className="w-4 h-4 text-pink-300/90" strokeWidth={1.5} />
-                          </motion.div>
+                          </div>
                           <p className="text-xs text-white/70 font-light text-center leading-tight">{snapshotData.nervousSystemState}</p>
                         </div>
                         <div className="flex flex-col items-center">
-                          <motion.div 
-                            className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg"
-                            animate={{ y: [0, -4, 0], opacity: [1, 0.8, 1] }}
-                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                          >
+                          <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/10 backdrop-blur-md rounded-2xl flex flex-col items-center justify-center mb-1.5 shadow-lg">
                             <TrendingUp className="w-4 h-4 text-[#E8B4C8]" strokeWidth={1.5} />
-                          </motion.div>
+                          </div>
                           <p className="text-xs text-white/70 font-light text-center leading-tight">{snapshotData.alivePhase}</p>
                         </div>
                       </div>
@@ -787,15 +755,11 @@ RESPONSE REQUIREMENTS:
             <Card className="bg-gradient-to-br from-[#F5E8EE]/60 via-[#DEBECC]/40 to-transparent backdrop-blur-xl border-0 shadow-[0_8px_30px_rgba(110,29,64,0.08)] rounded-3xl overflow-hidden">
               <CardHeader className="pb-3 pt-7">
                 <div className="flex items-center gap-2 mb-2">
-                  <motion.div
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    className="w-8 h-8 rounded-full bg-gradient-to-br from-[#943A59]/20 to-[#DEBECC]/20 flex items-center justify-center"
-                  >
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#943A59]/20 to-[#DEBECC]/20 flex items-center justify-center">
                     <svg className="w-4 h-4 text-[#943A59]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
-                  </motion.div>
+                  </div>
                 </div>
                 <CardTitle className="text-xl font-light text-gray-900 tracking-tight mb-2">
                   Community
