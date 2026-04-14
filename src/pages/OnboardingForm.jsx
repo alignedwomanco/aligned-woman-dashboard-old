@@ -529,7 +529,7 @@ Give 2-3 specific boundary examples related to their context. Like: "no meetings
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/695154cb868ee011bb627195/23f49bf5a_AlignedWomanLogoPurple.png"
+                src="https://media.base44.com/images/public/69597fee61a120309007685f/511e856dc_99e446771_AWBlogo.png"
                 alt="The Aligned Woman"
                 className="w-14 h-14 object-contain"
               />
