@@ -62,6 +62,8 @@ export default function AdminSettings() {
 
   useEffect(() => {
     const loadUser = async () => {
+      const isAuth = await base44.auth.isAuthenticated();
+      if (!isAuth) return;
       const user = await base44.auth.me();
       setCurrentUser(user);
       setProfileData({
