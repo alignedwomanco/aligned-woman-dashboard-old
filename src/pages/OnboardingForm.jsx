@@ -531,7 +531,7 @@ Give 2-3 specific boundary examples related to their context. Like: "no meetings
               <img 
                 src="https://media.base44.com/images/public/69597fee61a120309007685f/511e856dc_99e446771_AWBlogo.png"
                 alt="The Aligned Woman"
-                className="w-14 h-14 object-contain"
+                className="w-14 h-14 object-contain -mt-2"
               />
               <div>
                 <h1 className="text-lg font-medium text-gray-900 tracking-tight">Your Pathway</h1>
