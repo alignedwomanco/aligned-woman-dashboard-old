@@ -22,7 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { Shield, Users, Upload, Camera, Trash2, Save, UserPlus, RefreshCw, Edit } from "lucide-react";
 import {
   Dialog,
@@ -274,7 +274,7 @@ export default function AdminSettings() {
           <p className="text-gray-600 text-xs sm:text-base">Manage system settings and configurations</p>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <div className="space-y-2 sm:space-y-3 overflow-x-auto scrollbar-hide -mx-3 px-3 sm:mx-0 sm:px-0">
             {/* People & Content */}
             <div>
@@ -331,13 +331,15 @@ export default function AdminSettings() {
           </div>
 
           {/* Members Tab */}
-          <TabsContent value="members" className="space-y-6">
-            <MembersManager allUsers={allUsers} />
-            <AccessTagManager />
-          </TabsContent>
+          {activeTab === "members" && (
+            <div className="space-y-6">
+              <MembersManager allUsers={allUsers} />
+              <AccessTagManager />
+            </div>
+          )}
 
           {/* User Management Tab */}
-          <TabsContent value="users" className="space-y-6">
+          {activeTab === "users" && <div className="space-y-6">
             {/* Administrators Section */}
             <Card>
               <CardHeader>
@@ -675,52 +677,38 @@ export default function AdminSettings() {
                 </div>
               </DialogContent>
             </Dialog>
-          </TabsContent>
+          </div>}
 
           {/* Course Builder Tab */}
-          <TabsContent value="courses">
-            <CourseBuilderContent />
-          </TabsContent>
+          {activeTab === "courses" && <CourseBuilderContent />}
 
           {/* Experts Tab */}
-          <TabsContent value="experts">
-            <ExpertsManagementContent />
-          </TabsContent>
+          {activeTab === "experts" && <ExpertsManagementContent />}
 
           {/* Payment Settings Tab */}
-          <TabsContent value="payments">
-            <PaymentSettingsContent />
-          </TabsContent>
+          {activeTab === "payments" && <PaymentSettingsContent />}
 
           {/* Integrations Tab */}
-          <TabsContent value="integrations">
-            <StripeIntegrationContent currentUser={currentUser} />
-          </TabsContent>
+          {activeTab === "integrations" && <StripeIntegrationContent currentUser={currentUser} />}
 
           {/* Analytics Tab */}
-          <TabsContent value="analytics">
-            {["educator", "expert"].includes(currentUser?.role) || currentUser?.is_educator || currentUser?.is_expert ? (
+          {activeTab === "analytics" && (
+            ["educator", "expert"].includes(currentUser?.role) || currentUser?.is_educator || currentUser?.is_expert ? (
               <EducatorAnalyticsContent currentUser={currentUser} />
             ) : (
               <AdminMetricsContent />
-            )}
-          </TabsContent>
+            )
+          )}
 
           {/* AI Chat Widget Tab */}
-          <TabsContent value="ai-chat">
-            <AIChatWidgetSettings />
-          </TabsContent>
+          {activeTab === "ai-chat" && <AIChatWidgetSettings />}
 
           {/* Support Room Tab */}
-          <TabsContent value="support">
-            <SupportRoomContent currentUser={currentUser} />
-          </TabsContent>
+          {activeTab === "support" && <SupportRoomContent currentUser={currentUser} />}
 
           {/* Logos Tab */}
-          <TabsContent value="logos">
-            <LogoManagement />
-          </TabsContent>
-        </Tabs>
+          {activeTab === "logos" && <LogoManagement />}
+        </div>
       </div>
     </div>
   );
